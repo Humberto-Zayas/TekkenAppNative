@@ -1,29 +1,31 @@
 // App.js
-import React, { useState } from 'react';
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import BoxComponent from './components/BoxComponent';
 
+const Stack = createStackNavigator();
+
 export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home" screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="BoxComponent" component={BoxComponent} />
+      </Stack.Navigator>
+      <StatusBar style="auto" />
+    </NavigationContainer>
+  );
+}
+
+const HomeScreen = ({ navigation }) => {
   const boxTitles = Array.from({ length: 32 }, (_, index) => `Box ${index + 1}`);
-  const [selectedBox, setSelectedBox] = useState(null);
-  const [showBoxComponent, setShowBoxComponent] = useState(false);
 
   const handleBoxPress = (title) => {
-    setSelectedBox(title);
-    setShowBoxComponent(true);
+    navigation.navigate('BoxComponent', { title });
   };
-
-  const handleBackPress = () => {
-    setShowBoxComponent(false);
-    setSelectedBox(null);
-  };
-
-  if (showBoxComponent) {
-    return (
-      <BoxComponent title={selectedBox} onBackPress={handleBackPress} />
-    );
-  }
 
   return (
     <View style={styles.container}>
@@ -38,10 +40,9 @@ export default function App() {
           </TouchableOpacity>
         ))}
       </View>
-      <StatusBar style="auto" />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
