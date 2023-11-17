@@ -1,16 +1,29 @@
 // App.js
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Button } from 'react-native';
 import BoxComponent from './components/BoxComponent';
 
 export default function App() {
   const boxTitles = Array.from({ length: 32 }, (_, index) => `Box ${index + 1}`);
   const [selectedBox, setSelectedBox] = useState(null);
+  const [showBoxComponent, setShowBoxComponent] = useState(false);
 
   const handleBoxPress = (title) => {
     setSelectedBox(title);
+    setShowBoxComponent(true);
   };
+
+  const handleBackPress = () => {
+    setShowBoxComponent(false);
+    setSelectedBox(null);
+  };
+
+  if (showBoxComponent) {
+    return (
+      <BoxComponent title={selectedBox} onBackPress={handleBackPress} />
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -25,7 +38,6 @@ export default function App() {
           </TouchableOpacity>
         ))}
       </View>
-      {selectedBox && <BoxComponent title={selectedBox} />}
       <StatusBar style="auto" />
     </View>
   );
