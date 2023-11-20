@@ -5,10 +5,6 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 const HomeScreen = ({ navigation }) => {
   const boxTitles = Array.from({ length: 32 }, (_, index) => `Box ${index + 1}`);
 
-  const handleBoxPress = () => {
-    navigation.navigate('CardList');
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.gridContainer}>
