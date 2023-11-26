@@ -8,15 +8,15 @@ const CardListComponent = ({ route, navigation }) => {
 
   // Sample data for the card list
   const cardData = [
-    { id: '1', name: 'Card 1', thumbnail: 'Thumbnail 1', rating: 4.5 },
-    { id: '2', name: 'Card 2', thumbnail: 'Thumbnail 2', rating: 3.8 },
-    { id: '3', name: 'Card 3', thumbnail: 'Thumbnail 3', rating: 5.0 },
-    { id: '4', name: 'Card 4', thumbnail: 'Thumbnail 1', rating: 4.5 },
-    { id: '5', name: 'Card 5', thumbnail: 'Thumbnail 2', rating: 3.8 },
-    { id: '6', name: 'Card 6', thumbnail: 'Thumbnail 3', rating: 5.0 },
-    { id: '7', name: 'Card 7', thumbnail: 'Thumbnail 1', rating: 4.5 },
-    { id: '8', name: 'Card 8', thumbnail: 'Thumbnail 2', rating: 3.8 },
-    { id: '9', name: 'Card 9', thumbnail: 'Thumbnail 3', rating: 5.0 },
+    { id: '1', name: 'Card 1', thumbnail: require('../../data/images/cardThumbs/images.png'), rating: 4.5 },
+    { id: '2', name: 'Card 2', thumbnail: require('../../data/images/cardThumbs/images.png'), rating: 3.8 },
+    { id: '3', name: 'Card 3', thumbnail: require('../../data/images/cardThumbs/images.png'), rating: 5.0 },
+    { id: '4', name: 'Card 4', thumbnail: require('../../data/images/cardThumbs/images.png'), rating: 4.5 },
+    { id: '5', name: 'Card 5', thumbnail: require('../../data/images/cardThumbs/images.png'), rating: 3.8 },
+    { id: '6', name: 'Card 6', thumbnail: require('../../data/images/cardThumbs/images.png'), rating: 5.0 },
+    { id: '7', name: 'Card 7', thumbnail: require('../../data/images/cardThumbs/images.png'), rating: 4.5 },
+    { id: '8', name: 'Card 8', thumbnail: require('../../data/images/cardThumbs/images.png'), rating: 3.8 },
+    { id: '9', name: 'Card 9', thumbnail: require('../../data/images/cardThumbs/images.png'), rating: 5.0 },
     // Add more cards as needed
   ];
 
@@ -27,15 +27,14 @@ const CardListComponent = ({ route, navigation }) => {
   const renderCardItem = ({ item }) => (
     <TouchableOpacity style={styles.cardItem} onPress={() => handleCardPress(item)}>
       <View style={{ marginRight: 10 }}>
-        {/* You can use an Image component for the thumbnail */}
-        <Text>{item.thumbnail}</Text>
+        <Image source={item.thumbnail} style={styles.thumbnailImage} />
       </View>
       <View>
         <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.name}</Text>
         <Text>Rating: {item.rating}</Text>
       </View>
     </TouchableOpacity>
-  );
+  );  
 
   return (
     <View style={styles.container}>
@@ -86,6 +85,11 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 60,
   },
+  thumbnailImage: {
+    width: 50,  // Set the desired width
+    height: 50, // Set the desired height
+    borderRadius: 25, // Adjust border radius to make it circular
+  },  
 });
 
 export default CardListComponent;
