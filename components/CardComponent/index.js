@@ -7,35 +7,37 @@ const CardComponent = ({ route }) => {
 
   // Sample data for tables
   const heatEngagersData = [
-    { id: '1', value: 'X', description: 'Engages opponent with powerful attacks' },
-    { id: '2', value: 'X', description: 'Engages opponent with powerful attacks' },
+    { id: '1', value: 'df1+2', description: 'Engages opponent with powerful attacks' },
+    { id: '2', value: 'ff+3', description: 'Engages opponent with powerful attacks' },
     // Add more rows as needed
   ];
 
   const punishersData = [
-    {
-      id: '1',
-      value: '1,1,2',
-      description: '10F standing punish',
-    },
+    { id: '1', value: '1,1,2', description: '10F standing punish' },
+    { id: '2', value: '2,2,2,2', description: '12F standing punish' },
     // Add more rows as needed
   ];
 
   const moveFlowchartData = [
-    { id: '1', value: 'Forward + X', description: 'Initiates a forward attack' },
+    { id: '1', value: 'f+2,1', description: 'Initiates a forward attack' },
+    { id: '2', value: 'db1+2', description: 'Initiates a forward attack' },
     // Add more rows as needed
   ];
 
   const renderTableItem = ({ item }) => (
     <View style={styles.tableRow}>
-      <View style={styles.column}>
-        <Text style={styles.value}>{item.value}</Text>
+      <View style={styles.columnLeft}>
+        <Text style={styles.value} numberOfLines={2}>
+          {item.value}
+        </Text>
       </View>
       <View style={styles.column}>
-        <Text style={styles.value}>{item.description}</Text>
+        <Text style={styles.value} numberOfLines={2}>
+          {item.description}
+        </Text>
       </View>
     </View>
-  );
+  );  
 
   return (
     <View style={styles.container}>
@@ -80,17 +82,17 @@ const styles = StyleSheet.create({
   },
   subContainer: {
     marginTop: 10,
-    borderRadius: 10, // Add border radius for rounded corners
-    borderWidth: 1, // Add border width
-    borderColor: 'lightgray', // Set border color
-    overflow: 'hidden', // Hide content outside border
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'lightgray',
+    overflow: 'hidden',
   },
   tableTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'white', // Set the desired text color
-    backgroundColor: 'blue', // Set the desired background color
-    padding: 10, // Adjust padding as needed
+    color: 'white',
+    backgroundColor: 'blue',
+    padding: 10,
   },
   tableRow: {
     flexDirection: 'row',
@@ -99,13 +101,23 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: 'lightgray',
   },
+  columnLeft: {
+    // flex: 0.8,
+    width: '30%',
+    padding: 8,
+    alignItems: 'center', // Center the content vertically
+    justifyContent: 'center', // Center the content horizontally
+  },
   column: {
-    flex: 1,
-    padding: 8, // Add padding to space out content
+    // flex: 2,
+    width: '80%',
+    padding: 8,
+    alignItems: 'start', // Center the content vertically
   },
   value: {
     fontSize: 16,
   },
 });
+
 
 export default CardComponent;
