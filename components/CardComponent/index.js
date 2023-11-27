@@ -1,11 +1,12 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-import HeroComponent from './HeroComponent'; // Adjust the import path accordingly
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Modal, TouchableOpacity } from 'react-native';
+import { FlatList as GestureFlatList, ScrollView, BorderlessButton } from 'react-native-gesture-handler';
+import HeroComponent from './HeroComponent';
 
 const CardComponent = ({ route }) => {
   const { item } = route.params;
+  const [selectedItem, setSelectedItem] = useState(null);
 
-  // Sample data for tables
   const heatEngagersData = [
     { id: '1', value: 'df1+2', description: 'Engages opponent with powerful attacks' },
     { id: '2', value: 'ff+3', description: 'Engages opponent with powerful attacks' },
@@ -24,54 +25,80 @@ const CardComponent = ({ route }) => {
     // Add more rows as needed
   ];
 
+  const openDrawer = (item) => {
+    setSelectedItem(item);
+  };
+
+  const closeDrawer = () => {
+    setSelectedItem(null);
+  };
+
   const renderTableItem = ({ item }) => (
-    <View style={styles.tableRow}>
-      <View style={styles.columnLeft}>
-        <Text style={styles.value} numberOfLines={2}>
-          {item.value}
-        </Text>
+    <TouchableOpacity onPress={() => openDrawer(item)}>
+      <View style={styles.tableRow}>
+        <View style={styles.columnLeft}>
+          <Text style={styles.value} numberOfLines={2}>
+            {item.value}
+          </Text>
+        </View>
+        <View style={styles.column}>
+          <Text style={styles.value} numberOfLines={2}>
+            {item.description}
+          </Text>
+        </View>
       </View>
-      <View style={styles.column}>
-        <Text style={styles.value} numberOfLines={2}>
-          {item.description}
-        </Text>
-      </View>
-    </View>
-  );  
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
       <HeroComponent name={item.name} thumbnail={item.thumbnail} rating={item.rating} />
 
-      {/* Heat Engagers Table */}
-      <View style={styles.subContainer}>
-        <Text style={styles.tableTitle}>Heat Engagers</Text>
-        <FlatList
-          data={heatEngagersData}
-          keyExtractor={(item) => item.id}
-          renderItem={renderTableItem}
-        />
-      </View>
+      <GestureFlatList
+        data={heatEngagersData}
+        keyExtractor={(item) => item.id}
+        ListHeaderComponent={<Text style={styles.tableTitle}>Heat Engagers</Text>}
+        renderItem={renderTableItem}
+        style={styles.flatList}
+      />
 
-      {/* Punishers Table */}
-      <View style={styles.subContainer}>
-        <Text style={styles.tableTitle}>Punishers</Text>
-        <FlatList
-          data={punishersData}
-          keyExtractor={(item) => item.id}
-          renderItem={renderTableItem}
-        />
-      </View>
-      
-      {/* Move/Flowchart Table */}
-      <View style={styles.subContainer}>
-        <Text style={styles.tableTitle}>Move/Flowchart</Text>
-        <FlatList
-          data={moveFlowchartData}
-          keyExtractor={(item) => item.id}
-          renderItem={renderTableItem}
-        />
-      </View>
+      <GestureFlatList
+        data={punishersData}
+        keyExtractor={(item) => item.id}
+        ListHeaderComponent={<Text style={styles.tableTitle}>Punishers</Text>}
+        renderItem={renderTableItem}
+        style={styles.flatList}
+      />
+
+      <GestureFlatList
+        data={moveFlowchartData}
+        keyExtractor={(item) => item.id}
+        ListHeaderComponent={<Text style={styles.tableTitle}>Move/Flowchart</Text>}
+        renderItem={renderTableItem}
+        style={styles.flatList}
+      />
+
+      <Modal visible={selectedItem !== null} animationType="slide" transparent>
+        <ScrollView
+          style={styles.modalContainer}
+          showsVerticalScrollIndicator={false}
+          onScrollEndDrag={(e) => {
+            const offsetY = e.nativeEvent.contentOffset.y;
+            const scrollHeight = e.nativeEvent.contentSize.height;
+            if (offsetY + 700 >= scrollHeight) {
+              closeDrawer();
+            }
+          }}
+        >
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>{selectedItem?.value}</Text>
+            <Text style={styles.modalText}>{selectedItem?.description}</Text>
+            <BorderlessButton onPress={closeDrawer} style={styles.closeButton}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </BorderlessButton>
+          </View>
+        </ScrollView>
+      </Modal>
     </View>
   );
 };
@@ -80,12 +107,12 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
   },
-  subContainer: {
-    marginTop: 10,
+  flatList: {
     borderRadius: 10,
     borderWidth: 1,
     borderColor: 'lightgray',
     overflow: 'hidden',
+    marginBottom: 16
   },
   tableTitle: {
     fontSize: 18,
@@ -102,22 +129,41 @@ const styles = StyleSheet.create({
     borderBottomColor: 'lightgray',
   },
   columnLeft: {
-    // flex: 0.8,
     width: '30%',
     padding: 8,
-    alignItems: 'center', // Center the content vertically
-    justifyContent: 'center', // Center the content horizontally
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   column: {
-    // flex: 2,
-    width: '80%',
+    width: '70%',
     padding: 8,
-    alignItems: 'start', // Center the content vertically
+    alignItems: 'start',
   },
   value: {
     fontSize: 16,
   },
+  modalContainer: {
+    flex: 1,
+    marginTop: 50,
+    marginHorizontal: 20,
+    backgroundColor: 'white',
+  },
+  modalContent: {
+    padding: 20,
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  closeButton: {
+    alignItems: 'center',
+    padding: 10,
+    marginTop: 10,
+  },
+  closeButtonText: {
+    color: 'blue',
+    fontSize: 16,
+  },
 });
-
 
 export default CardComponent;
