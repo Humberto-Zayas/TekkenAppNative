@@ -2,28 +2,12 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import { FlatList as GestureFlatList, ScrollView, BorderlessButton } from 'react-native-gesture-handler';
 import HeroComponent from './HeroComponent';
+import ModalComponent from './ModalComponent'; // Import the new component
+import { heatEngagersData, punishersData, moveFlowchartData } from '../../data/moveData';
 
 const CardComponent = ({ route }) => {
   const { item } = route.params;
   const [selectedItem, setSelectedItem] = useState(null);
-
-  const heatEngagersData = [
-    { id: '1', value: 'df1+2', description: 'Engages opponent with powerful attacks' },
-    { id: '2', value: 'ff+3', description: 'Engages opponent with powerful attacks' },
-    // Add more rows as needed
-  ];
-
-  const punishersData = [
-    { id: '1', value: '1,1,2', description: '10F standing punish' },
-    { id: '2', value: '2,2,2,2', description: '12F standing punish' },
-    // Add more rows as needed
-  ];
-
-  const moveFlowchartData = [
-    { id: '1', value: 'f+2,1', description: 'Initiates a forward attack' },
-    { id: '2', value: 'db1+2', description: 'Initiates a forward attack' },
-    // Add more rows as needed
-  ];
 
   const openDrawer = (item) => {
     setSelectedItem(item);
