@@ -8,7 +8,7 @@ const CardListComponent = ({ route, navigation }) => {
 
   // Sample data for the card list
   const cardData = [
-    { id: '1', name: 'Card 1', thumbnail: require('../../data/images/cardThumbs/images.png'), rating: 4.5 },
+    { id: '1', name: 'Card 1\'s Really Awesome Long Long Title', thumbnail: require('../../data/images/cardThumbs/images.png'), rating: 4.5 },
     { id: '2', name: 'Card 2', thumbnail: require('../../data/images/cardThumbs/images.png'), rating: 3.8 },
     { id: '3', name: 'Card 3', thumbnail: require('../../data/images/cardThumbs/images.png'), rating: 5.0 },
     { id: '4', name: 'Card 4', thumbnail: require('../../data/images/cardThumbs/images.png'), rating: 4.5 },
@@ -30,7 +30,7 @@ const CardListComponent = ({ route, navigation }) => {
         <Image source={item.thumbnail} style={styles.thumbnailImage} />
       </View>
       <View>
-        <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.name}</Text>
+        <Text style={{ fontSize: 16, fontWeight: 'bold' }} numberOfLines={1}>{item.name}</Text>
         <Text>Rating: {item.rating}</Text>
       </View>
     </TouchableOpacity>

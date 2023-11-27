@@ -81,3 +81,9 @@ export const moveFlowchartData = [
   },
   // Add more rows as needed
 ];
+
+export const customData = [
+  {
+    youtube: 'https://www.youtube.com/watch?v=PsCpewoF2E4&t=4s&ab_channel=BandaiNamcoEntertainmentAmerica'
+  }
+]

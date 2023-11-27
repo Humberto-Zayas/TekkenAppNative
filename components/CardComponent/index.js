@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import { FlatList as GestureFlatList, ScrollView, BorderlessButton } from 'react-native-gesture-handler';
 import HeroComponent from './HeroComponent';
 import ModalComponent from './ModalComponent'; // Import the new component
-import { heatEngagersData, punishersData, moveFlowchartData } from '../../data/moveData';
+import { heatEngagersData, punishersData, moveFlowchartData, customData } from '../../data/moveData';
 
 const CardComponent = ({ route }) => {
   const { item } = route.params;
