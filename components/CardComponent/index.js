@@ -22,7 +22,7 @@ const CardComponent = ({ route }) => {
       <View style={styles.tableRow}>
         <View style={styles.columnLeft}>
           <Text style={styles.value} numberOfLines={2}>
-            {item.value}
+            {item.move}
           </Text>
         </View>
         <View style={styles.column}>
