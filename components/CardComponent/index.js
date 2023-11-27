@@ -63,25 +63,7 @@ const CardComponent = ({ route }) => {
       />
 
       <Modal visible={selectedItem !== null} animationType="slide" transparent>
-        <ScrollView
-          style={styles.modalContainer}
-          showsVerticalScrollIndicator={false}
-          onScrollEndDrag={(e) => {
-            const offsetY = e.nativeEvent.contentOffset.y;
-            const scrollHeight = e.nativeEvent.contentSize.height;
-            if (offsetY + 700 >= scrollHeight) {
-              closeDrawer();
-            }
-          }}
-        >
-          <View style={styles.modalContent}>
-            <Text style={styles.modalText}>{selectedItem?.value}</Text>
-            <Text style={styles.modalText}>{selectedItem?.description}</Text>
-            <BorderlessButton onPress={closeDrawer} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </BorderlessButton>
-          </View>
-        </ScrollView>
+       <ModalComponent selectedItem={selectedItem} closeDrawer={closeDrawer} />
       </Modal>
     </View>
   );

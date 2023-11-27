@@ -1,6 +1,6 @@
 export const heatEngagersData = [
   { id: '1', value: 'df1+2', description: 'Engages opponent with powerful attacks' },
-  { id: '2', value: 'ff+3', description: 'Engages opponent with powerful attacks' },
+  { id: '2', value: 'ff+3', description: 'Engages opponent with powerful attacksEngages opponent with powerful attacksEngages opponent with powerful attacksEngages opponent with powerful attacksEngages opponent with powerful attacksEngages opponent with powerful attacksEngages opponent with powerful attacksEngages opponent with powerful attacksEngages opponent with powerful attacksEngages opponent with powerful attacks' },
   // Add more rows as needed
 ];
 

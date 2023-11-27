@@ -1,38 +1,55 @@
-// ModalComponent.js
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { BorderlessButton } from 'react-native-gesture-handler';
+import React, { useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 
 const ModalComponent = ({ selectedItem, closeDrawer }) => {
+  const modalContainerRef = useRef(null);
+  const scrollViewRef = useRef(null);
+
+  const handleScrollEndDrag = (e) => {
+    const offsetY = e.nativeEvent.contentOffset.y;
+    const scrollHeight = e.nativeEvent.contentSize.height;
+    const scrollViewHeight = e.nativeEvent.layoutMeasurement.height;
+
+    if (offsetY + scrollViewHeight + 20 >= scrollHeight) {
+      closeDrawer();
+    } else {
+      modalContainerRef.current.setNativeProps({
+        style: { transform: [{ translateY: offsetY }] },
+      });
+    }
+  };
+
   return (
     <ScrollView
-      style={styles.modalContainer}
+      ref={scrollViewRef}
+      style={styles.scrollView}
+      onScrollEndDrag={handleScrollEndDrag}
       showsVerticalScrollIndicator={false}
-      onScrollEndDrag={(e) => {
-        const offsetY = e.nativeEvent.contentOffset.y;
-        const scrollHeight = e.nativeEvent.contentSize.height;
-        if (offsetY + 700 >= scrollHeight) {
-          closeDrawer();
-        }
-      }}
     >
-      <View style={styles.modalContent}>
-        <Text style={styles.modalText}>{selectedItem?.value}</Text>
-        <Text style={styles.modalText}>{selectedItem?.description}</Text>
-        <BorderlessButton onPress={closeDrawer} style={styles.closeButton}>
-          <Text style={styles.closeButtonText}>Close</Text>
-        </BorderlessButton>
+      <View ref={modalContainerRef} style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalText}>{selectedItem?.value}</Text>
+          <Text style={styles.modalText}>{selectedItem?.description}</Text>
+          <TouchableOpacity onPress={closeDrawer} style={styles.closeButton}>
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  modalContainer: {
+  scrollView: {
     flex: 1,
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
     marginTop: 50,
     marginHorizontal: 20,
-    backgroundColor: 'white',
   },
   modalContent: {
     padding: 20,
