@@ -1,18 +1,15 @@
-// CardListComponent.js
+// SavedListComponent.js
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import {cardData} from '../../data/cardData';
+import savedCardData from '../../data/savedCardData'; // Assuming you have a separate data file for saved cards
 
-const CardListComponent = ({ route, navigation }) => {
-  const { character } = route.params;
-  const { name, image } = character;
-
-  const handleCardPress = (item) => {
-    navigation.navigate('CardComponent', { item });
+const SavedListComponent = ({ navigation }) => {
+  const handleSavedCardPress = (item) => {
+    navigation.navigate('SavedCardComponent', { item });
   };
 
-  const renderCardItem = ({ item }) => (
-    <TouchableOpacity style={styles.cardItem} onPress={() => handleCardPress(item)}>
+  const renderSavedCardItem = ({ item }) => (
+    <TouchableOpacity style={styles.cardItem} onPress={() => handleSavedCardPress(item)}>
       <View style={{ marginRight: 10 }}>
         <Image source={item.thumbnail} style={styles.thumbnailImage} />
       </View>
@@ -21,19 +18,15 @@ const CardListComponent = ({ route, navigation }) => {
         <Text>Rating: {item.rating}</Text>
       </View>
     </TouchableOpacity>
-  );  
+  );
 
   return (
     <View style={styles.container}>
-      <View style={styles.heroContainer}>
-        <Image source={image} style={styles.heroImage} />
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10 }}>{name}</Text>
-      </View>
       <FlatList
         contentContainerStyle={styles.flatList}
-        data={cardData}
+        data={savedCardData}
         keyExtractor={(item) => item.id}
-        renderItem={renderCardItem}
+        renderItem={renderSavedCardItem}
         showsVerticalScrollIndicator={false}
       />
     </View>
@@ -62,21 +55,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '100%', // Full width
   },
-  heroContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 20,
-  },
-  heroImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-  },
   thumbnailImage: {
-    width: 50,  // Set the desired width
-    height: 50, // Set the desired height
-    borderRadius: 25, // Adjust border radius to make it circular
-  },  
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
 });
 
-export default CardListComponent;
+export default SavedListComponent;
