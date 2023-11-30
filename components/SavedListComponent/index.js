@@ -1,7 +1,7 @@
 // SavedListComponent.js
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import savedCardData from '../../data/savedCardData'; // Assuming you have a separate data file for saved cards
+import {savedCardData} from '../../data/savedCardData.js'; // Assuming you have a separate data file for saved cards
 
 const SavedListComponent = ({ navigation }) => {
   const handleSavedCardPress = (item) => {

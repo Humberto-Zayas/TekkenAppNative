@@ -1,4 +1,4 @@
-export const cardData = [
+export const savedCardData = [
   { id: '1', name: 'Card 1\'s Really Awesome Long Long Title', thumbnail: require('./images/cardThumbs/images.png'), rating: 4.5 },
   { id: '2', name: 'Card 2', thumbnail: require('./images/cardThumbs/images.png'), rating: 3.8 },
   { id: '3', name: 'Card 3', thumbnail: require('./images/cardThumbs/images.png'), rating: 5.0 },

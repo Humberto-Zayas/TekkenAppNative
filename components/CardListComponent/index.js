@@ -4,9 +4,9 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react
 import {cardData} from '../../data/cardData';
 
 const CardListComponent = ({ route, navigation }) => {
-  const { character } = route.params;
-  const { name, image } = character;
-
+  const character = route.params?.character || {}; // Use optional chaining to handle undefined
+  const { name, image } = character; 
+  console.log('route: ', route.params);
   const handleCardPress = (item) => {
     navigation.navigate('CardComponent', { item });
   };
