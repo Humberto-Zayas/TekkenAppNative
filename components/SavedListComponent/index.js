@@ -21,7 +21,7 @@ const SavedListComponent = ({ navigation }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <View>
       <FlatList
         contentContainerStyle={styles.flatList}
         data={savedCardData}
@@ -54,6 +54,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgray',
     borderRadius: 10,
     width: '100%', // Full width
+  },
+  heroContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  heroImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
   },
   thumbnailImage: {
     width: 50,

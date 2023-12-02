@@ -1,4 +1,4 @@
-// CardListComponent.js
+// CardNavigator.js
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -7,9 +7,9 @@ import SavedListComponent from '../SavedListComponent';
 
 const Tab = createBottomTabNavigator();
 
-const CardScreen = ({ route }) => {
-  const { character } = route.params;
-  return <CardListComponent route={route} navigation={navigation} character={character} />;
+const CardScreen = ({ route, navigation }) => {
+  const { params } = route;
+  return <CardListComponent {...params} navigation={navigation} />;
 };
 
 const SavedScreen = ({ navigation }) => {

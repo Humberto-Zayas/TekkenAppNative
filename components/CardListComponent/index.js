@@ -1,12 +1,18 @@
-// CardListComponent.js
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import {cardData} from '../../data/cardData';
+import { View, Text, Image, StyleSheet } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import { cardData, savedCardData } from '../../data/cardData';
+import { FontAwesome } from '@expo/vector-icons';
+import SavedListComponent from '../SavedListComponent';
+
+const Tab = createBottomTabNavigator();
 
 const CardListComponent = ({ route, navigation }) => {
-  const character = route.params?.character || {}; // Use optional chaining to handle undefined
-  const { name, image } = character; 
-  console.log('route: ', route.params);
+  const { params } = route || {};
+  const { character: routeCharacter } = params || {};
+  const { name, image } = routeCharacter || {};
+
   const handleCardPress = (item) => {
     navigation.navigate('CardComponent', { item });
   };
@@ -21,7 +27,7 @@ const CardListComponent = ({ route, navigation }) => {
         <Text>Rating: {item.rating}</Text>
       </View>
     </TouchableOpacity>
-  );  
+  );
 
   return (
     <View style={styles.container}>
@@ -29,13 +35,32 @@ const CardListComponent = ({ route, navigation }) => {
         <Image source={image} style={styles.heroImage} />
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10 }}>{name}</Text>
       </View>
-      <FlatList
-        contentContainerStyle={styles.flatList}
-        data={cardData}
-        keyExtractor={(item) => item.id}
-        renderItem={renderCardItem}
-        showsVerticalScrollIndicator={false}
-      />
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+
+            if (route.name === 'All') {
+              iconName = focused ? 'list' : 'list'; // Use the same icon for both focused and unfocused states
+            } else if (route.name === 'Saved') {
+              iconName = focused ? 'bookmark' : 'bookmark'; // Use the same icon for both focused and unfocused states
+            }
+
+            return <FontAwesome name={iconName} size={size} color={color} />;
+          },
+        })}
+      >
+        <Tab.Screen name="All" component={() => (
+          <FlatList
+            contentContainerStyle={styles.flatList}
+            data={cardData}
+            keyExtractor={(item) => item.id}
+            renderItem={renderCardItem}
+            showsVerticalScrollIndicator={false}
+          />
+        )} />
+        <Tab.Screen name="Saved" component={SavedListComponent} />
+      </Tab.Navigator>
     </View>
   );
 };
@@ -73,10 +98,10 @@ const styles = StyleSheet.create({
     borderRadius: 60,
   },
   thumbnailImage: {
-    width: 50,  // Set the desired width
-    height: 50, // Set the desired height
-    borderRadius: 25, // Adjust border radius to make it circular
-  },  
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
 });
 
 export default CardListComponent;
