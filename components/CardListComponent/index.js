@@ -2,9 +2,9 @@ import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
-import { cardData, savedCardData } from '../../data/cardData';
+import { cardData } from '../../data/cardData';
+import { savedCardData } from '../../data/savedCardData';
 import { FontAwesome } from '@expo/vector-icons';
-import SavedListComponent from '../SavedListComponent';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,6 +29,26 @@ const CardListComponent = ({ route, navigation }) => {
     </TouchableOpacity>
   );
 
+  const AllScreenComponent = () => (
+    <FlatList
+      contentContainerStyle={styles.flatList}
+      data={cardData}
+      keyExtractor={(item) => item.id}
+      renderItem={renderCardItem}
+      showsVerticalScrollIndicator={false}
+    />
+  );
+
+  const SavedScreenComponent = () => (
+    <FlatList
+      contentContainerStyle={styles.flatList}
+      data={savedCardData}
+      keyExtractor={(item) => item.id}
+      renderItem={renderCardItem}
+      showsVerticalScrollIndicator={false}
+    />
+  );
+
   return (
     <View style={styles.container}>
       <View style={styles.heroContainer}>
@@ -50,16 +70,12 @@ const CardListComponent = ({ route, navigation }) => {
           },
         })}
       >
-        <Tab.Screen name="All" component={() => (
-          <FlatList
-            contentContainerStyle={styles.flatList}
-            data={cardData}
-            keyExtractor={(item) => item.id}
-            renderItem={renderCardItem}
-            showsVerticalScrollIndicator={false}
-          />
-        )} />
-        <Tab.Screen name="Saved" component={SavedListComponent} />
+        <Tab.Screen name="All">
+          {() => <AllScreenComponent />}
+        </Tab.Screen>
+        <Tab.Screen name="Saved">
+          {() => <SavedScreenComponent />}
+        </Tab.Screen>
       </Tab.Navigator>
     </View>
   );
