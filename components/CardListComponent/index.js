@@ -46,15 +46,21 @@ const CardListComponent = ({ route, navigation }) => {
         />
       )}
 
-      {/* Toggle Button */}
-      <TouchableOpacity
-        style={styles.toggleButton}
-        onPress={() => setShowSavedList(!showSavedList)}
-      >
-        <Text style={styles.toggleButtonText}>
-          {showSavedList ? 'Show All Cards' : 'Show Saved List'}
-        </Text>
-      </TouchableOpacity>
+      {/* Toggle Buttons */}
+      <View style={styles.toggleButtonContainer}>
+        <TouchableOpacity
+          style={[styles.toggleButton, { marginRight: 10 }]}
+          onPress={() => setShowSavedList(false)}
+        >
+          <Text style={styles.toggleButtonText}>Show All Cards</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.toggleButton}
+          onPress={() => setShowSavedList(true)}
+        >
+          <Text style={styles.toggleButtonText}>Show Saved List</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -96,12 +102,18 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
   },
+  toggleButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 'auto',
+    padding: 10
+  },
   toggleButton: {
     backgroundColor: 'lightblue',
     padding: 10,
     borderRadius: 5,
-    marginTop: 10,
     alignItems: 'center',
+    flex: 1,
   },
   toggleButtonText: {
     fontSize: 16,
