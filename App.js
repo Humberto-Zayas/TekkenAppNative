@@ -1,4 +1,3 @@
-// App.js
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
@@ -6,7 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './components/HomeScreen';
 import BoxComponent from './components/BoxComponent';
 import CardListComponent from './components/CardListComponent';
-import CardComponent from './components/CardComponent';
+import CardComponent from './components/CardComponent'; // Import the CardComponent
 
 const Stack = createStackNavigator();
 

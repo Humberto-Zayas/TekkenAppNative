@@ -1,17 +1,13 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import React, { useState } from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { cardData } from '../../data/cardData';
-import { savedCardData } from '../../data/savedCardData';
-import { FontAwesome } from '@expo/vector-icons';
-
-const Tab = createBottomTabNavigator();
+import SavedListComponent from '../SavedListComponent';
 
 const CardListComponent = ({ route, navigation }) => {
-  const { params } = route || {};
-  const { character: routeCharacter } = params || {};
-  const { name, image } = routeCharacter || {};
+  const { character } = route.params;
+  const { name, image } = character;
+
+  const [showSavedList, setShowSavedList] = useState(false);
 
   const handleCardPress = (item) => {
     navigation.navigate('CardComponent', { item });
@@ -23,30 +19,12 @@ const CardListComponent = ({ route, navigation }) => {
         <Image source={item.thumbnail} style={styles.thumbnailImage} />
       </View>
       <View>
-        <Text style={{ fontSize: 16, fontWeight: 'bold' }} numberOfLines={1}>{item.name}</Text>
+        <Text style={{ fontSize: 16, fontWeight: 'bold' }} numberOfLines={1}>
+          {item.name}
+        </Text>
         <Text>Rating: {item.rating}</Text>
       </View>
     </TouchableOpacity>
-  );
-
-  const AllScreenComponent = () => (
-    <FlatList
-      contentContainerStyle={styles.flatList}
-      data={cardData}
-      keyExtractor={(item) => item.id}
-      renderItem={renderCardItem}
-      showsVerticalScrollIndicator={false}
-    />
-  );
-
-  const SavedScreenComponent = () => (
-    <FlatList
-      contentContainerStyle={styles.flatList}
-      data={savedCardData}
-      keyExtractor={(item) => item.id}
-      renderItem={renderCardItem}
-      showsVerticalScrollIndicator={false}
-    />
   );
 
   return (
@@ -55,28 +33,28 @@ const CardListComponent = ({ route, navigation }) => {
         <Image source={image} style={styles.heroImage} />
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10 }}>{name}</Text>
       </View>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
 
-            if (route.name === 'All') {
-              iconName = focused ? 'list' : 'list'; // Use the same icon for both focused and unfocused states
-            } else if (route.name === 'Saved') {
-              iconName = focused ? 'bookmark' : 'bookmark'; // Use the same icon for both focused and unfocused states
-            }
+      {showSavedList ? (
+        <SavedListComponent navigation={navigation} />
+      ) : (
+        <FlatList
+          contentContainerStyle={styles.flatList}
+          data={cardData}
+          keyExtractor={(item) => item.id}
+          renderItem={renderCardItem}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
 
-            return <FontAwesome name={iconName} size={size} color={color} />;
-          },
-        })}
+      {/* Toggle Button */}
+      <TouchableOpacity
+        style={styles.toggleButton}
+        onPress={() => setShowSavedList(!showSavedList)}
       >
-        <Tab.Screen name="All">
-          {() => <AllScreenComponent />}
-        </Tab.Screen>
-        <Tab.Screen name="Saved">
-          {() => <SavedScreenComponent />}
-        </Tab.Screen>
-      </Tab.Navigator>
+        <Text style={styles.toggleButtonText}>
+          {showSavedList ? 'Show All Cards' : 'Show Saved List'}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -117,6 +95,17 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
+  },
+  toggleButton: {
+    backgroundColor: 'lightblue',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  toggleButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
