@@ -6,8 +6,8 @@ import SavedListComponent from '../SavedListComponent';
 const CardListComponent = ({ route, navigation }) => {
   const { character } = route.params;
   const { name, image } = character;
-
   const [showSavedList, setShowSavedList] = useState(false);
+  const [isMenuVisible, setMenuVisible] = useState(false);
 
   const handleCardPress = (item) => {
     navigation.navigate('CardComponent', { item });
@@ -26,6 +26,15 @@ const CardListComponent = ({ route, navigation }) => {
       </View>
     </TouchableOpacity>
   );
+
+  const toggleMenu = () => {
+    setMenuVisible(!isMenuVisible);
+  };
+
+  const handleCreateCard = () => {
+    navigation.navigate('CreateCardComponent');
+    setMenuVisible(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -61,6 +70,20 @@ const CardListComponent = ({ route, navigation }) => {
           <Text style={styles.toggleButtonText}>Show Saved List</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Floating Action Button */}
+      <TouchableOpacity style={styles.fab} onPress={toggleMenu}>
+        <Text style={styles.fabText}>+</Text>
+      </TouchableOpacity>
+
+      {isMenuVisible && (
+        <View style={styles.fabMenu}>
+          <TouchableOpacity style={styles.menuItem} onPress={handleCreateCard}>
+            <Text>Create Card</Text>
+          </TouchableOpacity>
+          {/* Add more menu items as needed */}
+        </View>
+      )}
     </View>
   );
 };
@@ -71,6 +94,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     padding: 20,
+    position: 'relative'
   },
   flatList: {
     flexGrow: 1,
@@ -118,6 +142,37 @@ const styles = StyleSheet.create({
   toggleButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  // Floating Action Button Styles
+  fab: {
+    position: 'absolute',
+    bottom: 96,
+    right: 16,
+    backgroundColor: 'blue',
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 3,
+  },
+  fabText: {
+    fontSize: 24,
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  // Floating Action Menu Styles
+  fabMenu: {
+    position: 'absolute',
+    bottom: 180,
+    right: 16,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    elevation: 4,
+    padding: 8,
+  },
+  menuItem: {
+    padding: 8,
   },
 });
 

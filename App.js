@@ -5,7 +5,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './components/HomeScreen';
 import BoxComponent from './components/BoxComponent';
 import CardListComponent from './components/CardListComponent';
-import CardComponent from './components/CardComponent'; // Import the CardComponent
+import CardComponent from './components/CardComponent';
+import CreateCardComponent from './components/CreateCardComponent';
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,7 @@ export default function App() {
         <Stack.Screen name="BoxComponent" component={BoxComponent} />
         <Stack.Screen name="CardList" component={CardListComponent} />
         <Stack.Screen name="CardComponent" component={CardComponent} /> 
+        <Stack.Screen name="CreateCardComponent" component={CreateCardComponent} />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
