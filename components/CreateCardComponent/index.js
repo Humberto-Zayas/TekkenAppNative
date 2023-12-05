@@ -19,6 +19,7 @@ const CreateCardComponent = ({ route, navigation }) => {
     youtube: '',
   });
 
+  const [selectedMoveIndex, setSelectedMoveIndex] = useState(null); // Track the index of the move being edited
   const [isModalVisible, setModalVisible] = useState(false);
 
   const handleChange = (field, value) => {
@@ -29,7 +30,17 @@ const CreateCardComponent = ({ route, navigation }) => {
   };
 
   const handleAddMove = () => {
-    setMoves((prevMoves) => [...prevMoves, { ...formData }]);
+    if (selectedMoveIndex !== null) {
+      // If editing, update the existing move
+      const updatedMoves = [...moves];
+      updatedMoves[selectedMoveIndex] = { ...formData };
+      setMoves(updatedMoves);
+      setSelectedMoveIndex(null);
+    } else {
+      // If not editing, add a new move
+      setMoves((prevMoves) => [...prevMoves, { ...formData }]);
+    }
+
     setFormData({
       move: '',
       description: '',
@@ -42,7 +53,21 @@ const CreateCardComponent = ({ route, navigation }) => {
       notes: '',
       youtube: '',
     });
-    setModalVisible(false)
+
+    setModalVisible(false);
+  };
+
+  const handleEditMove = (index) => {
+    // Set form data to the selected move for editing
+    setFormData({ ...moves[index] });
+    setSelectedMoveIndex(index);
+    setModalVisible(true);
+  };
+
+  const handleDeleteMove = (index) => {
+    // Delete the selected move
+    const updatedMoves = moves.filter((_, i) => i !== index);
+    setMoves(updatedMoves);
   };
 
   const handleSave = () => {
@@ -72,21 +97,47 @@ const CreateCardComponent = ({ route, navigation }) => {
     setModalVisible(false);
   };
 
+  const handleReset = () => {
+    setSelectedMoveIndex(null);
+    setModalVisible(false);
+    setFormData({
+      move: '',
+      description: '',
+      hitLevel: '',
+      damage: '',
+      startUpFrame: '',
+      blockFrame: '',
+      hitFrame: '',
+      counterHitFrame: '',
+      notes: '',
+      youtube: '',
+    });
+  }
+
   return (
     <ScrollView style={styles.container}>
       <HeroComponent name={characterName} thumbnail={characterImage} />
       <Text style={styles.title}>Create a {characterName} Card</Text>
 
       {moves.map((move, index) => (
-        <View key={index}>
+        <View key={index} style={styles.moveContainer}>
           <Text>{move.move}</Text>
+          <TouchableOpacity onPress={() => handleEditMove(index)}>
+            <FontAwesome name="edit" size={20} color="blue" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleDeleteMove(index)}>
+            <FontAwesome name="trash" size={20} color="red" />
+          </TouchableOpacity>
           {/* Render other move details here */}
         </View>
       ))}
 
       <TouchableOpacity
         style={styles.plusButton}
-        onPress={() => setModalVisible(true)}
+        onPress={() => {
+          setSelectedMoveIndex(null);
+          setModalVisible(true);
+        }}
       >
         <FontAwesome name="plus" size={24} color="white" />
       </TouchableOpacity>
@@ -162,11 +213,15 @@ const CreateCardComponent = ({ route, navigation }) => {
               onChangeText={(text) => handleChange('youtube', text)}
             />
 
-            <Button title="Add Move" onPress={handleAddMove} />
-            
+            <Button title={selectedMoveIndex !== null ? 'Edit Move' : 'Add Move'} onPress={handleAddMove} />
+
             <TouchableOpacity
               style={styles.closeButton}
-              onPress={() => setModalVisible(false)}
+              // onPress={() => {
+              //   setSelectedMoveIndex(null);
+              //   setModalVisible(false);
+              // }}
+              onPress={handleReset}
             >
               <Text style={{ color: 'white' }}>Close</Text>
             </TouchableOpacity>
@@ -184,6 +239,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  moveContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 10,
   },
   input: {
