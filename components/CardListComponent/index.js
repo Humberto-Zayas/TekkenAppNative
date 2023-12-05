@@ -32,8 +32,19 @@ const CardListComponent = ({ route, navigation }) => {
   };
 
   const handleCreateCard = () => {
-    navigation.navigate('CreateCardComponent');
     setMenuVisible(false);
+    // Pass the character name to CreateCardComponent
+    navigation.navigate('CreateCardComponent', {
+      characterName: name,
+      characterImage: image,
+      onSave: onSaveCard, // Pass the onSaveCard function
+    });
+  };
+
+  // Handle saving the card data
+  const onSaveCard = (formData) => {
+    // Logic to save the card data
+    console.log(`Saved card data for ${name}:`, formData);
   };
 
   return (
@@ -79,7 +90,7 @@ const CardListComponent = ({ route, navigation }) => {
       {isMenuVisible && (
         <View style={styles.fabMenu}>
           <TouchableOpacity style={styles.menuItem} onPress={handleCreateCard}>
-            <Text>Create Card</Text>
+            <Text>Create {name} Card</Text>
           </TouchableOpacity>
           {/* Add more menu items as needed */}
         </View>

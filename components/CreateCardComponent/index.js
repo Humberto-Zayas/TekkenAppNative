@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ScrollView } from 'react-native';
+import HeroComponent from '../CardComponent/HeroComponent';
 
-const CreateCardComponent = ({ onSave }) => {
+const CreateCardComponent = ({ route, navigation }) => {
+  const { characterName, characterImage } = route.params;
   const [formData, setFormData] = useState({
     move: '',
     description: '',
@@ -12,6 +14,7 @@ const CreateCardComponent = ({ onSave }) => {
     hitFrame: '',
     counterHitFrame: '',
     notes: '',
+    youtube: '',
   });
 
   const handleChange = (field, value) => {
@@ -22,7 +25,13 @@ const CreateCardComponent = ({ onSave }) => {
   };
 
   const handleSave = () => {
-    onSave(formData);
+    // Perform save action, you can save to a local store or API
+    // For now, let's just log the data
+    console.log('Saving Card:', formData);
+
+    // Optionally, you can navigate back to the previous screen after saving
+    navigation.goBack();
+
     // Optionally, you can reset the form after saving
     setFormData({
       move: '',
@@ -34,12 +43,15 @@ const CreateCardComponent = ({ onSave }) => {
       hitFrame: '',
       counterHitFrame: '',
       notes: '',
+      youtube: '',
     });
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Create a New Card</Text>
+    <ScrollView style={styles.container}>
+      <HeroComponent name={characterName} thumbnail={characterImage} />
+      <Text style={styles.title}>Create a {characterName} Card</Text>
+
       <TextInput
         style={styles.input}
         placeholder="Move"
@@ -52,9 +64,59 @@ const CreateCardComponent = ({ onSave }) => {
         value={formData.description}
         onChangeText={(text) => handleChange('description', text)}
       />
-      {/* Repeat TextInput for other fields as needed */}
+      <TextInput
+        style={styles.input}
+        placeholder="Hit Level"
+        value={formData.hitLevel}
+        onChangeText={(text) => handleChange('hitLevel', text)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Damage"
+        value={formData.damage}
+        onChangeText={(text) => handleChange('damage', text)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Start-up Frame"
+        value={formData.startUpFrame}
+        onChangeText={(text) => handleChange('startUpFrame', text)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Block Frame"
+        value={formData.blockFrame}
+        onChangeText={(text) => handleChange('blockFrame', text)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Hit Frame"
+        value={formData.hitFrame}
+        onChangeText={(text) => handleChange('hitFrame', text)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Counter Hit Frame"
+        value={formData.counterHitFrame}
+        onChangeText={(text) => handleChange('counterHitFrame', text)}
+      />
+      <TextInput
+        style={styles.textArea}
+        placeholder="Notes"
+        multiline
+        numberOfLines={4}
+        value={formData.notes}
+        onChangeText={(text) => handleChange('notes', text)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="YouTube Link"
+        value={formData.youtube}
+        onChangeText={(text) => handleChange('youtube', text)}
+      />
+
       <Button title="Save Card" onPress={handleSave} />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -69,6 +131,13 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 10,
+    padding: 10,
+  },
+  textArea: {
+    height: 80,
     borderColor: 'gray',
     borderWidth: 1,
     marginBottom: 10,
