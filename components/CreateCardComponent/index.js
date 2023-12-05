@@ -5,6 +5,7 @@ import { FontAwesome } from '@expo/vector-icons';
 
 const CreateCardComponent = ({ route, navigation }) => {
   const { characterName, characterImage } = route.params;
+  const [moves, setMoves] = useState([]);
   const [formData, setFormData] = useState({
     move: '',
     description: '',
@@ -27,15 +28,33 @@ const CreateCardComponent = ({ route, navigation }) => {
     }));
   };
 
+  const handleAddMove = () => {
+    setMoves((prevMoves) => [...prevMoves, { ...formData }]);
+    setFormData({
+      move: '',
+      description: '',
+      hitLevel: '',
+      damage: '',
+      startUpFrame: '',
+      blockFrame: '',
+      hitFrame: '',
+      counterHitFrame: '',
+      notes: '',
+      youtube: '',
+    });
+    setModalVisible(false)
+  };
+
   const handleSave = () => {
     // Perform save action, you can save to a local store or API
     // For now, let's just log the data
-    console.log('Saving Card:', formData);
+    console.log('Saving Card:', moves);
 
     // Optionally, you can navigate back to the previous screen after saving
-    // navigation.goBack();
+    navigation.goBack();
 
     // Optionally, you can reset the form after saving
+    setMoves([]);
     setFormData({
       move: '',
       description: '',
@@ -58,13 +77,20 @@ const CreateCardComponent = ({ route, navigation }) => {
       <HeroComponent name={characterName} thumbnail={characterImage} />
       <Text style={styles.title}>Create a {characterName} Card</Text>
 
+      {moves.map((move, index) => (
+        <View key={index}>
+          <Text>{move.move}</Text>
+          {/* Render other move details here */}
+        </View>
+      ))}
+
       <TouchableOpacity
         style={styles.plusButton}
         onPress={() => setModalVisible(true)}
       >
         <FontAwesome name="plus" size={24} color="white" />
       </TouchableOpacity>
-
+      <Button title="Save Card" onPress={handleSave} />
       <Modal
         visible={isModalVisible}
         animationType="fade"
@@ -136,13 +162,14 @@ const CreateCardComponent = ({ route, navigation }) => {
               onChangeText={(text) => handleChange('youtube', text)}
             />
 
-            <Button title="Save Card" onPress={handleSave} />
+            <Button title="Add Move" onPress={handleAddMove} />
+            
             <TouchableOpacity
-            style={styles.closeButton}
-            onPress={() => setModalVisible(false)}
-          >
-            <Text style={{ color: 'white' }}>Close</Text>
-          </TouchableOpacity>
+              style={styles.closeButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={{ color: 'white' }}>Close</Text>
+            </TouchableOpacity>
           </ScrollView>
         </View>
       </Modal>
