@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView, Modal, TouchableOpacity } from 'react-native';
+import { FlatList as GestureFlatList, } from 'react-native-gesture-handler';
 import HeroComponent from '../CardComponent/HeroComponent';
 import { FontAwesome } from '@expo/vector-icons';
 
@@ -145,25 +146,39 @@ const CreateCardComponent = ({ route, navigation }) => {
     }
   };
 
+  const renderTableItem = ({ item }) => (
+    <TouchableOpacity onPress={() => handleEditMove(item.index, item.moveSet)}>
+      <View style={styles.tableRow}>
+        <View style={styles.columnLeft}>
+          <Text style={styles.value} numberOfLines={2}>
+            {item.move}
+          </Text>
+        </View>
+        <View style={styles.column}>
+          <Text style={styles.value} numberOfLines={2}>
+            {item.description}
+          </Text>
+        </View>
+        <TouchableOpacity onPress={() => handleDeleteMove(item.index, item.moveSet)}>
+          <FontAwesome name="trash" size={20} color="red" />
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <HeroComponent name={characterName} thumbnail={characterImage} />
       <Text style={styles.title}>Create a {characterName} Card</Text>
 
       <TextInput style={styles.input} placeholder='Enter A Card Name' value={cardName} onChangeText={(text) => setCardName(text)} />
-      <Text style={styles.subtitle}>Punishers</Text>
-      {punisherData.map((move, index) => (
-        <View key={index} style={styles.moveContainer}>
-          <Text>{move.move}</Text>
-          <TouchableOpacity onPress={() => handleEditMove(index, 'punisherData')}>
-            <FontAwesome name="edit" size={20} color="blue" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleDeleteMove(index, 'punisherData')}>
-            <FontAwesome name="trash" size={20} color="red" />
-          </TouchableOpacity>
-        </View>
-      ))}
-
+      <GestureFlatList
+        data={punisherData.map((item, index) => ({ ...item, index, moveSet: 'punisherData' }))}
+        keyExtractor={(item) => `${item.index}_${item.moveSet}`}
+        ListHeaderComponent={<Text style={styles.tableTitle}>Punishers</Text>}
+        renderItem={renderTableItem}
+        style={styles.flatList}
+      />
       <TouchableOpacity
         style={styles.plusButton}
         onPress={() => {
@@ -175,18 +190,14 @@ const CreateCardComponent = ({ route, navigation }) => {
         <FontAwesome name="plus" size={24} color="white" />
       </TouchableOpacity>
 
-      <Text style={styles.subtitle}>Move Flow Chart Data</Text>
-      {moveFlowChartData.map((move, index) => (
-        <View key={index} style={styles.moveContainer}>
-          <Text>{move.move}</Text>
-          <TouchableOpacity onPress={() => handleEditMove(index, 'moveFlowChartData')}>
-            <FontAwesome name="edit" size={20} color="blue" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleDeleteMove(index, 'moveFlowChartData')}>
-            <FontAwesome name="trash" size={20} color="red" />
-          </TouchableOpacity>
-        </View>
-      ))}
+      <GestureFlatList
+        data={moveFlowChartData.map((item, index) => ({ ...item, index, moveSet: 'moveFlowChartData' }))}
+        keyExtractor={(item) => `${item.index}_${item.moveSet}`}
+        ListHeaderComponent={<Text style={styles.tableTitle}>Move/Flowchart</Text>}
+        renderItem={renderTableItem}
+        style={styles.flatList}
+      />
+
       <TouchableOpacity
         style={styles.plusButton}
         onPress={() => {
@@ -283,7 +294,7 @@ const CreateCardComponent = ({ route, navigation }) => {
           </ScrollView>
         </View>
       </Modal>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -348,6 +359,38 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     alignItems: 'center',
     marginBottom: 20,
+  },
+  flatList: {
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'lightgray',
+    overflow: 'hidden',
+    marginBottom: 16,
+  },
+  tableTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+    backgroundColor: 'blue',
+    padding: 10,
+  },
+  tableRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightgray',
+  },
+  columnLeft: {
+    width: '30%',
+    padding: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  column: {
+    width: '60%',
+    padding: 8,
+    alignItems: 'start',
   },
 });
 
