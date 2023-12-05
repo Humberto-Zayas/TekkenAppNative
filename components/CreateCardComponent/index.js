@@ -7,6 +7,9 @@ const CreateCardComponent = ({ route, navigation }) => {
   const { characterName, characterImage } = route.params;
   const [punisherData, setPunisherData] = useState([]);
   const [moveFlowChartData, setMoveFlowChartData] = useState([]);
+  const [cardName, setCardName] = useState('');
+  const [cardDescription, setCardDescription] = useState('');
+  const [youtubeLink, setYouTubeLink] = useState('');
   const [formData, setFormData] = useState({
     move: '',
     description: '',
@@ -17,7 +20,6 @@ const CreateCardComponent = ({ route, navigation }) => {
     hitFrame: '',
     counterHitFrame: '',
     notes: '',
-    youtube: '',
   });
 
   const [selectedMoveIndex, setSelectedMoveIndex] = useState(null); // Track the index of the move being edited
@@ -54,7 +56,6 @@ const CreateCardComponent = ({ route, navigation }) => {
       hitFrame: '',
       counterHitFrame: '',
       notes: '',
-      youtube: '',
     });
 
     setModalVisible(false);
@@ -95,7 +96,6 @@ const CreateCardComponent = ({ route, navigation }) => {
       hitFrame: '',
       counterHitFrame: '',
       notes: '',
-      youtube: '',
     });
 
     // Close the modal
@@ -116,7 +116,6 @@ const CreateCardComponent = ({ route, navigation }) => {
       hitFrame: '',
       counterHitFrame: '',
       notes: '',
-      youtube: '',
     });
   };
 
@@ -151,6 +150,7 @@ const CreateCardComponent = ({ route, navigation }) => {
       <HeroComponent name={characterName} thumbnail={characterImage} />
       <Text style={styles.title}>Create a {characterName} Card</Text>
 
+      <TextInput style={styles.input} placeholder='Enter A Card Name' value={cardName} onChangeText={(text) => setCardName(text)} />
       <Text style={styles.subtitle}>Punishers</Text>
       {punisherData.map((move, index) => (
         <View key={index} style={styles.moveContainer}>
@@ -197,6 +197,15 @@ const CreateCardComponent = ({ route, navigation }) => {
       >
         <FontAwesome name="plus" size={24} color="white" />
       </TouchableOpacity>
+      <TextInput
+        style={styles.textArea}
+        placeholder="Explain Your Strategy"
+        multiline
+        numberOfLines={4}
+        value={cardDescription}
+        onChangeText={(text) => setCardDescription(text)}
+      />
+      <TextInput style={styles.input} placeholder='YouTube Link' value={youtubeLink} onChangeText={(text) => setYouTubeLink(text)} />
       <Button title="Save Card" onPress={handleSave} />
       <Modal
         visible={isModalVisible}
@@ -261,12 +270,6 @@ const CreateCardComponent = ({ route, navigation }) => {
               numberOfLines={4}
               value={formData.notes}
               onChangeText={(text) => handleChange('notes', text)}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="YouTube Link"
-              value={formData.youtube}
-              onChangeText={(text) => handleChange('youtube', text)}
             />
 
             <Button title={selectedMoveIndex !== null ? 'Edit Move' : 'Add Move'} onPress={handleAddMove} />

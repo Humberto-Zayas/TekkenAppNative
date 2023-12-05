@@ -37,14 +37,7 @@ const CardListComponent = ({ route, navigation }) => {
     navigation.navigate('CreateCardComponent', {
       characterName: name,
       characterImage: image,
-      onSave: onSaveCard, // Pass the onSaveCard function
     });
-  };
-
-  // Handle saving the card data
-  const onSaveCard = (formData) => {
-    // Logic to save the card data
-    console.log(`Saved card data for ${name}:`, formData);
   };
 
   return (
