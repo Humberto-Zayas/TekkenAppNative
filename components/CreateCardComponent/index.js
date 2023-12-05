@@ -5,7 +5,8 @@ import { FontAwesome } from '@expo/vector-icons';
 
 const CreateCardComponent = ({ route, navigation }) => {
   const { characterName, characterImage } = route.params;
-  const [moves, setMoves] = useState([]);
+  const [punisherData, setPunisherData] = useState([]);
+  const [moveFlowChartData, setMoveFlowChartData] = useState([]);
   const [formData, setFormData] = useState({
     move: '',
     description: '',
@@ -20,6 +21,7 @@ const CreateCardComponent = ({ route, navigation }) => {
   });
 
   const [selectedMoveIndex, setSelectedMoveIndex] = useState(null); // Track the index of the move being edited
+  const [selectedMoveSet, setSelectedMoveSet] = useState(null); // Track the move set being edited
   const [isModalVisible, setModalVisible] = useState(false);
 
   const handleChange = (field, value) => {
@@ -30,15 +32,16 @@ const CreateCardComponent = ({ route, navigation }) => {
   };
 
   const handleAddMove = () => {
-    if (selectedMoveIndex !== null) {
-      // If editing, update the existing move
-      const updatedMoves = [...moves];
+    if (selectedMoveIndex !== null && selectedMoveSet) {
+      // If editing, update the existing move in the selected move set
+      const updatedMoves = [...getMoveSet(selectedMoveSet)];
       updatedMoves[selectedMoveIndex] = { ...formData };
-      setMoves(updatedMoves);
+      setMoveSet(selectedMoveSet, updatedMoves);
       setSelectedMoveIndex(null);
+      setSelectedMoveSet(null);
     } else {
-      // If not editing, add a new move
-      setMoves((prevMoves) => [...prevMoves, { ...formData }]);
+      // If not editing, add a new move to the selected move set
+      setMoveSet(selectedMoveSet, (prevMoves) => [...prevMoves, { ...formData }]);
     }
 
     setFormData({
@@ -57,29 +60,31 @@ const CreateCardComponent = ({ route, navigation }) => {
     setModalVisible(false);
   };
 
-  const handleEditMove = (index) => {
+  const handleEditMove = (index, moveSet) => {
     // Set form data to the selected move for editing
-    setFormData({ ...moves[index] });
+    setFormData({ ...getMoveSet(moveSet)[index] });
     setSelectedMoveIndex(index);
+    setSelectedMoveSet(moveSet);
     setModalVisible(true);
   };
 
-  const handleDeleteMove = (index) => {
-    // Delete the selected move
-    const updatedMoves = moves.filter((_, i) => i !== index);
-    setMoves(updatedMoves);
+  const handleDeleteMove = (index, moveSet) => {
+    // Delete the selected move from the specified move set
+    const updatedMoves = getMoveSet(moveSet).filter((_, i) => i !== index);
+    setMoveSet(moveSet, updatedMoves);
   };
 
   const handleSave = () => {
     // Perform save action, you can save to a local store or API
     // For now, let's just log the data
-    console.log('Saving Card:', moves);
+    console.log('Saving Card:', { punisherData, moveFlowChartData });
 
     // Optionally, you can navigate back to the previous screen after saving
     navigation.goBack();
 
     // Optionally, you can reset the form after saving
-    setMoves([]);
+    setPunisherData([]);
+    setMoveFlowChartData([]);
     setFormData({
       move: '',
       description: '',
@@ -99,6 +104,7 @@ const CreateCardComponent = ({ route, navigation }) => {
 
   const handleReset = () => {
     setSelectedMoveIndex(null);
+    setSelectedMoveSet(null);
     setModalVisible(false);
     setFormData({
       move: '',
@@ -112,23 +118,49 @@ const CreateCardComponent = ({ route, navigation }) => {
       notes: '',
       youtube: '',
     });
-  }
+  };
+
+  const setMoveSet = (moveSetType, moves) => {
+    switch (moveSetType) {
+      case 'punisherData':
+        setPunisherData(moves);
+        break;
+      case 'moveFlowChartData':
+        setMoveFlowChartData(moves);
+        break;
+      // Add more cases if needed
+      default:
+        break;
+    }
+  };
+
+  const getMoveSet = (moveSetType) => {
+    switch (moveSetType) {
+      case 'punisherData':
+        return punisherData;
+      case 'moveFlowChartData':
+        return moveFlowChartData;
+      // Add more cases if needed
+      default:
+        return [];
+    }
+  };
 
   return (
     <ScrollView style={styles.container}>
       <HeroComponent name={characterName} thumbnail={characterImage} />
       <Text style={styles.title}>Create a {characterName} Card</Text>
 
-      {moves.map((move, index) => (
+      <Text style={styles.subtitle}>Punishers</Text>
+      {punisherData.map((move, index) => (
         <View key={index} style={styles.moveContainer}>
           <Text>{move.move}</Text>
-          <TouchableOpacity onPress={() => handleEditMove(index)}>
+          <TouchableOpacity onPress={() => handleEditMove(index, 'punisherData')}>
             <FontAwesome name="edit" size={20} color="blue" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleDeleteMove(index)}>
+          <TouchableOpacity onPress={() => handleDeleteMove(index, 'punisherData')}>
             <FontAwesome name="trash" size={20} color="red" />
           </TouchableOpacity>
-          {/* Render other move details here */}
         </View>
       ))}
 
@@ -136,6 +168,30 @@ const CreateCardComponent = ({ route, navigation }) => {
         style={styles.plusButton}
         onPress={() => {
           setSelectedMoveIndex(null);
+          setSelectedMoveSet('punisherData');
+          setModalVisible(true);
+        }}
+      >
+        <FontAwesome name="plus" size={24} color="white" />
+      </TouchableOpacity>
+
+      <Text style={styles.subtitle}>Move Flow Chart Data</Text>
+      {moveFlowChartData.map((move, index) => (
+        <View key={index} style={styles.moveContainer}>
+          <Text>{move.move}</Text>
+          <TouchableOpacity onPress={() => handleEditMove(index, 'moveFlowChartData')}>
+            <FontAwesome name="edit" size={20} color="blue" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleDeleteMove(index, 'moveFlowChartData')}>
+            <FontAwesome name="trash" size={20} color="red" />
+          </TouchableOpacity>
+        </View>
+      ))}
+      <TouchableOpacity
+        style={styles.plusButton}
+        onPress={() => {
+          setSelectedMoveIndex(null);
+          setSelectedMoveSet('moveFlowChartData');
           setModalVisible(true);
         }}
       >
@@ -217,10 +273,6 @@ const CreateCardComponent = ({ route, navigation }) => {
 
             <TouchableOpacity
               style={styles.closeButton}
-              // onPress={() => {
-              //   setSelectedMoveIndex(null);
-              //   setModalVisible(false);
-              // }}
               onPress={handleReset}
             >
               <Text style={{ color: 'white' }}>Close</Text>
@@ -239,6 +291,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 20,
     marginBottom: 10,
   },
   moveContainer: {
