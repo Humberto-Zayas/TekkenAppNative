@@ -82,19 +82,19 @@ const CreateCardComponent = ({ route, navigation }) => {
       alert('Please enter a Card Name and Card Description.');
       return;
     }
-  
+
     if (punisherData.length < 3 || moveFlowChartData.length < 3) {
       alert('Please add at least 3 moves in both Punishers and Move/Flowchart data sets.');
       return;
     }
-  
+
     // Perform save action, you can save to a local store or API
     // For now, let's just log the data
     console.log('Saving Card:', { punisherData, moveFlowChartData, cardName, cardDescription, youtubeLink });
-  
+
     // Optionally, you can navigate back to the previous screen after saving
     navigation.goBack();
-  
+
     // Optionally, you can reset the form after saving
     setPunisherData([]);
     setMoveFlowChartData([]);
@@ -112,11 +112,11 @@ const CreateCardComponent = ({ route, navigation }) => {
       counterHitFrame: '',
       notes: '',
     });
-  
+
     // Close the modal
     setModalVisible(false);
   };
-  
+
 
   const handleReset = () => {
     setSelectedMoveIndex(null);
@@ -161,78 +161,76 @@ const CreateCardComponent = ({ route, navigation }) => {
     }
   };
 
-  const renderTableItem = ({ item }) => (
-    <TouchableOpacity onPress={() => handleEditMove(item.index, item.moveSet)}>
-      <View style={styles.tableRow}>
-        <View style={styles.columnLeft}>
-          <Text style={styles.value} numberOfLines={2}>
-            {item.move}
-          </Text>
+  const renderMoveSet = (moves, moveSetType) => {
+    return moves.map((item, index) => (
+      <TouchableOpacity key={`${index}_${moveSetType}`} onPress={() => handleEditMove(index, moveSetType)}>
+        <View style={styles.tableRow}>
+          <View style={styles.columnLeft}>
+            <Text style={styles.value} numberOfLines={2}>
+              {item.move}
+            </Text>
+          </View>
+          <View style={styles.column}>
+            <Text style={styles.value} numberOfLines={2}>
+              {item.description}
+            </Text>
+          </View>
+          <TouchableOpacity onPress={() => handleDeleteMove(index, moveSetType)}>
+            <FontAwesome style={{ marginRight: 10 }} name="trash" size={25} color="red" />
+          </TouchableOpacity>
         </View>
-        <View style={styles.column}>
-          <Text style={styles.value} numberOfLines={2}>
-            {item.description}
-          </Text>
-        </View>
-        <TouchableOpacity onPress={() => handleDeleteMove(item.index, item.moveSet)}>
-          <FontAwesome style={{marginRight: 10}} name="trash" size={25} color="red" />
-        </TouchableOpacity>
-      </View>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    ));
+  };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <HeroComponent name={characterName} thumbnail={characterImage} />
       <Text style={styles.title}>Create a {characterName} Card</Text>
 
       <TextInput style={styles.input} placeholder='Enter A Card Name' value={cardName} onChangeText={(text) => setCardName(text)} />
-      <GestureFlatList
-        data={punisherData.map((item, index) => ({ ...item, index, moveSet: 'punisherData' }))}
-        keyExtractor={(item) => `${item.index}_${item.moveSet}`}
-        ListHeaderComponent={<Text style={styles.tableTitle}>Punishers</Text>}
-        renderItem={renderTableItem}
-        style={styles.flatList}
-      />
-      <TouchableOpacity
-        style={styles.plusButton}
-        onPress={() => {
-          setSelectedMoveIndex(null);
-          setSelectedMoveSet('punisherData');
-          setModalVisible(true);
-        }}
-      >
-        <FontAwesome name="plus" size={15} color="white" />
-      </TouchableOpacity>
-
-      <GestureFlatList
-        data={moveFlowChartData.map((item, index) => ({ ...item, index, moveSet: 'moveFlowChartData' }))}
-        keyExtractor={(item) => `${item.index}_${item.moveSet}`}
-        ListHeaderComponent={<Text style={styles.tableTitle}>Move/Flowchart</Text>}
-        renderItem={renderTableItem}
-        style={styles.flatList}
-      />
-
-      <TouchableOpacity
-        style={styles.plusButton}
-        onPress={() => {
-          setSelectedMoveIndex(null);
-          setSelectedMoveSet('moveFlowChartData');
-          setModalVisible(true);
-        }}
-      >
-        <FontAwesome name="plus" size={15} color="white" />
-      </TouchableOpacity>
-      <TextInput
-        style={styles.textArea}
-        placeholder="Explain Your Strategy"
-        multiline
-        numberOfLines={4}
-        value={cardDescription}
-        onChangeText={(text) => setCardDescription(text)}
-      />
-      <TextInput style={styles.input} placeholder='YouTube Link' value={youtubeLink} onChangeText={(text) => setYouTubeLink(text)} />
-      <Button title="Save Card" onPress={handleSave} />
+      <View style={{ paddingBottom: 52 }}>
+        {/* Render Punishers */}
+        <View style={styles.flatList}>
+          <Text style={styles.tableTitle}>Punishers</Text>
+          {renderMoveSet(punisherData, 'punisherData')}
+        </View>
+        <TouchableOpacity
+          style={styles.plusButton}
+          onPress={() => {
+            setSelectedMoveIndex(null);
+            setSelectedMoveSet('punisherData');
+            setModalVisible(true);
+          }}
+        >
+          <FontAwesome name="plus" size={15} color="white" />
+        </TouchableOpacity>
+        {/* Render Move/Flowchart */}
+        <View style={styles.flatList}>
+          <Text style={styles.tableTitle}>Move/Flowchart</Text>
+          {renderMoveSet(moveFlowChartData, 'moveFlowChartData')}
+        </View>
+        <TouchableOpacity
+          style={styles.plusButton}
+          onPress={() => {
+            setSelectedMoveIndex(null);
+            setSelectedMoveSet('moveFlowChartData');
+            setModalVisible(true);
+          }}
+        >
+          <FontAwesome name="plus" size={15} color="white" />
+        </TouchableOpacity>
+        <TextInput
+          style={styles.textArea}
+          placeholder="Explain Your Strategy"
+          multiline
+          numberOfLines={4}
+          value={cardDescription}
+          onChangeText={(text) => setCardDescription(text)}
+        />
+        <TextInput style={styles.input} placeholder='YouTube Link' value={youtubeLink} onChangeText={(text) => setYouTubeLink(text)} />
+        <Button title="Save Card" onPress={handleSave} />
+      </View>
       <Modal
         visible={isModalVisible}
         animationType="fade"
@@ -309,13 +307,13 @@ const CreateCardComponent = ({ route, navigation }) => {
           </ScrollView>
         </View>
       </Modal>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20
+    padding: 20,
   },
   title: {
     fontSize: 18,
@@ -357,7 +355,7 @@ const styles = StyleSheet.create({
   modalContent: {
     width: '80%',
     backgroundColor: 'white',
-    // paddingTop: 150,
+    paddingTop: 90,
     padding: 20,
     borderRadius: 10,
     marginBottom: 20,

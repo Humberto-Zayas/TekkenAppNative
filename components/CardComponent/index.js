@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Modal, TouchableOpacity } from 'react-native';
-import { FlatList as GestureFlatList, ScrollView, BorderlessButton } from 'react-native-gesture-handler';
+import { View, Text, StyleSheet, Modal, TouchableOpacity, ScrollView } from 'react-native';
+import { FlatList as GestureFlatList } from 'react-native-gesture-handler';
 import HeroComponent from './HeroComponent';
 import ModalComponent from './ModalComponent'; // Import the new component
 import { heatEngagersData, punishersData, moveFlowchartData, customData } from '../../data/moveData';
@@ -17,7 +17,13 @@ const CardComponent = ({ route }) => {
     setSelectedItem(null);
   };
 
-  const renderTableItem = ({ item }) => (
+  const dataMap = {
+    heatEngagersData,
+    punishersData,
+    moveFlowchartData,
+  };
+
+  const renderTableItem = ({ item, index, moveSetType }) => (
     <TouchableOpacity onPress={() => openDrawer(item)}>
       <View style={styles.tableRow}>
         <View style={styles.columnLeft}>
@@ -34,51 +40,45 @@ const CardComponent = ({ route }) => {
     </TouchableOpacity>
   );
 
+  const renderMoveSet = (moveSetType) => {
+    const moves = dataMap[moveSetType];
+    return (
+      <View style={styles.flatList}>
+        <Text style={styles.tableTitle}>{moveSetType}</Text>
+        {moves.map((item, index) => (
+          <View key={`${index}_${moveSetType}`}>
+            {renderTableItem({ item, index, moveSetType })}
+          </View>
+        ))}
+      </View>
+    );
+  };
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <HeroComponent name={item.name} thumbnail={item.thumbnail} rating={item.rating} />
-
-      <GestureFlatList
-        data={heatEngagersData}
-        keyExtractor={(item) => item.id}
-        ListHeaderComponent={<Text style={styles.tableTitle}>Heat Engagers</Text>}
-        renderItem={renderTableItem}
-        style={styles.flatList}
-      />
-
-      <GestureFlatList
-        data={punishersData}
-        keyExtractor={(item) => item.id}
-        ListHeaderComponent={<Text style={styles.tableTitle}>Punishers</Text>}
-        renderItem={renderTableItem}
-        style={styles.flatList}
-      />
-
-      <GestureFlatList
-        data={moveFlowchartData}
-        keyExtractor={(item) => item.id}
-        ListHeaderComponent={<Text style={styles.tableTitle}>Move/Flowchart</Text>}
-        renderItem={renderTableItem}
-        style={styles.flatList}
-      />
-
+      <View style={{paddingBottom: 32}}>
+        {Object.keys(dataMap).map((moveSetType) => renderMoveSet(moveSetType))}
+      </View>
       <Modal visible={selectedItem !== null} animationType="slide" transparent>
-       <ModalComponent selectedItem={selectedItem} closeDrawer={closeDrawer} />
+        <ModalComponent selectedItem={selectedItem} closeDrawer={closeDrawer} />
       </Modal>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 10,
+    paddingBottom: 50,
   },
   flatList: {
     borderRadius: 10,
     borderWidth: 1,
     borderColor: 'lightgray',
     overflow: 'hidden',
-    marginBottom: 16
+    marginBottom: 16,
   },
   tableTitle: {
     fontSize: 18,
