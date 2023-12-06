@@ -160,7 +160,7 @@ const CreateCardComponent = ({ route, navigation }) => {
           </Text>
         </View>
         <TouchableOpacity onPress={() => handleDeleteMove(item.index, item.moveSet)}>
-          <FontAwesome name="trash" size={20} color="red" />
+          <FontAwesome style={{marginRight: 10}} name="trash" size={25} color="red" />
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
@@ -187,7 +187,7 @@ const CreateCardComponent = ({ route, navigation }) => {
           setModalVisible(true);
         }}
       >
-        <FontAwesome name="plus" size={24} color="white" />
+        <FontAwesome name="plus" size={15} color="white" />
       </TouchableOpacity>
 
       <GestureFlatList
@@ -206,7 +206,7 @@ const CreateCardComponent = ({ route, navigation }) => {
           setModalVisible(true);
         }}
       >
-        <FontAwesome name="plus" size={24} color="white" />
+        <FontAwesome name="plus" size={15} color="white" />
       </TouchableOpacity>
       <TextInput
         style={styles.textArea}
@@ -300,7 +300,7 @@ const CreateCardComponent = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 20
   },
   title: {
     fontSize: 18,
@@ -355,10 +355,12 @@ const styles = StyleSheet.create({
   },
   plusButton: {
     backgroundColor: 'blue',
-    padding: 16,
+    padding: 8,
     borderRadius: 28,
     alignItems: 'center',
     marginBottom: 20,
+    width: 32,
+    alignSelf: 'center'
   },
   flatList: {
     borderRadius: 10,
