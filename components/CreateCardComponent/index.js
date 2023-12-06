@@ -77,16 +77,30 @@ const CreateCardComponent = ({ route, navigation }) => {
   };
 
   const handleSave = () => {
+    // Validate cardName, cardDescription, and moves in both data sets
+    if (!cardName || !cardDescription) {
+      alert('Please enter a Card Name and Card Description.');
+      return;
+    }
+  
+    if (punisherData.length < 3 || moveFlowChartData.length < 3) {
+      alert('Please add at least 3 moves in both Punishers and Move/Flowchart data sets.');
+      return;
+    }
+  
     // Perform save action, you can save to a local store or API
     // For now, let's just log the data
-    console.log('Saving Card:', { punisherData, moveFlowChartData });
-
+    console.log('Saving Card:', { punisherData, moveFlowChartData, cardName, cardDescription, youtubeLink });
+  
     // Optionally, you can navigate back to the previous screen after saving
     navigation.goBack();
-
+  
     // Optionally, you can reset the form after saving
     setPunisherData([]);
     setMoveFlowChartData([]);
+    setCardName('');
+    setCardDescription('');
+    setYouTubeLink('');
     setFormData({
       move: '',
       description: '',
@@ -98,10 +112,11 @@ const CreateCardComponent = ({ route, navigation }) => {
       counterHitFrame: '',
       notes: '',
     });
-
+  
     // Close the modal
     setModalVisible(false);
   };
+  
 
   const handleReset = () => {
     setSelectedMoveIndex(null);
