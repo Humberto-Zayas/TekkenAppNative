@@ -1,22 +1,34 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Modal } from 'react-native';
 import { characters } from '../../data/characters';
+import Login from '../Login';
+import { useAuth } from '../../utils/AuthContext';
 
 const HomeScreen = ({ navigation }) => {
   const [isMenuVisible, setMenuVisible] = useState(false);
+  const [isLoginVisible, setLoginVisible] = useState(false);
+  const { user, logout } = useAuth();
 
   const toggleMenu = () => {
     setMenuVisible(!isMenuVisible);
   };
 
+  const toggleLogin = () => {
+    setLoginVisible(!isLoginVisible);
+  };
+
   const handleLogin = () => {
-    // Implement your login logic
-    console.log('Login clicked');
+    // Implement your login logic here
+    // For simplicity, let's assume login is successful
+    const user = { username: 'exampleUser' };
+    setUser(user); // Assuming you have a setUser function from useAuth
+    toggleLogin(); // Close the login modal
   };
 
   const handleLogout = () => {
-    // Implement your logout logic
-    console.log('Logout clicked');
+    // Implement your logout logic here
+    logout();
+    setMenuVisible(false); // Close the menu after logout
   };
 
   return (
@@ -50,12 +62,27 @@ const HomeScreen = ({ navigation }) => {
           <TouchableOpacity style={styles.modalContent} onPress={toggleMenu}>
             <Text style={styles.menuText}>Close Menu</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.modalContent} onPress={handleLogin}>
-            <Text style={styles.menuText}>Login</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.modalContent} onPress={handleLogout}>
-            <Text style={styles.menuText}>Logout</Text>
-          </TouchableOpacity>
+          {!user ? (
+            <TouchableOpacity style={styles.modalContent} onPress={toggleLogin}>
+              <Text style={styles.menuText}>Login</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.modalContent} onPress={handleLogout}>
+              <Text style={styles.menuText}>Logout</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </Modal>
+
+      {/* Login modal */}
+      <Modal
+        transparent
+        animationType="slide"
+        visible={isLoginVisible}
+        onRequestClose={() => setLoginVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <Login onLogin={handleLogin} onClose={toggleLogin} />
         </View>
       </Modal>
     </View>

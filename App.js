@@ -7,20 +7,24 @@ import BoxComponent from './components/BoxComponent';
 import CardListComponent from './components/CardListComponent';
 import CardComponent from './components/CardComponent';
 import CreateCardComponent from './components/CreateCardComponent';
+import { AuthProvider } from './utils/AuthContext';
+
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: true }}>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="BoxComponent" component={BoxComponent} />
-        <Stack.Screen name="CardList" component={CardListComponent} />
-        <Stack.Screen name="CardComponent" component={CardComponent} /> 
-        <Stack.Screen name="CreateCardComponent" component={CreateCardComponent} />
-      </Stack.Navigator>
-      <StatusBar style="auto" />
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: true }}>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="BoxComponent" component={BoxComponent} />
+          <Stack.Screen name="CardList" component={CardListComponent} />
+          <Stack.Screen name="CardComponent" component={CardComponent} />
+          <Stack.Screen name="CreateCardComponent" component={CreateCardComponent} />
+        </Stack.Navigator>
+        <StatusBar style="auto" />
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
