@@ -1,47 +1,56 @@
-// LoginComponent.js
+// Login.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-const Login = ({ onLogin, onClose }) => {
+const Login = ({ route }) => {
+  const { isSignUp } = route.params || { isSignUp: false }; // Ensure default value if params is undefined
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
-  const handleLogin = () => {
-    // Implement your login logic here
-    onLogin(username, password);
-  };
+  const [email, setEmail] = useState('');
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={username}
-        onChangeText={(text) => setUsername(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={onClose}>
-        <Text style={styles.buttonText}>Close</Text>
-      </TouchableOpacity>
+      {/* Login Form */}
+      <View style={styles.formContainer}>
+        <Text style={styles.title}>{isSignUp ? 'Sign Up' : 'Login'}</Text>
+        {isSignUp && (
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+          />
+        )}
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={username}
+          onChangeText={(text) => setUsername(text)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+        />
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>{isSignUp ? 'Sign Up' : 'Login'}</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  formContainer: {
+    width: '80%',
+    marginBottom: 20,
   },
   title: {
     fontSize: 24,

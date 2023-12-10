@@ -7,6 +7,7 @@ import BoxComponent from './components/BoxComponent';
 import CardListComponent from './components/CardListComponent';
 import CardComponent from './components/CardComponent';
 import CreateCardComponent from './components/CreateCardComponent';
+import Login from './components/Login';
 import { AuthProvider } from './utils/AuthContext';
 
 
@@ -22,6 +23,7 @@ export default function App() {
           <Stack.Screen name="CardList" component={CardListComponent} />
           <Stack.Screen name="CardComponent" component={CardComponent} />
           <Stack.Screen name="CreateCardComponent" component={CreateCardComponent} />
+          <Stack.Screen name="Login" component={Login} />
         </Stack.Navigator>
         <StatusBar style="auto" />
       </NavigationContainer>
