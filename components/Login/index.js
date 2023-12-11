@@ -1,16 +1,76 @@
-// Login.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
 const Login = ({ route, navigation }) => {
-  const { isSignUp } = route.params || { isSignUp: false }; // Ensure default value if params is undefined
+  const { isSignUp } = route.params || { isSignUp: false };
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
 
+  const handleLogin = async () => {
+    // Perform login logic using Fetch API
+    try {
+      const response = await fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
+
+      if (response.ok) {
+        console.log('Login successful!');
+      } else {
+        console.error('Login failed.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleSignup = async () => {
+    // Perform signup logic using Fetch API
+    try {
+      const registrationDate = new Date().getTime(); // Get current timestamp as registrationDate
+  
+      const response = await fetch('http://localhost:3000/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username,
+          password,
+          email,
+          registrationDate, // Include registrationDate in the request body
+        }),
+      });
+  
+      if (response.ok) {
+        console.log('Signup successful!');
+      } else {
+        console.error('Signup failed.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   const handleToggle = () => {
     // Navigate to the same screen with the opposite isSignUp value
     navigation.setParams({ isSignUp: !isSignUp });
+  };
+
+  const handleAction = () => {
+    // Run login or signup logic based on isSignUp value
+    if (isSignUp) {
+      handleSignup();
+    } else {
+      handleLogin();
+    }
   };
 
   return (
@@ -39,7 +99,7 @@ const Login = ({ route, navigation }) => {
           value={password}
           onChangeText={(text) => setPassword(text)}
         />
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleAction}>
           <Text style={styles.buttonText}>{isSignUp ? 'Sign Up' : 'Login'}</Text>
         </TouchableOpacity>
       </View>
