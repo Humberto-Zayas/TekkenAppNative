@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-const Login = ({ route, navigation }) => {
+const Login = ({ route }) => {
   const { isSignUp } = route.params || { isSignUp: false };
+  const [signUp, setSignUp] = useState(isSignUp);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+  const navigation = useNavigation();
 
   const handleLogin = async () => {
-    // Perform login logic using Fetch API
     try {
       const response = await fetch('http://localhost:3000/login', {
         method: 'POST',
@@ -20,9 +22,10 @@ const Login = ({ route, navigation }) => {
           password,
         }),
       });
-
+  
       if (response.ok) {
         console.log('Login successful!');
+        // Perform actions after successful login
       } else {
         console.error('Login failed.');
       }
@@ -30,27 +33,29 @@ const Login = ({ route, navigation }) => {
       console.error('Error:', error);
     }
   };
-
-  const handleSignup = async () => {
-    // Perform signup logic using Fetch API
-    try {
-      const registrationDate = new Date().getTime(); // Get current timestamp as registrationDate
   
+  
+  const handleSignup = async () => {
+    try {
+      const registrationDate = new Date().getTime();
+
       const response = await fetch('http://localhost:3000/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username,
+          email: email.toLowerCase(), // Convert email to lowercase
           password,
-          email,
-          registrationDate, // Include registrationDate in the request body
+          username,
+          registrationDate,
         }),
       });
-  
+
       if (response.ok) {
         console.log('Signup successful!');
+        // Navigate back to the home screen or any other screen
+        navigation.goBack();
       } else {
         console.error('Signup failed.');
       }
@@ -60,13 +65,11 @@ const Login = ({ route, navigation }) => {
   };
 
   const handleToggle = () => {
-    // Navigate to the same screen with the opposite isSignUp value
-    navigation.setParams({ isSignUp: !isSignUp });
+    setSignUp(!signUp);
   };
 
   const handleAction = () => {
-    // Run login or signup logic based on isSignUp value
-    if (isSignUp) {
+    if (signUp) {
       handleSignup();
     } else {
       handleLogin();
@@ -75,23 +78,31 @@ const Login = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Login Form */}
       <View style={styles.formContainer}>
-        <Text style={styles.title}>{isSignUp ? 'Sign Up' : 'Login'}</Text>
-        {isSignUp && (
+        <Text style={styles.title}>{signUp ? 'Sign Up' : 'Login'}</Text>
+        {signUp && (
           <TextInput
             style={styles.input}
             placeholder="Email"
             value={email}
-            onChangeText={(text) => setEmail(text)}
+            onChangeText={(text) => setEmail(text.toLowerCase())} // Convert email to lowercase
           />
         )}
-        <TextInput
-          style={styles.input}
-          placeholder="Username"
-          value={username}
-          onChangeText={(text) => setUsername(text)}
-        />
+        {signUp ? (
+          <TextInput
+            style={styles.input}
+            placeholder="Username"
+            value={username}
+            onChangeText={(text) => setUsername(text)}
+          />
+        ) : (
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={(text) => setEmail(text.toLowerCase())} // Convert email to lowercase
+          />
+        )}
         <TextInput
           style={styles.input}
           placeholder="Password"
@@ -100,14 +111,13 @@ const Login = ({ route, navigation }) => {
           onChangeText={(text) => setPassword(text)}
         />
         <TouchableOpacity style={styles.button} onPress={handleAction}>
-          <Text style={styles.buttonText}>{isSignUp ? 'Sign Up' : 'Login'}</Text>
+          <Text style={styles.buttonText}>{signUp ? 'Sign Up' : 'Login'}</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Toggle Button */}
       <TouchableOpacity onPress={handleToggle}>
         <Text style={styles.toggleText}>
-          {isSignUp ? 'Already have an account? Login' : "Don't have an account? Sign Up"}
+          {signUp ? 'Already have an account? Login' : "Don't have an account? Sign Up"}
         </Text>
       </TouchableOpacity>
     </View>

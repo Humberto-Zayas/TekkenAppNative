@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Modal } from 'react-native';
 import Login from '../Login';
-import {characters} from '../../data/characters';
+import { characters } from '../../data/characters';
 import { useAuth } from '../../utils/AuthContext';
 
 const HomeScreen = ({ navigation }) => {
@@ -70,9 +70,14 @@ const HomeScreen = ({ navigation }) => {
               </TouchableOpacity>
             </>
           ) : (
-            <TouchableOpacity style={styles.modalContent} onPress={handleLogout}>
-              <Text style={styles.menuText}>Logout</Text>
-            </TouchableOpacity>
+            <View style={styles.modalContent}>
+              {/* Conditionally render avatar if the user is logged in */}
+              <Image source={require('../../data/images/cardThumbs/images.png')} style={styles.avatar} />
+              <Text style={styles.menuText}>Logged In</Text>
+              <TouchableOpacity onPress={handleLogout}>
+                <Text style={styles.menuText}>Logout</Text>
+              </TouchableOpacity>
+            </View>
           )}
         </View>
       </Modal>

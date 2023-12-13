@@ -1,45 +1,42 @@
 // AuthContext.js
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthContext = createContext();
 
-const initialState = {
-  user: null,
-  isLoading: true,
-};
-
-const authReducer = (state, action) => {
-  switch (action.type) {
-    case 'SET_USER':
-      return {
-        ...state,
-        user: action.payload,
-        isLoading: false,
-      };
-    case 'LOGOUT':
-      return {
-        ...state,
-        user: null,
-        isLoading: false,
-      };
-    default:
-      return state;
-  }
-};
-
 const AuthProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, initialState);
+  const [user, setUser] = useState(null);
 
-  const setUser = (user) => {
-    dispatch({ type: 'SET_USER', payload: user });
+  useEffect(() => {
+    // Check if the user is already logged in (you can modify this logic based on your app's needs)
+    const checkUser = async () => {
+      try {
+        const storedUser = await AsyncStorage.getItem('user');
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        }
+      } catch (error) {
+        console.error('Error retrieving user from storage:', error);
+      }
+    };
+
+    checkUser();
+  }, []);
+
+  const login = (userData) => {
+    // Perform login logic (you can modify this based on your server response)
+    setUser(userData);
+    AsyncStorage.setItem('user', JSON.stringify(userData));
   };
 
   const logout = () => {
-    dispatch({ type: 'LOGOUT' });
+    // Perform logout logic
+    setUser(null);
+    AsyncStorage.removeItem('user');
   };
 
   return (
-    <AuthContext.Provider value={{ ...state, setUser, logout }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
