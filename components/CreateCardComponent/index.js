@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView, Modal, TouchableOpacity } from 'react-native';
-import { FlatList as GestureFlatList, } from 'react-native-gesture-handler';
-import HeroComponent from '../CardComponent/HeroComponent';
+import HeroCreatComponent from './HeroCreateComponent';
 import { FontAwesome } from '@expo/vector-icons';
+import { styles } from './styles';
 
 const CreateCardComponent = ({ route, navigation }) => {
   const { characterName, characterImage } = route.params;
   const [punisherData, setPunisherData] = useState([]);
   const [moveFlowChartData, setMoveFlowChartData] = useState([]);
-  const [cardName, setCardName] = useState('');
-  const [cardDescription, setCardDescription] = useState('');
-  const [youtubeLink, setYouTubeLink] = useState('');
+
   const [formData, setFormData] = useState({
     move: '',
     description: '',
@@ -21,6 +19,14 @@ const CreateCardComponent = ({ route, navigation }) => {
     hitFrame: '',
     counterHitFrame: '',
     notes: '',
+    creator: '',
+    key: '',
+    characterName: '',
+    punisherData: [],
+    moveFlowChartData: [],
+    cardName: '',
+    cardDescription: '',
+    youtubeLink: '',
   });
 
   const [selectedMoveIndex, setSelectedMoveIndex] = useState(null); // Track the index of the move being edited
@@ -32,6 +38,10 @@ const CreateCardComponent = ({ route, navigation }) => {
       ...prevData,
       [field]: value,
     }));
+  };
+
+  const handleCardNameChange = (cardName) => {
+    handleChange('cardName', cardName);
   };
 
   const handleAddMove = () => {
@@ -57,6 +67,14 @@ const CreateCardComponent = ({ route, navigation }) => {
       hitFrame: '',
       counterHitFrame: '',
       notes: '',
+      creator: '', // Add this line
+      key: '',     // Add this line
+      characterName: '', // Add this line
+      punisherData: [],  // Add this line
+      moveFlowChartData: [], // Add this line
+      cardName: '', // Add this line
+      cardDescription: '', // Add this line
+      youtubeLink: '', // Add this line
     });
 
     setModalVisible(false);
@@ -78,29 +96,24 @@ const CreateCardComponent = ({ route, navigation }) => {
 
   const handleSave = () => {
     // Validate cardName, cardDescription, and moves in both data sets
-    if (!cardName || !cardDescription) {
+    if (!formData.cardName || !formData.cardDescription) {
       alert('Please enter a Card Name and Card Description.');
       return;
     }
 
-    if (punisherData.length < 3 || moveFlowChartData.length < 3) {
+    if (formData.punisherData.length < 3 || formData.moveFlowChartData.length < 3) {
       alert('Please add at least 3 moves in both Punishers and Move/Flowchart data sets.');
       return;
     }
 
     // Perform save action, you can save to a local store or API
     // For now, let's just log the data
-    console.log('Saving Card:', { punisherData, moveFlowChartData, cardName, cardDescription, youtubeLink });
+    console.log('Saving Card:', formData);
 
     // Optionally, you can navigate back to the previous screen after saving
     navigation.goBack();
 
     // Optionally, you can reset the form after saving
-    setPunisherData([]);
-    setMoveFlowChartData([]);
-    setCardName('');
-    setCardDescription('');
-    setYouTubeLink('');
     setFormData({
       move: '',
       description: '',
@@ -111,12 +124,19 @@ const CreateCardComponent = ({ route, navigation }) => {
       hitFrame: '',
       counterHitFrame: '',
       notes: '',
+      creator: '',
+      key: '',
+      characterName: '',
+      punisherData: [],
+      moveFlowChartData: [],
+      cardName: '',
+      cardDescription: '',
+      youtubeLink: '',
     });
 
     // Close the modal
     setModalVisible(false);
   };
-
 
   const handleReset = () => {
     setSelectedMoveIndex(null);
@@ -185,10 +205,7 @@ const CreateCardComponent = ({ route, navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <HeroComponent name={characterName} thumbnail={characterImage} />
-      <Text style={styles.title}>Create a {characterName} Card</Text>
-
-      <TextInput style={styles.input} placeholder='Enter A Card Name' value={cardName} onChangeText={(text) => setCardName(text)} />
+      <HeroCreatComponent name={characterName} thumbnail={characterImage} onCardNameChange={handleCardNameChange} />     
       <View style={{ paddingBottom: 52 }}>
         {/* Render Punishers */}
         <View style={styles.flatList}>
@@ -225,10 +242,30 @@ const CreateCardComponent = ({ route, navigation }) => {
           placeholder="Explain Your Strategy"
           multiline
           numberOfLines={4}
-          value={cardDescription}
-          onChangeText={(text) => setCardDescription(text)}
+          value={formData.cardDescription}
+          onChangeText={(text) => handleChange('cardDescription', text)}
         />
-        <TextInput style={styles.input} placeholder='YouTube Link' value={youtubeLink} onChangeText={(text) => setYouTubeLink(text)} />
+        <TextInput
+          style={styles.input}
+          placeholder='YouTube Link'
+          value={formData.youtubeLink}
+          onChangeText={(text) => handleChange('youtubeLink', text)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Creator"
+          value={formData.creator}
+          onChangeText={(text) => handleChange('creator', text)}
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Key"
+          // secureTextEntry={true} // To mask the entered text
+          value={formData.key}
+          onChangeText={(text) => handleChange('key', text)}
+        />
+
         <Button title="Save Card" onPress={handleSave} />
       </View>
       <Modal
@@ -311,102 +348,5 @@ const CreateCardComponent = ({ route, navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  moveContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    padding: 10,
-  },
-  textArea: {
-    height: 80,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    padding: 10,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    width: '80%',
-    backgroundColor: 'white',
-    paddingTop: 90,
-    padding: 20,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  closeButton: {
-    backgroundColor: 'blue',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  plusButton: {
-    backgroundColor: 'blue',
-    padding: 8,
-    borderRadius: 28,
-    alignItems: 'center',
-    marginBottom: 20,
-    width: 32,
-    alignSelf: 'center'
-  },
-  flatList: {
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: 'lightgray',
-    overflow: 'hidden',
-    marginBottom: 16,
-  },
-  tableTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
-    backgroundColor: 'blue',
-    padding: 10,
-  },
-  tableRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: 'lightgray',
-  },
-  columnLeft: {
-    width: '30%',
-    padding: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  column: {
-    width: '60%',
-    padding: 8,
-    alignItems: 'start',
-  },
-});
 
 export default CreateCardComponent;
