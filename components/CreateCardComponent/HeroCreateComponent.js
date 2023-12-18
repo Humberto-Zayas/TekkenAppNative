@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, TextInput, Image, StyleSheet } from 'react-native';
 
 const HeroComponent = ({ cardName, thumbnail, onCardNameChange }) => {
+  console.log('onCardNameChange:', onCardNameChange);
   return (
     <View style={styles.heroContainer}>
       <Image source={thumbnail} style={styles.thumbnail} />

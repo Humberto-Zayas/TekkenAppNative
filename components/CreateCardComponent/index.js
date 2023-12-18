@@ -41,6 +41,7 @@ const CreateCardComponent = ({ route, navigation }) => {
   };
 
   const handleCardNameChange = (cardName) => {
+    console.log('handleCardNameChange:', cardName);
     handleChange('cardName', cardName);
   };
 
@@ -56,8 +57,10 @@ const CreateCardComponent = ({ route, navigation }) => {
       // If not editing, add a new move to the selected move set
       setMoveSet(selectedMoveSet, (prevMoves) => [...prevMoves, { ...formData }]);
     }
-
-    setFormData({
+  
+    // Only reset the fields related to the move
+    setFormData((prevData) => ({
+      ...prevData,
       move: '',
       description: '',
       hitLevel: '',
@@ -67,18 +70,11 @@ const CreateCardComponent = ({ route, navigation }) => {
       hitFrame: '',
       counterHitFrame: '',
       notes: '',
-      creator: '', // Add this line
-      key: '',     // Add this line
-      characterName: '', // Add this line
-      punisherData: [],  // Add this line
-      moveFlowChartData: [], // Add this line
-      cardName: '', // Add this line
-      cardDescription: '', // Add this line
-      youtubeLink: '', // Add this line
-    });
-
+    }));
+  
     setModalVisible(false);
   };
+  
 
   const handleEditMove = (index, moveSet) => {
     // Set form data to the selected move for editing
@@ -94,50 +90,63 @@ const CreateCardComponent = ({ route, navigation }) => {
     setMoveSet(moveSet, updatedMoves);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     // Validate cardName, cardDescription, and moves in both data sets
     if (!formData.cardName || !formData.cardDescription) {
       alert('Please enter a Card Name and Card Description.');
       return;
     }
-
-    if (formData.punisherData.length < 3 || formData.moveFlowChartData.length < 3) {
+  
+    if (punisherData.length < 3 || moveFlowChartData.length < 3) {
       alert('Please add at least 3 moves in both Punishers and Move/Flowchart data sets.');
       return;
     }
-
-    // Perform save action, you can save to a local store or API
-    // For now, let's just log the data
-    console.log('Saving Card:', formData);
-
-    // Optionally, you can navigate back to the previous screen after saving
-    navigation.goBack();
-
-    // Optionally, you can reset the form after saving
-    setFormData({
-      move: '',
-      description: '',
-      hitLevel: '',
-      damage: '',
-      startUpFrame: '',
-      blockFrame: '',
-      hitFrame: '',
-      counterHitFrame: '',
-      notes: '',
-      creator: '',
-      key: '',
-      characterName: '',
-      punisherData: [],
-      moveFlowChartData: [],
-      cardName: '',
-      cardDescription: '',
-      youtubeLink: '',
-    });
-
-    // Close the modal
-    setModalVisible(false);
+  
+    try {
+      // Send a POST request to your server
+      const response = await fetch('http://localhost:3000/createCard', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to save the card.');
+      }
+  
+      // Log the success message and navigate back
+      console.log('Card saved successfully:', formData);
+      navigation.goBack();
+  
+      // Optionally, reset the form and close the modal
+      setFormData({
+        move: '',
+        description: '',
+        hitLevel: '',
+        damage: '',
+        startUpFrame: '',
+        blockFrame: '',
+        hitFrame: '',
+        counterHitFrame: '',
+        notes: '',
+        creator: '',
+        key: '',
+        characterName: '',
+        punisherData: [],
+        moveFlowChartData: [],
+        cardName: '',
+        cardDescription: '',
+        youtubeLink: '',
+      });
+      setModalVisible(false);
+    } catch (error) {
+      console.error('Error saving the card:', error);
+      alert('Failed to save the card. Please try again.');
+    }
   };
-
+  
   const handleReset = () => {
     setSelectedMoveIndex(null);
     setSelectedMoveSet(null);
@@ -205,7 +214,7 @@ const CreateCardComponent = ({ route, navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <HeroCreatComponent name={characterName} thumbnail={characterImage} onCardNameChange={handleCardNameChange} />     
+      <HeroCreatComponent name={characterName} thumbnail={characterImage} onCardNameChange={handleCardNameChange} />   
       <View style={{ paddingBottom: 52 }}>
         {/* Render Punishers */}
         <View style={styles.flatList}>
