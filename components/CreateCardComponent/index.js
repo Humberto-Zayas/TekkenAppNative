@@ -21,7 +21,7 @@ const CreateCardComponent = ({ route, navigation }) => {
     notes: '',
     creator: '',
     key: '',
-    characterName: '',
+    characterName: characterName,
     punisherData: [],
     moveFlowChartData: [],
     cardName: '',
@@ -109,7 +109,11 @@ const CreateCardComponent = ({ route, navigation }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          punisherData,
+          moveFlowChartData,
+        }),
       });
   
       if (!response.ok) {
@@ -117,11 +121,11 @@ const CreateCardComponent = ({ route, navigation }) => {
       }
   
       // Log the success message and navigate back
-      console.log('Card saved successfully:', formData);
+      console.log('Card saved successfully:', cardData);
       navigation.goBack();
   
       // Optionally, reset the form and close the modal
-      setFormData({
+      setCardData({
         move: '',
         description: '',
         hitLevel: '',
@@ -134,18 +138,18 @@ const CreateCardComponent = ({ route, navigation }) => {
         creator: '',
         key: '',
         characterName: '',
-        punisherData: [],
-        moveFlowChartData: [],
         cardName: '',
         cardDescription: '',
         youtubeLink: '',
       });
+      setPunisherData([]);
+      setMoveFlowChartData([]);
       setModalVisible(false);
     } catch (error) {
       console.error('Error saving the card:', error);
       alert('Failed to save the card. Please try again.');
     }
-  };
+  };  
   
   const handleReset = () => {
     setSelectedMoveIndex(null);

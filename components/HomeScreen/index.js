@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Modal } from 'react-native';
 import Login from '../Login';
 import { characters } from '../../data/characters';
@@ -7,6 +7,8 @@ import { useAuth } from '../../utils/AuthContext';
 const HomeScreen = ({ navigation }) => {
   const [isMenuVisible, setMenuVisible] = useState(false);
   const { user, logout } = useAuth(); // Destructure setUser from your context
+  const [countries, setCountries] = useState([]);
+
 
   const toggleMenu = () => {
     setMenuVisible(!isMenuVisible);
@@ -22,6 +24,22 @@ const HomeScreen = ({ navigation }) => {
     toggleMenu(); // Close the menu
     navigation.navigate('Login', { isSignUp }); // Navigate to the Login screen with the isSignUp parameter
   };
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const response = await fetch('https://expressjs-mongoose-production-563e.up.railway.app/countries');
+        const data = await response.json();
+        setCountries(data);
+        console.log('Fetched countries:', data);
+      } catch (error) {
+        console.error('Error fetching countries:', error);
+      }
+    };
+
+    fetchCountries();
+  }, []); // Empty dependency array ensures that the effect runs only once when the component mounts
+
 
   return (
     <View style={styles.container}>
