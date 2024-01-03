@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { Alert, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { REACT_APP_API_BASE_URL } from '@env';
 
 const Login = ({ route }) => {
   const { isSignUp } = route.params || { isSignUp: false };
@@ -12,55 +13,63 @@ const Login = ({ route }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost:3000/login', {
+      console.log('Raw password during login:', password);
+      const response = await fetch(`http://localhost:3333/users/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          username,
-          password,
-        }),
+        body: JSON.stringify({ email, password }),
       });
   
       if (response.ok) {
-        console.log('Login successful!');
-        // Perform actions after successful login
+        // Login successful, navigate to the home screen
+        navigation.navigate('Home');
       } else {
-        console.error('Login failed.');
+        // Handle login failure, show an error message
+        console.error('Login failed');
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error during login:', error);
     }
   };
   
-  
   const handleSignup = async () => {
     try {
-      const registrationDate = new Date().getTime();
-
-      const response = await fetch('http://localhost:3000/signup', {
+      console.log('Raw password during signup:', password);
+      const response = await fetch(`http://localhost:3333/users/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email: email.toLowerCase(), // Convert email to lowercase
-          password,
-          username,
-          registrationDate,
-        }),
+        body: JSON.stringify({ username, email, password }),
       });
-
+  
       if (response.ok) {
-        console.log('Signup successful!');
-        // Navigate back to the home screen or any other screen
-        navigation.goBack();
+        // Signup successful, show an alert message
+        Alert.alert('Signup Successful', 'You can now login with your credentials.', [
+          {
+            text: 'OK',
+            onPress: () => {
+              // Navigate to the login screen
+              setSignUp(false);
+            },
+          },
+        ]);
       } else {
-        console.error('Signup failed.');
+        // Signup failed, show an error alert
+        Alert.alert('Signup Failed', 'Something went wrong. Please try again.', [
+          {
+            text: 'OK',
+            onPress: () => {
+              // Optionally, you can handle retries or other actions here
+            },
+          },
+        ]);
+        console.error('Signup failed');
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error during signup:', error);
     }
   };
 
