@@ -3,6 +3,9 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, Modal } from 'react-na
 import Login from '../Login';
 import { characters } from '../../data/characters';
 import { useAuth } from '../../utils/AuthContext';
+import { REACT_APP_API_BASE_URL } from '@env';
+
+console.log(REACT_APP_API_BASE_URL)
 
 const HomeScreen = ({ navigation }) => {
   const [isMenuVisible, setMenuVisible] = useState(false);
@@ -28,7 +31,7 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch('https://expressjs-mongoose-production-563e.up.railway.app/countries');
+        const response = await fetch(`${REACT_APP_API_BASE_URL}/countries`);
         const data = await response.json();
         setCountries(data);
         console.log('Fetched countries:', data);
