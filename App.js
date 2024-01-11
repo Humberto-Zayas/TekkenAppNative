@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -9,14 +9,31 @@ import CardListComponent from './components/CardListComponent';
 import CardComponent from './components/CardComponent';
 import CreateCardComponent from './components/CreateCardComponent';
 import Login from './components/Login';
+import CustomHeader from './components/CustomHeader';
 
 const Stack = createStackNavigator();
 
 export default function App() {
+  const [isMenuVisible, setMenuVisible] = useState(false);
+
+  const handleMenuPress = () => {
+    setMenuVisible(true);
+  };
+
+  const toggleMenu = (isVisible) => {
+    setMenuVisible(isVisible);
+  };
+
   return (
     <AuthProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: true }}>
+        {/* <Stack.Navigator
+          initialRouteName="Home"
+          screenOptions={{
+            header: () => <CustomHeader onMenuPress={handleMenuPress} />,
+          }}
+        > */}
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="BoxComponent" component={BoxComponent} />
           <Stack.Screen name="CardList" component={CardListComponent} />
