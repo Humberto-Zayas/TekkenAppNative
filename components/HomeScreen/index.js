@@ -3,11 +3,12 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, Modal } from 'react-na
 import { characters } from '../../data/characters';
 import { REACT_APP_API_BASE_URL } from '@env';
 import { useAuth } from '../../utils/AuthContext'; // Adjust the path accordingly
+import Menu from '../Menu'; // Import the Menu component
 
 const HomeScreen = ({ navigation }) => {
   const [isMenuVisible, setMenuVisible] = useState(false);
   const [countries, setCountries] = useState([]);
-  const { user, logout } = useAuth(); // Access user data and logout function from the authentication context
+  const { user } = useAuth();
 
   const toggleMenu = () => {
     setMenuVisible(!isMenuVisible);
@@ -63,41 +64,7 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <Modal
-        transparent
-        animationType="slide"
-        visible={isMenuVisible}
-        onRequestClose={() => setMenuVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <TouchableOpacity style={styles.modalContent} onPress={toggleMenu}>
-            <Text style={styles.menuText}>Close Menu</Text>
-          </TouchableOpacity>
-
-          <>
-            {user ? (
-              <TouchableOpacity style={styles.modalContent} onPress={handleLogout}>
-                <Text style={styles.menuText}>Logout</Text>
-              </TouchableOpacity>
-            ) : (
-              <>
-                <TouchableOpacity
-                  style={styles.modalContent}
-                  onPress={() => handleLoginNavigation(false)}
-                >
-                  <Text style={styles.menuText}>Login</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.modalContent}
-                  onPress={() => handleLoginNavigation(true)}
-                >
-                  <Text style={styles.menuText}>Sign Up</Text>
-                </TouchableOpacity>
-              </>
-            )}
-          </>
-        </View>
-      </Modal>
+      <Menu isMenuVisible={isMenuVisible} toggleMenu={toggleMenu} navigation={navigation} />
     </View>
   );
 };

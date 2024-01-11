@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { cardData } from '../../data/cardData';
 import SavedListComponent from '../SavedListComponent';
+import Menu from '../Menu';
 
 const CardListComponent = ({ route, navigation }) => {
   const { character } = route.params;
   const { name, image } = character;
   const [showSavedList, setShowSavedList] = useState(false);
   const [isMenuVisible, setMenuVisible] = useState(false);
-
+  const [isCardMenuVisible, setCardMenuVisible] = useState(false);
   const handleCardPress = (item) => {
     navigation.navigate('CardComponent', { item });
   };
@@ -31,8 +32,12 @@ const CardListComponent = ({ route, navigation }) => {
     setMenuVisible(!isMenuVisible);
   };
 
+  const toggleCardMenu = () => {
+    setCardMenuVisible(!isCardMenuVisible);
+  };
+
   const handleCreateCard = () => {
-    setMenuVisible(false);
+    setCardMenuVisible(false);
     // Pass the character name to CreateCardComponent
     navigation.navigate('CreateCardComponent', {
       characterName: name,
@@ -59,7 +64,6 @@ const CardListComponent = ({ route, navigation }) => {
         />
       )}
 
-      {/* Toggle Buttons */}
       <View style={styles.toggleButtonContainer}>
         <TouchableOpacity
           style={[styles.toggleButton, { marginRight: 10 }]}
@@ -75,19 +79,24 @@ const CardListComponent = ({ route, navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Floating Action Button */}
-      <TouchableOpacity style={styles.fab} onPress={toggleMenu}>
+      <TouchableOpacity style={styles.fab} onPress={toggleCardMenu}>
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>
 
-      {isMenuVisible && (
+      {isCardMenuVisible && (
         <View style={styles.fabMenu}>
           <TouchableOpacity style={styles.menuItem} onPress={handleCreateCard}>
             <Text>Create {name} Card</Text>
           </TouchableOpacity>
-          {/* Add more menu items as needed */}
         </View>
       )}
+      <View style={styles.menuContainer}>
+        <TouchableOpacity onPress={toggleMenu}>
+          <Text style={styles.menuText}>☰ Menu</Text>
+        </TouchableOpacity>
+      </View>
+      <Menu isMenuVisible={isMenuVisible} toggleMenu={toggleMenu} navigation={navigation} />
+
     </View>
   );
 };
@@ -114,6 +123,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgray',
     borderRadius: 10,
     width: '100%', // Full width
+  },
+  menuContainer: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    zIndex: 1,
+  },
+  menuText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'blue',
   },
   heroContainer: {
     alignItems: 'center',
