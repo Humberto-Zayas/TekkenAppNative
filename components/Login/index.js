@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { Alert, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { REACT_APP_API_BASE_URL } from '@env';
-
-console.log(REACT_APP_API_BASE_URL)
+import { useAuth } from '../../utils/AuthContext'; // Adjust the path accordingly
 
 const Login = ({ route }) => {
   const { isSignUp } = route.params || { isSignUp: false };
@@ -12,6 +11,7 @@ const Login = ({ route }) => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const navigation = useNavigation();
+  const { login } = useAuth(); // Use the useAuth hook to access authentication context
 
   const handleLogin = async () => {
     try {
@@ -26,6 +26,8 @@ const Login = ({ route }) => {
   
       if (response.ok) {
         // Login successful, navigate to the home screen
+        const userData = await response.json();
+        login(userData); // Update the authentication context
         navigation.navigate('Home');
       } else {
         // Handle login failure, show an error message

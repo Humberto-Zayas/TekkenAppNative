@@ -8,7 +8,6 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Check if the user is already logged in (you can modify this logic based on your app's needs)
     const checkUser = async () => {
       try {
         const storedUser = await AsyncStorage.getItem('user');
@@ -24,13 +23,11 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (userData) => {
-    // Perform login logic (you can modify this based on your server response)
     setUser(userData);
     AsyncStorage.setItem('user', JSON.stringify(userData));
   };
 
   const logout = () => {
-    // Perform logout logic
     setUser(null);
     AsyncStorage.removeItem('user');
   };

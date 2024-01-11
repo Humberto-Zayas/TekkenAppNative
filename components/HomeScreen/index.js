@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Modal } from 'react-native';
 import { characters } from '../../data/characters';
 import { REACT_APP_API_BASE_URL } from '@env';
+import { useAuth } from '../../utils/AuthContext'; // Adjust the path accordingly
 
 const HomeScreen = ({ navigation }) => {
   const [isMenuVisible, setMenuVisible] = useState(false);
   const [countries, setCountries] = useState([]);
-
+  const { user, logout } = useAuth(); // Access user data and logout function from the authentication context
 
   const toggleMenu = () => {
     setMenuVisible(!isMenuVisible);
@@ -15,6 +16,11 @@ const HomeScreen = ({ navigation }) => {
   const handleLoginNavigation = (isSignUp) => {
     toggleMenu(); // Close the menu
     navigation.navigate('Login', { isSignUp }); // Navigate to the Login screen with the isSignUp parameter
+  };
+
+  const handleLogout = () => {
+    toggleMenu(); // Close the menu
+    logout(); // Logout the user using the logout function from AuthContext
   };
 
   useEffect(() => {
@@ -26,16 +32,18 @@ const HomeScreen = ({ navigation }) => {
         console.log('Fetched countries:', data);
       } catch (error) {
         console.error('Error fetching countries:', error);
-      } 
-
+      }
     };
 
     fetchCountries();
   }, []); // Empty dependency array ensures that the effect runs only once when the component mounts
 
-
   return (
     <View style={styles.container}>
+      {/* Display user status */}
+      <Text style={styles.userStatus}>
+        {user ? `Logged In as ${user.username}` : 'Not Logged In'}
+      </Text>
       <View style={styles.gridContainer}>
         {characters.map((character) => (
           <TouchableOpacity
@@ -66,21 +74,28 @@ const HomeScreen = ({ navigation }) => {
             <Text style={styles.menuText}>Close Menu</Text>
           </TouchableOpacity>
 
-            <>
-              <TouchableOpacity
-                style={styles.modalContent}
-                onPress={() => handleLoginNavigation(false)}
-              >
-                <Text style={styles.menuText}>Login</Text>
+          <>
+            {user ? (
+              <TouchableOpacity style={styles.modalContent} onPress={handleLogout}>
+                <Text style={styles.menuText}>Logout</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.modalContent}
-                onPress={() => handleLoginNavigation(true)}
-              >
-                <Text style={styles.menuText}>Sign Up</Text>
-              </TouchableOpacity>
-            </>
-          
+            ) : (
+              <>
+                <TouchableOpacity
+                  style={styles.modalContent}
+                  onPress={() => handleLoginNavigation(false)}
+                >
+                  <Text style={styles.menuText}>Login</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.modalContent}
+                  onPress={() => handleLoginNavigation(true)}
+                >
+                  <Text style={styles.menuText}>Sign Up</Text>
+                </TouchableOpacity>
+              </>
+            )}
+          </>
         </View>
       </Modal>
     </View>
@@ -121,6 +136,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     marginBottom: 20,
+  },
+  userStatus: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  box: {
+    alignItems: 'center',
+    margin: 10,
   },
 });
 
