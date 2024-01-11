@@ -8,14 +8,12 @@ import CardListComponent from './components/CardListComponent';
 import CardComponent from './components/CardComponent';
 import CreateCardComponent from './components/CreateCardComponent';
 import Login from './components/Login';
-import { AuthProvider } from './utils/AuthContext';
 
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <AuthProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: true }}>
           <Stack.Screen name="Home" component={HomeScreen} />
@@ -27,6 +25,5 @@ export default function App() {
         </Stack.Navigator>
         <StatusBar style="auto" />
       </NavigationContainer>
-    </AuthProvider>
   );
 }

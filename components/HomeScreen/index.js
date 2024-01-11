@@ -1,26 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Modal } from 'react-native';
-import Login from '../Login';
 import { characters } from '../../data/characters';
-import { useAuth } from '../../utils/AuthContext';
 import { REACT_APP_API_BASE_URL } from '@env';
-
-console.log(REACT_APP_API_BASE_URL)
 
 const HomeScreen = ({ navigation }) => {
   const [isMenuVisible, setMenuVisible] = useState(false);
-  const { user, logout } = useAuth(); // Destructure setUser from your context
   const [countries, setCountries] = useState([]);
 
 
   const toggleMenu = () => {
     setMenuVisible(!isMenuVisible);
-  };
-
-  const handleLogout = () => {
-    // Implement your logout logic here
-    logout();
-    setMenuVisible(false); // Close the menu after logout
   };
 
   const handleLoginNavigation = (isSignUp) => {
@@ -37,7 +26,8 @@ const HomeScreen = ({ navigation }) => {
         console.log('Fetched countries:', data);
       } catch (error) {
         console.error('Error fetching countries:', error);
-      }
+      } 
+
     };
 
     fetchCountries();
@@ -75,7 +65,7 @@ const HomeScreen = ({ navigation }) => {
           <TouchableOpacity style={styles.modalContent} onPress={toggleMenu}>
             <Text style={styles.menuText}>Close Menu</Text>
           </TouchableOpacity>
-          {!user ? (
+
             <>
               <TouchableOpacity
                 style={styles.modalContent}
@@ -90,16 +80,7 @@ const HomeScreen = ({ navigation }) => {
                 <Text style={styles.menuText}>Sign Up</Text>
               </TouchableOpacity>
             </>
-          ) : (
-            <View style={styles.modalContent}>
-              {/* Conditionally render avatar if the user is logged in */}
-              <Image source={require('../../data/images/cardThumbs/images.png')} style={styles.avatar} />
-              <Text style={styles.menuText}>Logged In</Text>
-              <TouchableOpacity onPress={handleLogout}>
-                <Text style={styles.menuText}>Logout</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+          
         </View>
       </Modal>
     </View>

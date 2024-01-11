@@ -3,6 +3,8 @@ import { Alert, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'reac
 import { useNavigation } from '@react-navigation/native';
 import { REACT_APP_API_BASE_URL } from '@env';
 
+console.log(REACT_APP_API_BASE_URL)
+
 const Login = ({ route }) => {
   const { isSignUp } = route.params || { isSignUp: false };
   const [signUp, setSignUp] = useState(isSignUp);
@@ -14,7 +16,7 @@ const Login = ({ route }) => {
   const handleLogin = async () => {
     try {
       console.log('Raw password during login:', password);
-      const response = await fetch(`http://localhost:3333/users/login`, {
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/users/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,7 +39,7 @@ const Login = ({ route }) => {
   const handleSignup = async () => {
     try {
       console.log('Raw password during signup:', password);
-      const response = await fetch(`http://localhost:3333/users/signup`, {
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/users/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
