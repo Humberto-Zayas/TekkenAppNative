@@ -1,43 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Modal } from 'react-native';
 import { characters } from '../../data/characters';
-import { REACT_APP_API_BASE_URL } from '@env';
-import { useAuth } from '../../utils/AuthContext'; // Adjust the path accordingly
-import Menu from '../Menu'; // Import the Menu component
+import { useAuth } from '../../utils/AuthContext';
 
 const HomeScreen = ({ navigation }) => {
-  const [isMenuVisible, setMenuVisible] = useState(false);
-  const [countries, setCountries] = useState([]);
   const { user } = useAuth();
-
-  const toggleMenu = () => {
-    setMenuVisible(!isMenuVisible);
-  };
-
-  const handleLoginNavigation = (isSignUp) => {
-    toggleMenu(); // Close the menu
-    navigation.navigate('Login', { isSignUp }); // Navigate to the Login screen with the isSignUp parameter
-  };
-
-  const handleLogout = () => {
-    toggleMenu(); // Close the menu
-    logout(); // Logout the user using the logout function from AuthContext
-  };
-
-  useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        const response = await fetch(`${REACT_APP_API_BASE_URL}/countries`);
-        const data = await response.json();
-        setCountries(data);
-        console.log('Fetched countries:', data);
-      } catch (error) {
-        console.error('Error fetching countries:', error);
-      }
-    };
-
-    fetchCountries();
-  }, []); // Empty dependency array ensures that the effect runs only once when the component mounts
 
   return (
     <View style={styles.container}>
@@ -57,14 +24,6 @@ const HomeScreen = ({ navigation }) => {
           </TouchableOpacity>
         ))}
       </View>
-
-      <View style={styles.menuContainer}>
-        <TouchableOpacity onPress={toggleMenu}>
-          <Text style={styles.menuText}>☰ Menu</Text>
-        </TouchableOpacity>
-      </View>
-
-      <Menu isMenuVisible={isMenuVisible} toggleMenu={toggleMenu} navigation={navigation} />
     </View>
   );
 };

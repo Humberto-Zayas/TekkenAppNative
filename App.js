@@ -27,13 +27,13 @@ export default function App() {
   return (
     <AuthProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: true }}>
-        {/* <Stack.Navigator
+        {/* <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: true }}> */}
+        <Stack.Navigator
           initialRouteName="Home"
           screenOptions={{
-            header: () => <CustomHeader onMenuPress={handleMenuPress} />,
+            header: (props) => <CustomHeader  {...props} onMenuPress={handleMenuPress} />,
           }}
-        > */}
+        >
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="BoxComponent" component={BoxComponent} />
           <Stack.Screen name="CardList" component={CardListComponent} />

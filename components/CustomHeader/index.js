@@ -1,11 +1,14 @@
 // CustomHeader.js
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
-import { useAuth } from '../../utils/AuthContext'; // Adjust the path accordingly
+import { useAuth } from '../../utils/AuthContext';
+import { useRoute } from '@react-navigation/native';
 
 const CustomHeader = ({ navigation }) => {
   const [isMenuVisible, setMenuVisible] = useState(false);
-  const { user, logout } = useAuth(); // Access user data and logout function from the authentication context
+  const { user, logout } = useAuth();
+  const route = useRoute();
+  const [screenName, setScreenName] = useState(route.name);
 
   const handleLoginNavigation = (isSignUp) => {
     setMenuVisible(false);
@@ -15,14 +18,28 @@ const CustomHeader = ({ navigation }) => {
   const handleLogout = () => {
     setMenuVisible(false);
     logout();
+    navigation.navigate('Home');
+  };
+
+  const handleBack = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    }
   };
 
   return (
     <View style={styles.headerContainer}>
+      {navigation.canGoBack() && (
+        <TouchableOpacity onPress={handleBack}>
+          <Text style={styles.backArrow}>{'< Back'}</Text>
+        </TouchableOpacity>
+      )}
+
+      <Text style={styles.screenName}>{screenName}</Text>
+
       <TouchableOpacity onPress={() => setMenuVisible(true)}>
         <Text style={styles.menuText}>☰ Menu</Text>
       </TouchableOpacity>
-
       <Modal
         transparent
         animationType="slide"
@@ -67,8 +84,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 50,
-    backgroundColor: 'lightblue',
+    padding: 20,
+    marginTop: 50,
+    backgroundColor: 'transparent',
+  },
+  backArrow: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'blue',
+  },
+  screenName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'blue',
   },
   menuText: {
     fontSize: 18,
