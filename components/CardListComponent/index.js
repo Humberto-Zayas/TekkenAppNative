@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { cardData } from '../../data/cardData';
 import SavedListComponent from '../SavedListComponent';
-import Menu from '../Menu';
 
 const CardListComponent = ({ route, navigation }) => {
   const { character } = route.params;
   const { name, image } = character;
   const [showSavedList, setShowSavedList] = useState(false);
-  const [isMenuVisible, setMenuVisible] = useState(false);
   const [isCardMenuVisible, setCardMenuVisible] = useState(false);
   const handleCardPress = (item) => {
     navigation.navigate('CardComponent', { item });
@@ -27,10 +25,6 @@ const CardListComponent = ({ route, navigation }) => {
       </View>
     </TouchableOpacity>
   );
-
-  const toggleMenu = () => {
-    setMenuVisible(!isMenuVisible);
-  };
 
   const toggleCardMenu = () => {
     setCardMenuVisible(!isCardMenuVisible);
@@ -90,12 +84,6 @@ const CardListComponent = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
       )}
-      <View style={styles.menuContainer}>
-        <TouchableOpacity onPress={toggleMenu}>
-          <Text style={styles.menuText}>☰ Menu</Text>
-        </TouchableOpacity>
-      </View>
-      <Menu isMenuVisible={isMenuVisible} toggleMenu={toggleMenu} navigation={navigation} />
 
     </View>
   );

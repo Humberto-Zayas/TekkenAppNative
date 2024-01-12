@@ -1,9 +1,12 @@
 // SavedListComponent.js
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import {savedCardData} from '../../data/savedCardData.js'; // Assuming you have a separate data file for saved cards
+import { useAuth } from '../../utils/AuthContext';
+import { savedCardData } from '../../data/savedCardData.js'; // Assuming you have a separate data file for saved cards
 
 const SavedListComponent = ({ navigation }) => {
+  const { user } = useAuth();
+
   const handleSavedCardPress = (item) => {
     navigation.navigate('SavedCardComponent', { item });
   };
@@ -14,23 +17,49 @@ const SavedListComponent = ({ navigation }) => {
         <Image source={item.thumbnail} style={styles.thumbnailImage} />
       </View>
       <View>
-        <Text style={{ fontSize: 16, fontWeight: 'bold' }} numberOfLines={1}>{item.name}</Text>
+        <Text style={{ fontSize: 16, fontWeight: 'bold' }} numberOfLines={1}>
+          {item.name}
+        </Text>
         <Text>Rating: {item.rating}</Text>
       </View>
     </TouchableOpacity>
   );
 
-  return (
-    <View>
-      <FlatList
-        contentContainerStyle={styles.flatList}
-        data={savedCardData}
-        keyExtractor={(item) => item.id}
-        renderItem={renderSavedCardItem}
-        showsVerticalScrollIndicator={false}
-      />
-    </View>
-  );
+  const renderContent = () => {
+    if (user) {
+      return (
+        <FlatList
+          contentContainerStyle={styles.flatList}
+          data={savedCardData}
+          keyExtractor={(item) => item.id}
+          renderItem={renderSavedCardItem}
+          showsVerticalScrollIndicator={false}
+        />
+      );
+    } else {
+      return (
+        <View style={styles.messageContainer}>
+          <Text style={styles.messageText}>
+            To view saved cards, you must login or sign up.
+          </Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('Login', { isSignUp: false })}
+          >
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('Login', { isSignUp: true })}
+          >
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+  };
+
+  return <View>{renderContent()}</View>;
 };
 
 const styles = StyleSheet.create({
@@ -69,6 +98,27 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
+  },
+  messageContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  messageText: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  button: {
+    backgroundColor: 'blue',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 
