@@ -14,15 +14,6 @@ import CustomHeader from './components/CustomHeader';
 const Stack = createStackNavigator();
 
 export default function App() {
-  const [isMenuVisible, setMenuVisible] = useState(false);
-
-  const handleMenuPress = () => {
-    setMenuVisible(true);
-  };
-
-  const toggleMenu = (isVisible) => {
-    setMenuVisible(isVisible);
-  };
 
   return (
     <AuthProvider>
@@ -31,7 +22,7 @@ export default function App() {
         <Stack.Navigator
           initialRouteName="Home"
           screenOptions={{
-            header: (props) => <CustomHeader  {...props} onMenuPress={handleMenuPress} />,
+            header: (props) => <CustomHeader  {...props} />,
           }}
         >
           <Stack.Screen name="Home" component={HomeScreen} />
