@@ -1,19 +1,34 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Modal,
+} from 'react-native';
 import { cardData } from '../../data/cardData';
 import SavedListComponent from '../SavedListComponent';
+import { useAuth } from '../../utils/AuthContext';
 
 const CardListComponent = ({ route, navigation }) => {
   const { character } = route.params;
   const { name, image } = character;
   const [showSavedList, setShowSavedList] = useState(false);
   const [isCardMenuVisible, setCardMenuVisible] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const { user } = useAuth();
+
   const handleCardPress = (item) => {
     navigation.navigate('CardComponent', { item });
   };
 
   const renderCardItem = ({ item }) => (
-    <TouchableOpacity style={styles.cardItem} onPress={() => handleCardPress(item)}>
+    <TouchableOpacity
+      style={styles.cardItem}
+      onPress={() => handleCardPress(item)}
+    >
       <View style={{ marginRight: 10 }}>
         <Image source={item.thumbnail} style={styles.thumbnailImage} />
       </View>
@@ -32,18 +47,73 @@ const CardListComponent = ({ route, navigation }) => {
 
   const handleCreateCard = () => {
     setCardMenuVisible(false);
-    // Pass the character name to CreateCardComponent
-    navigation.navigate('CreateCardComponent', {
-      characterName: name,
-      characterImage: image,
-    });
+
+    if (!user) {
+      setShowModal(true);
+    } else {
+      // User is logged in, navigate to 'Create Card'
+      navigation.navigate('CreateCardComponent', {
+        characterName: name,
+        characterImage: image,
+      });
+    }
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+  const renderLoginSignupModal = () => {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showModal}
+        onRequestClose={closeModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Authentication Required</Text>
+            <Text style={styles.modalText}>
+              To create cards, you must log in or sign up.
+            </Text>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => {
+                closeModal();
+                navigation.navigate('Login', { isSignUp: false });
+              }}
+            >
+              <Text style={styles.modalButtonText}>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => {
+                closeModal();
+                navigation.navigate('Login', { isSignUp: true });
+              }}
+            >
+              <Text style={styles.modalButtonText}>Sign Up</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={closeModal}
+            >
+              <Text style={styles.modalButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.heroContainer}>
         <Image source={image} style={styles.heroImage} />
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10 }}>{name}</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10 }}>
+          {name}
+        </Text>
       </View>
 
       {showSavedList ? (
@@ -85,6 +155,7 @@ const CardListComponent = ({ route, navigation }) => {
         </View>
       )}
 
+      {showModal && renderLoginSignupModal()}
     </View>
   );
 };
@@ -95,7 +166,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     padding: 20,
-    position: 'relative'
+    position: 'relative',
   },
   flatList: {
     flexGrow: 1,
@@ -142,7 +213,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 'auto',
-    padding: 10
+    padding: 10,
   },
   toggleButton: {
     backgroundColor: 'lightblue',
@@ -185,6 +256,41 @@ const styles = StyleSheet.create({
   },
   menuItem: {
     padding: 8,
+  },
+  // Modal Styles
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  modalText: {
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalButton: {
+    backgroundColor: 'blue',
+    padding: 12,
+    borderRadius: 5,
+    margin: 5,
+    width: '80%',
+    alignItems: 'center',
+  },
+  modalButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
 
