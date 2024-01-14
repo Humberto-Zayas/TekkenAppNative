@@ -5,6 +5,7 @@ import { useAuth } from '../../utils/AuthContext';
 
 const HomeScreen = ({ navigation }) => {
   const { user } = useAuth();
+  console.log(user)
 
   return (
     <View style={styles.container}>
