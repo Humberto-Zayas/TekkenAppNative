@@ -3,12 +3,17 @@ import { View, Text, TextInput, Button, StyleSheet, ScrollView, Modal, Touchable
 import HeroCreatComponent from './HeroCreateComponent';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
+import { useAuth } from '../../utils/AuthContext';
+import { REACT_APP_API_BASE_URL } from '@env';
 
 const CreateCardComponent = ({ route, navigation }) => {
+  const { user } = useAuth();
   const { characterName, characterImage } = route.params;
   const [punisherData, setPunisherData] = useState([]);
   const [moveFlowChartData, setMoveFlowChartData] = useState([]);
-
+  const [cardName, setCardName] = useState(null);
+  const [cardDescription, setCardDescription] = useState(null);
+  const [youtubeLink, setYoutubeLink] = useState(null);
   const [formData, setFormData] = useState({
     move: '',
     description: '',
@@ -19,14 +24,6 @@ const CreateCardComponent = ({ route, navigation }) => {
     hitFrame: '',
     counterHitFrame: '',
     notes: '',
-    creator: '',
-    key: '',
-    characterName: characterName,
-    punisherData: [],
-    moveFlowChartData: [],
-    cardName: '',
-    cardDescription: '',
-    youtubeLink: '',
   });
 
   const [selectedMoveIndex, setSelectedMoveIndex] = useState(null); // Track the index of the move being edited
@@ -41,8 +38,8 @@ const CreateCardComponent = ({ route, navigation }) => {
   };
 
   const handleCardNameChange = (cardName) => {
-    console.log('handleCardNameChange:', cardName);
-    handleChange('cardName', cardName);
+    // handleChange('cardName', cardName);
+    setCardName(cardName)
   };
 
   const handleAddMove = () => {
@@ -58,7 +55,6 @@ const CreateCardComponent = ({ route, navigation }) => {
       setMoveSet(selectedMoveSet, (prevMoves) => [...prevMoves, { ...formData }]);
     }
   
-    // Only reset the fields related to the move
     setFormData((prevData) => ({
       ...prevData,
       move: '',
@@ -71,13 +67,10 @@ const CreateCardComponent = ({ route, navigation }) => {
       counterHitFrame: '',
       notes: '',
     }));
-  
     setModalVisible(false);
   };
   
-
   const handleEditMove = (index, moveSet) => {
-    // Set form data to the selected move for editing
     setFormData({ ...getMoveSet(moveSet)[index] });
     setSelectedMoveIndex(index);
     setSelectedMoveSet(moveSet);
@@ -85,14 +78,12 @@ const CreateCardComponent = ({ route, navigation }) => {
   };
 
   const handleDeleteMove = (index, moveSet) => {
-    // Delete the selected move from the specified move set
     const updatedMoves = getMoveSet(moveSet).filter((_, i) => i !== index);
     setMoveSet(moveSet, updatedMoves);
   };
 
   const handleSave = async () => {
-    // Validate cardName, cardDescription, and moves in both data sets
-    if (!formData.cardName || !formData.cardDescription) {
+    if (!cardName || !cardDescription) {
       alert('Please enter a Card Name and Card Description.');
       return;
     }
@@ -104,52 +95,39 @@ const CreateCardComponent = ({ route, navigation }) => {
   
     try {
       // Send a POST request to your server
-      const response = await fetch('http://localhost:3000/createCard', {
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/createCard`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user?.token}`, // Include the JWT token in the headers
         },
         body: JSON.stringify({
-          ...formData,
+          cardName,
+          cardDescription,
+          youtubeLink,
+          userId: user?.userId,
           punisherData,
           moveFlowChartData,
         }),
       });
   
       if (!response.ok) {
-        throw new Error('Failed to save the card.');
+        throw new Error('Failed to save the card.', response);
       }
   
-      // Log the success message and navigate back
-      console.log('Card saved successfully:', cardData);
-      navigation.goBack();
-  
-      // Optionally, reset the form and close the modal
-      setCardData({
-        move: '',
-        description: '',
-        hitLevel: '',
-        damage: '',
-        startUpFrame: '',
-        blockFrame: '',
-        hitFrame: '',
-        counterHitFrame: '',
-        notes: '',
-        creator: '',
-        key: '',
-        characterName: '',
-        cardName: '',
-        cardDescription: '',
-        youtubeLink: '',
-      });
+      setCardName('');
+      setCardDescription('');
+      setYoutubeLink('');
       setPunisherData([]);
       setMoveFlowChartData([]);
       setModalVisible(false);
+
+      navigation.goBack();
     } catch (error) {
       console.error('Error saving the card:', error);
       alert('Failed to save the card. Please try again.');
     }
-  };  
+  };
   
   const handleReset = () => {
     setSelectedMoveIndex(null);
@@ -176,7 +154,6 @@ const CreateCardComponent = ({ route, navigation }) => {
       case 'moveFlowChartData':
         setMoveFlowChartData(moves);
         break;
-      // Add more cases if needed
       default:
         break;
     }
@@ -188,7 +165,6 @@ const CreateCardComponent = ({ route, navigation }) => {
         return punisherData;
       case 'moveFlowChartData':
         return moveFlowChartData;
-      // Add more cases if needed
       default:
         return [];
     }
@@ -255,30 +231,15 @@ const CreateCardComponent = ({ route, navigation }) => {
           placeholder="Explain Your Strategy"
           multiline
           numberOfLines={4}
-          value={formData.cardDescription}
-          onChangeText={(text) => handleChange('cardDescription', text)}
+          value={cardDescription}
+          onChangeText={(text) => setCardDescription(text)}
         />
         <TextInput
           style={styles.input}
           placeholder='YouTube Link'
-          value={formData.youtubeLink}
+          value={youtubeLink}
           onChangeText={(text) => handleChange('youtubeLink', text)}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Creator"
-          value={formData.creator}
-          onChangeText={(text) => handleChange('creator', text)}
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Key"
-          // secureTextEntry={true} // To mask the entered text
-          value={formData.key}
-          onChangeText={(text) => handleChange('key', text)}
-        />
-
         <Button title="Save Card" onPress={handleSave} />
       </View>
       <Modal

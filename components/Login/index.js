@@ -15,7 +15,6 @@ const Login = ({ route }) => {
 
   const handleLogin = async () => {
     try {
-      console.log('Raw password during login:', password);
       const response = await fetch(`${REACT_APP_API_BASE_URL}/users/login`, {
         method: 'POST',
         headers: {
@@ -40,7 +39,6 @@ const Login = ({ route }) => {
   
   const handleSignup = async () => {
     try {
-      console.log('Raw password during signup:', password);
       const response = await fetch(`${REACT_APP_API_BASE_URL}/users/signup`, {
         method: 'POST',
         headers: {
