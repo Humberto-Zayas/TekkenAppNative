@@ -60,7 +60,8 @@ const Login = ({ route }) => {
         ]);
       } else {
         // Signup failed, show an error alert
-        Alert.alert('Signup Failed', 'Something went wrong. Please try again.', [
+        const responseData = await response.json();
+        Alert.alert('Signup Failed', responseData.error, [
           {
             text: 'OK',
             onPress: () => {
@@ -68,12 +69,13 @@ const Login = ({ route }) => {
             },
           },
         ]);
-        console.error('Signup failed');
+        console.error('Signup failed:', responseData.error);
       }
     } catch (error) {
       console.error('Error during signup:', error);
     }
   };
+  
 
   const handleToggle = () => {
     setSignUp(!signUp);

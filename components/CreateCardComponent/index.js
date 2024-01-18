@@ -95,7 +95,7 @@ const CreateCardComponent = ({ route, navigation }) => {
   
     try {
       // Send a POST request to your server
-      const response = await fetch(`${REACT_APP_API_BASE_URL}/createCard`, {
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/cards/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -103,6 +103,7 @@ const CreateCardComponent = ({ route, navigation }) => {
         },
         body: JSON.stringify({
           cardName,
+          characterName,
           cardDescription,
           youtubeLink,
           userId: user?.userId,
@@ -112,7 +113,7 @@ const CreateCardComponent = ({ route, navigation }) => {
       });
   
       if (!response.ok) {
-        throw new Error('Failed to save the card.', response);
+        throw new Error('Failed to save the card.');
       }
   
       setCardName('');
@@ -121,13 +122,14 @@ const CreateCardComponent = ({ route, navigation }) => {
       setPunisherData([]);
       setMoveFlowChartData([]);
       setModalVisible(false);
-
+  
       navigation.goBack();
     } catch (error) {
       console.error('Error saving the card:', error);
       alert('Failed to save the card. Please try again.');
     }
   };
+  
   
   const handleReset = () => {
     setSelectedMoveIndex(null);
