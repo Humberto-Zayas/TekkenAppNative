@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Modal, TouchableOpacity } from 'react-native';
+import { Alert, View, Text, TextInput, Button, StyleSheet, ScrollView, Modal, TouchableOpacity } from 'react-native';
 import HeroCreatComponent from './HeroCreateComponent';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
@@ -54,7 +54,7 @@ const CreateCardComponent = ({ route, navigation }) => {
       // If not editing, add a new move to the selected move set
       setMoveSet(selectedMoveSet, (prevMoves) => [...prevMoves, { ...formData }]);
     }
-  
+
     setFormData((prevData) => ({
       ...prevData,
       move: '',
@@ -69,7 +69,7 @@ const CreateCardComponent = ({ route, navigation }) => {
     }));
     setModalVisible(false);
   };
-  
+
   const handleEditMove = (index, moveSet) => {
     setFormData({ ...getMoveSet(moveSet)[index] });
     setSelectedMoveIndex(index);
@@ -87,12 +87,12 @@ const CreateCardComponent = ({ route, navigation }) => {
       alert('Please enter a Card Name and Card Description.');
       return;
     }
-  
+
     if (punisherData.length < 3 || moveFlowChartData.length < 3) {
       alert('Please add at least 3 moves in both Punishers and Move/Flowchart data sets.');
       return;
     }
-  
+
     try {
       // Send a POST request to your server
       const response = await fetch(`${REACT_APP_API_BASE_URL}/cards/create`, {
@@ -111,26 +111,37 @@ const CreateCardComponent = ({ route, navigation }) => {
           moveFlowChartData,
         }),
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to save the card.');
       }
-  
+
       setCardName('');
       setCardDescription('');
       setYoutubeLink('');
       setPunisherData([]);
       setMoveFlowChartData([]);
       setModalVisible(false);
-  
-      navigation.goBack();
+
+      // Show an alert with a confirmation message
+      Alert.alert(
+        'Success',
+        'Card created successfully!',
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.goBack(), // Navigate back on confirmation
+          },
+        ],
+        { cancelable: false }
+      );
     } catch (error) {
       console.error('Error saving the card:', error);
       alert('Failed to save the card. Please try again.');
     }
   };
-  
-  
+
+
   const handleReset = () => {
     setSelectedMoveIndex(null);
     setSelectedMoveSet(null);
@@ -196,7 +207,7 @@ const CreateCardComponent = ({ route, navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <HeroCreatComponent name={characterName} thumbnail={characterImage} onCardNameChange={handleCardNameChange} />   
+      <HeroCreatComponent name={characterName} thumbnail={characterImage} onCardNameChange={handleCardNameChange} />
       <View style={{ paddingBottom: 52 }}>
         {/* Render Punishers */}
         <View style={styles.flatList}>
