@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Modal, TouchableOpacity, ScrollView } from 'react-native';
 import HeroComponent from './HeroComponent';
 import ModalComponent from './ModalComponent';
-import { heatEngagersData } from '../../data/moveData';
-import { characters } from '../../data/characters'; // I need to extract characters[x].heatEngagerData from here as opposed to the line above
+import { characters } from '../../data/characters';
 
 const CardComponent = ({ route }) => {
   const { id } = route.params;
@@ -20,8 +19,11 @@ const CardComponent = ({ route }) => {
         }
         const data = await response.json();
         setCard(data);
-        setCharacter(data.characterName)
-        console.log(data);
+
+        // Find the character object in the characters array
+        const foundCharacter = characters.find(char => char.name === data.characterName);
+        setCharacter(foundCharacter);
+
       } catch (error) {
         console.error('Error fetching card:', error);
       }
@@ -40,12 +42,12 @@ const CardComponent = ({ route }) => {
 
   const renderTableItem = ({ card, index, moveSetType }) => {
     const { move, description, youtubeLink } = card;
-  
+
     // Exclude __v and YouTube link from rendering
     if (moveSetType === '__v' || moveSetType === 'youtubeLink') {
       return null;
     }
-  
+
     return (
       <TouchableOpacity onPress={() => openDrawer(card)}>
         <View style={styles.tableRow}>
@@ -63,19 +65,21 @@ const CardComponent = ({ route }) => {
       </TouchableOpacity>
     );
   };
-  
+
   const renderMoveSet = (moveSetType) => {
+    console.log('Character:', character);
+    console.log('Heat Engager Data:', character?.heatEngagersData);
     if (moveSetType === '__v' || moveSetType === 'youtubeLink') {
       return null;
     }
-  
-    const moves = moveSetType === 'heatEngagersData' ? heatEngagersData : card?.[moveSetType] || [];
-  
+
+    const moves = moveSetType === 'heatEngagersData' ? character?.heatEngagersData || [] : card?.[moveSetType] || [];
+
     if (!Array.isArray(moves)) {
       // If moves is not an array, handle it appropriately
       return null; // You can also render an error message or an empty view
     }
-  
+
     return (
       <View style={styles.flatList} key={moveSetType}>
         <Text style={styles.tableTitle}>{moveSetType}</Text>
@@ -87,17 +91,35 @@ const CardComponent = ({ route }) => {
       </View>
     );
   };
-   
 
   return (
     <ScrollView style={styles.container}>
       <HeroComponent name={card?.cardName} thumbnail={card?.thumbnail} rating={card?.rating} />
-      <View style={{ paddingBottom: 32 }}>
+      <View style={{ paddingBottom: 64 }}>
+        {renderMoveSet('heatEngagersData')}
         {Object.keys(card || {}).map((moveSetType) => renderMoveSet(moveSetType))}
+
+        <View>
+        <Text style={styles.tableTitle}>The Strategy</Text>
+        <Text style={{ marginTop: 10 }}>{card?.cardDescription}</Text>
+
+        {card?.youtubeLink && (
+          <View style={styles.tableRow}>
+            <Text style={styles.columnLeft}>
+              <Text style={styles.value} numberOfLines={2}>
+                YouTube Link
+              </Text>
+            </Text>
+            <View style={styles.column}>
+              <Text style={styles.value} numberOfLines={2}>
+                {card?.youtubeLink}
+              </Text>
+            </View>
+          </View>
+        )}
       </View>
-      <View>
-        <Text>{card?.cardDescription}</Text>
       </View>
+     
       <Modal visible={selectedItem !== null} animationType="slide" transparent>
         <ModalComponent selectedItem={selectedItem} closeDrawer={closeDrawer} />
       </Modal>
