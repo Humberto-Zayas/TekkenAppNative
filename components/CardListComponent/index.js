@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,6 @@ import {
   Image,
   Modal,
 } from 'react-native';
-import { cardData } from '../../data/cardData';
 import SavedListComponent from '../SavedListComponent';
 import { useAuth } from '../../utils/AuthContext';
 
@@ -18,23 +17,42 @@ const CardListComponent = ({ route, navigation }) => {
   const [showSavedList, setShowSavedList] = useState(false);
   const [isCardMenuVisible, setCardMenuVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [cards, setCards] = useState([]);
   const { user } = useAuth();
 
-  const handleCardPress = (item) => {
-    navigation.navigate('CardComponent', { item });
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/character/${name}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch cards');
+        }
+        const data = await response.json();
+        console.log(data)
+        setCards(data);
+      } catch (error) {
+        console.error('Error fetching cards:', error);
+      }
+    };
+
+    fetchCards();
+  }, [name]);
+
+  const handleCardPress = (id) => {
+    navigation.navigate('CardComponent', { id });
   };
 
   const renderCardItem = ({ item }) => (
     <TouchableOpacity
       style={styles.cardItem}
-      onPress={() => handleCardPress(item)}
+      onPress={() => handleCardPress(item._id)}
     >
       <View style={{ marginRight: 10 }}>
         <Image source={item.thumbnail} style={styles.thumbnailImage} />
       </View>
       <View>
         <Text style={{ fontSize: 16, fontWeight: 'bold' }} numberOfLines={1}>
-          {item.name}
+          {item.cardName}
         </Text>
         <Text>Rating: {item.rating}</Text>
       </View>
@@ -121,8 +139,8 @@ const CardListComponent = ({ route, navigation }) => {
       ) : (
         <FlatList
           contentContainerStyle={styles.flatList}
-          data={cardData}
-          keyExtractor={(item) => item.id}
+          data={cards}
+          keyExtractor={(item) => item._id}
           renderItem={renderCardItem}
           showsVerticalScrollIndicator={false}
         />

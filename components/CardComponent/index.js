@@ -1,13 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Modal, TouchableOpacity, ScrollView } from 'react-native';
-import { FlatList as GestureFlatList } from 'react-native-gesture-handler';
 import HeroComponent from './HeroComponent';
-import ModalComponent from './ModalComponent'; // Import the new component
-import { heatEngagersData, punishersData, moveFlowchartData, customData } from '../../data/moveData';
+import ModalComponent from './ModalComponent';
+import { heatEngagersData } from '../../data/moveData';
+import { characters } from '../../data/characters'; // I need to extract characters[x].heatEngagerData from here as opposed to the line above
 
 const CardComponent = ({ route }) => {
-  const { item } = route.params;
+  const { id } = route.params;
+  const [card, setCard] = useState(null);
+  const [character, setCharacter] = useState(null)
   const [selectedItem, setSelectedItem] = useState(null);
+
+  useEffect(() => {
+    const fetchCard = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/id/${id}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch cards');
+        }
+        const data = await response.json();
+        setCard(data);
+        setCharacter(data.characterName)
+        console.log(data);
+      } catch (error) {
+        console.error('Error fetching card:', error);
+      }
+    };
+
+    fetchCard();
+  }, [id]);
 
   const openDrawer = (item) => {
     setSelectedItem(item);
@@ -17,48 +38,65 @@ const CardComponent = ({ route }) => {
     setSelectedItem(null);
   };
 
-  const dataMap = {
-    heatEngagersData,
-    punishersData,
-    moveFlowchartData,
-  };
-
-  const renderTableItem = ({ item, index, moveSetType }) => (
-    <TouchableOpacity onPress={() => openDrawer(item)}>
-      <View style={styles.tableRow}>
-        <View style={styles.columnLeft}>
-          <Text style={styles.value} numberOfLines={2}>
-            {item.move}
-          </Text>
-        </View>
-        <View style={styles.column}>
-          <Text style={styles.value} numberOfLines={2}>
-            {item.description}
-          </Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-
-  const renderMoveSet = (moveSetType) => {
-    const moves = dataMap[moveSetType];
+  const renderTableItem = ({ card, index, moveSetType }) => {
+    const { move, description, youtubeLink } = card;
+  
+    // Exclude __v and YouTube link from rendering
+    if (moveSetType === '__v' || moveSetType === 'youtubeLink') {
+      return null;
+    }
+  
     return (
-      <View style={styles.flatList}>
+      <TouchableOpacity onPress={() => openDrawer(card)}>
+        <View style={styles.tableRow}>
+          <View style={styles.columnLeft}>
+            <Text style={styles.value} numberOfLines={2}>
+              {move}
+            </Text>
+          </View>
+          <View style={styles.column}>
+            <Text style={styles.value} numberOfLines={2}>
+              {description}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+  
+  const renderMoveSet = (moveSetType) => {
+    if (moveSetType === '__v' || moveSetType === 'youtubeLink') {
+      return null;
+    }
+  
+    const moves = moveSetType === 'heatEngagersData' ? heatEngagersData : card?.[moveSetType] || [];
+  
+    if (!Array.isArray(moves)) {
+      // If moves is not an array, handle it appropriately
+      return null; // You can also render an error message or an empty view
+    }
+  
+    return (
+      <View style={styles.flatList} key={moveSetType}>
         <Text style={styles.tableTitle}>{moveSetType}</Text>
         {moves.map((item, index) => (
           <View key={`${index}_${moveSetType}`}>
-            {renderTableItem({ item, index, moveSetType })}
+            {renderTableItem({ card: item, index, moveSetType })}
           </View>
         ))}
       </View>
     );
   };
+   
 
   return (
     <ScrollView style={styles.container}>
-      <HeroComponent name={item.name} thumbnail={item.thumbnail} rating={item.rating} />
-      <View style={{paddingBottom: 32}}>
-        {Object.keys(dataMap).map((moveSetType) => renderMoveSet(moveSetType))}
+      <HeroComponent name={card?.cardName} thumbnail={card?.thumbnail} rating={card?.rating} />
+      <View style={{ paddingBottom: 32 }}>
+        {Object.keys(card || {}).map((moveSetType) => renderMoveSet(moveSetType))}
+      </View>
+      <View>
+        <Text>{card?.cardDescription}</Text>
       </View>
       <Modal visible={selectedItem !== null} animationType="slide" transparent>
         <ModalComponent selectedItem={selectedItem} closeDrawer={closeDrawer} />
