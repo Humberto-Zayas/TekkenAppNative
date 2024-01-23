@@ -47,7 +47,6 @@ const CardComponent = ({ route }) => {
           const userBookmarkData = await userBookmarkResponse.json();
           const bookmarked = userBookmarkData.bookmarks.some(bookmark => bookmark._id === id);
           setIsBookmarked(bookmarked);
-          console.log('user bookmark data:', userBookmarkData.bookmarks);
         } else {
           setIsBookmarked(false);
           console.error('Failed to fetch user bookmarks');
@@ -88,16 +87,30 @@ const CardComponent = ({ route }) => {
 
   const unbookmarkCard = async () => {
     try {
-      // Perform the unbookmarking logic
-
-      // Update the local state to reflect the bookmark status
-      setIsBookmarked(false);
-
-      console.log('Card unbookmarked successfully!');
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/users/${userId}/unbookmark/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+  
+      if (!response.ok) {
+        const responseData = await response.json();
+        if (responseData.error === 'Card not bookmarked') {
+          // Handle case when the card is not bookmarked
+          console.log('Card is not bookmarked');
+        } else {
+          throw new Error('Failed to unbookmark card');
+        }
+      } else {
+        // Update the local state to reflect the bookmark status
+        setIsBookmarked(false);
+        console.log('Card unbookmarked successfully!');
+      }
     } catch (error) {
       console.error('Error unbookmarking card:', error);
     }
-  };
+  };  
 
   const toggleBookmark = () => {
     if (isBookmarked) {
