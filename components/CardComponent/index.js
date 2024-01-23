@@ -4,12 +4,17 @@ import HeroComponent from './HeroComponent';
 import ModalComponent from './ModalComponent';
 import { characters } from '../../data/characters';
 import {styles} from './styles';
+import { useAuth } from '../../utils/AuthContext';
 
 const CardComponent = ({ route }) => {
   const { id } = route.params;
   const [card, setCard] = useState(null);
   const [character, setCharacter] = useState(null)
   const [selectedItem, setSelectedItem] = useState(null);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const { user } = useAuth();
+  const userId = user?.userId; // Make sure userId is defined
+  console.log('what this: ', user)
 
   useEffect(() => {
     const fetchCard = async () => {
@@ -32,6 +37,50 @@ const CardComponent = ({ route }) => {
 
     fetchCard();
   }, [id]);
+
+  const bookmarkCard = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/users/${userId}/bookmark/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to bookmark card');
+      }
+  
+      // Optionally, you can update the local state or perform any other actions after bookmarking.
+      // For example, you might want to fetch the updated user data.
+      setIsBookmarked(true);
+      console.log('Card bookmarked successfully!');
+    } catch (error) {
+      console.error('Error bookmarking card:', error);
+    }
+  };  
+
+  const unbookmarkCard = async () => {
+    try {
+      // Perform the unbookmarking logic
+
+      // Update the local state to reflect the bookmark status
+      setIsBookmarked(false);
+
+      console.log('Card unbookmarked successfully!');
+    } catch (error) {
+      console.error('Error unbookmarking card:', error);
+    }
+  };
+
+  const toggleBookmark = () => {
+    if (isBookmarked) {
+      unbookmarkCard();
+    } else {
+      bookmarkCard();
+    }
+  };
 
   const openDrawer = (item) => {
     setSelectedItem(item);
@@ -68,8 +117,6 @@ const CardComponent = ({ route }) => {
   };
 
   const renderMoveSet = (moveSetType) => {
-    console.log('Character:', character);
-    console.log('Heat Engager Data:', character?.heatEngagersData);
     if (moveSetType === '__v' || moveSetType === 'youtubeLink') {
       return null;
     }
@@ -95,7 +142,13 @@ const CardComponent = ({ route }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <HeroComponent name={card?.cardName} thumbnail={card?.thumbnail} rating={card?.rating} />
+      <HeroComponent 
+        name={card?.cardName} 
+        thumbnail={card?.thumbnail} 
+        rating={card?.rating} 
+        isBookmarked={isBookmarked}
+        toggleBookmark={toggleBookmark}
+      />
       <View style={{ paddingBottom: 64 }}>
         {renderMoveSet('heatEngagersData')}
         {Object.keys(card || {}).map((moveSetType) => renderMoveSet(moveSetType))}

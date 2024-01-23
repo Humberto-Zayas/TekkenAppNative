@@ -29,7 +29,7 @@ const AuthProvider = ({ children }) => {
   const login = (userData) => {
     setState((prevState) => ({ ...prevState, user: userData, userId: userData._id }));
     AsyncStorage.setItem('user', JSON.stringify(userData));
-  };
+  };  
 
   const logout = () => {
     setState((prevState) => ({ ...prevState, user: null, userId: null }));

@@ -63,4 +63,43 @@ export const styles = StyleSheet.create({
     color: 'blue',
     fontSize: 16,
   },
+  heroContainer: {
+    flexDirection: 'row',
+    alignItems: 'center', // Align to the bottom of the container
+    justifyContent: 'space-between', // Align to the right
+    marginBottom: 10,
+    width: '100%', // Make the component full width
+    paddingHorizontal: 10, // Add padding for better spacing
+  },
+  thumbnail: {
+    width: 50,
+    height: 50,
+    borderRadius: 25, // Adjust border radius to make it circular
+    marginRight: 10,
+  },
+  heroInfo: {
+    flex: 1,
+  },
+  heroName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  ratingContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+  },
+  heroRating: {
+    fontSize: 16,
+    marginRight: 5,
+  },
+  starContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  starIcon: {
+    marginHorizontal: 2,
+  },
+  bookmarkIcon: {
+    marginVertical: 2,
+  },
 });
