@@ -1,24 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Modal, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import HeroComponent from './HeroComponent';
 import ModalComponent from './ModalComponent';
 import { characters } from '../../data/characters';
-import {styles} from './styles';
+import { styles } from './styles';
 import { useAuth } from '../../utils/AuthContext';
 
 const CardComponent = ({ route }) => {
   const { id } = route.params;
   const [card, setCard] = useState(null);
-  const [character, setCharacter] = useState(null)
+  const [character, setCharacter] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const { user } = useAuth();
   const userId = user?.userId; // Make sure userId is defined
-  console.log('what this: ', user)
+
 
   useEffect(() => {
     const fetchCard = async () => {
       try {
+        if (!userId) {
+          console.error('User ID is undefined');
+          return;
+        }
+
+        // Fetch card data
         const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/id/${id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch cards');
@@ -26,17 +32,33 @@ const CardComponent = ({ route }) => {
         const data = await response.json();
         setCard(data);
 
-        // Find the character object in the characters array
+        // Find character data
         const foundCharacter = characters.find(char => char.name === data.characterName);
         setCharacter(foundCharacter);
 
+        // Fetch user bookmarks
+        const userBookmarkResponse = await fetch(`${process.env.REACT_APP_API_BASE_URL}/users/${userId}/bookmarks`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
+
+        if (userBookmarkResponse.ok) {
+          const userBookmarkData = await userBookmarkResponse.json();
+          const bookmarked = userBookmarkData.bookmarks.some(bookmark => bookmark._id === id);
+          setIsBookmarked(bookmarked);
+          console.log('user bookmark data:', userBookmarkData.bookmarks);
+        } else {
+          setIsBookmarked(false);
+          console.error('Failed to fetch user bookmarks');
+        }
       } catch (error) {
         console.error('Error fetching card:', error);
       }
     };
 
     fetchCard();
-  }, [id]);
+  }, [id, userId, user]);
 
   const bookmarkCard = async () => {
     try {
@@ -47,19 +69,22 @@ const CardComponent = ({ route }) => {
           Authorization: `Bearer ${user.token}`,
         },
       });
-  
+
       if (!response.ok) {
-        throw new Error('Failed to bookmark card');
+        const responseData = await response.json();
+        if (responseData.error === 'Card already bookmarked') {
+          Alert.alert('Already Bookmarked', 'This card is already bookmarked!');
+        } else {
+          throw new Error('Failed to bookmark card');
+        }
+      } else {
+        setIsBookmarked(true);
+        console.log('Card bookmarked successfully!');
       }
-  
-      // Optionally, you can update the local state or perform any other actions after bookmarking.
-      // For example, you might want to fetch the updated user data.
-      setIsBookmarked(true);
-      console.log('Card bookmarked successfully!');
     } catch (error) {
       console.error('Error bookmarking card:', error);
     }
-  };  
+  };
 
   const unbookmarkCard = async () => {
     try {
@@ -124,8 +149,7 @@ const CardComponent = ({ route }) => {
     const moves = moveSetType === 'heatEngagersData' ? character?.heatEngagersData || [] : card?.[moveSetType] || [];
 
     if (!Array.isArray(moves)) {
-      // If moves is not an array, handle it appropriately
-      return null; // You can also render an error message or an empty view
+      return null;
     }
 
     return (
@@ -142,45 +166,44 @@ const CardComponent = ({ route }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <HeroComponent 
-        name={card?.cardName} 
-        thumbnail={card?.thumbnail} 
-        rating={card?.rating} 
+      <HeroComponent
+        name={card?.cardName}
+        thumbnail={card?.thumbnail}
+        rating={card?.rating}
         isBookmarked={isBookmarked}
         toggleBookmark={toggleBookmark}
       />
+
       <View style={{ paddingBottom: 64 }}>
         {renderMoveSet('heatEngagersData')}
         {Object.keys(card || {}).map((moveSetType) => renderMoveSet(moveSetType))}
 
         <View>
-        <Text style={styles.tableTitle}>The Strategy</Text>
-        <Text style={{ marginTop: 10 }}>{card?.cardDescription}</Text>
+          <Text style={styles.tableTitle}>The Strategy</Text>
+          <Text style={{ marginTop: 10 }}>{card?.cardDescription}</Text>
 
-        {card?.youtubeLink && (
-          <View style={styles.tableRow}>
-            <Text style={styles.columnLeft}>
-              <Text style={styles.value} numberOfLines={2}>
-                YouTube Link
+          {card?.youtubeLink && (
+            <View style={styles.tableRow}>
+              <Text style={styles.columnLeft}>
+                <Text style={styles.value} numberOfLines={2}>
+                  YouTube Link
+                </Text>
               </Text>
-            </Text>
-            <View style={styles.column}>
-              <Text style={styles.value} numberOfLines={2}>
-                {card?.youtubeLink}
-              </Text>
+              <View style={styles.column}>
+                <Text style={styles.value} numberOfLines={2}>
+                  {card?.youtubeLink}
+                </Text>
+              </View>
             </View>
-          </View>
-        )}
+          )}
+        </View>
       </View>
-      </View>
-     
+
       <Modal visible={selectedItem !== null} animationType="slide" transparent>
         <ModalComponent selectedItem={selectedItem} closeDrawer={closeDrawer} />
       </Modal>
     </ScrollView>
   );
 };
-
-
 
 export default CardComponent;
