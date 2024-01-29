@@ -12,6 +12,7 @@ const CardComponent = ({ route }) => {
   const [character, setCharacter] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [userRating, setUserRating] = useState(null); // State to manage the user's rating
   const { user } = useAuth();
   const userId = user?.userId; // Make sure userId is defined
 
@@ -111,6 +112,32 @@ const CardComponent = ({ route }) => {
     }
   };
 
+  const rateCard = async () => {
+    try {
+      console.log('userRating before fetch:', userRating);
+
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/rate/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({ userId, rating: userRating }), // Include the user's rating
+      });
+
+      // ... rest of the code
+    } catch (error) {
+      console.error('Error submitting rating:', error);
+    }
+  };
+
+  // Use useEffect to automatically submit the rating when the userRating state changes
+  useEffect(() => {
+    if (userRating !== null) {
+      rateCard();
+    }
+  }, [userRating]);
+
   const toggleBookmark = () => {
     if (isBookmarked) {
       unbookmarkCard();
@@ -184,17 +211,14 @@ const CardComponent = ({ route }) => {
         rating={card?.rating}
         isBookmarked={isBookmarked}
         toggleBookmark={toggleBookmark}
+        onRatingChange={setUserRating}  // Pass setUserRating as the callback
       />
-
       <View style={{ paddingBottom: 64 }}>
         <Text style={styles.tableTitle}>The Strategy</Text>
         <Text style={{ marginBottom: 10, marginTop: 10 }}>{card?.cardDescription}</Text>
         {renderMoveSet('heatEngagersData')}
         {Object.keys(card || {}).map((moveSetType) => renderMoveSet(moveSetType))}
-
         <View>
-
-
           {card?.youtubeLink && (
             <View style={styles.tableRow}>
               <Text style={styles.columnLeft}>
@@ -211,7 +235,6 @@ const CardComponent = ({ route }) => {
           )}
         </View>
       </View>
-
       <Modal visible={selectedItem !== null} animationType="slide" transparent>
         <ModalComponent selectedItem={selectedItem} closeDrawer={closeDrawer} />
       </Modal>

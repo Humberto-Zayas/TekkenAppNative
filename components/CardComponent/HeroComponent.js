@@ -1,24 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import {styles} from './styles';
+import { styles } from './styles';
 
-const HeroComponent = ({ name, thumbnail, rating, isBookmarked, toggleBookmark }) => {
-  const [selectedRating, setSelectedRating] = useState(0);
+const HeroComponent = ({ name, thumbnail, rating, isBookmarked, toggleBookmark, onRatingChange }) => {
+  const [selectedRating, setSelectedRating] = useState(null);
 
   const handleStarPress = (starNumber) => {
     setSelectedRating(starNumber);
+    onRatingChange(starNumber); // Call the onRatingChange callback
   };
 
   const handleBookmarkPress = () => {
-    toggleBookmark(); // Call the toggleBookmark function from props
+    toggleBookmark();
   };
 
   const renderStars = () => {
     const stars = [];
 
     for (let i = 1; i <= 5; i++) {
-      const starIcon = selectedRating >= i ? 'star' : 'star-o';
+      const starIcon = selectedRating !== null && selectedRating >= i ? 'star' : 'star-o';
       stars.push(
         <TouchableOpacity key={i} onPress={() => handleStarPress(i)}>
           <FontAwesome name={starIcon} size={24} color="gold" style={styles.starIcon} />
@@ -34,7 +35,7 @@ const HeroComponent = ({ name, thumbnail, rating, isBookmarked, toggleBookmark }
       <Image source={thumbnail} style={styles.thumbnail} />
       <View style={styles.heroInfo}>
         <Text style={styles.heroName}>{name}</Text>
-        <Text style={styles.heroRating}>Rating: {rating}</Text>
+        <Text style={styles.heroRating}>Rating: {selectedRating !== null ? selectedRating : rating}</Text>
       </View>
       <View style={styles.ratingContainer}>
         <TouchableOpacity onPress={handleBookmarkPress}>
