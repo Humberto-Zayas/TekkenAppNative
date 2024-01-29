@@ -11,6 +11,7 @@ const CardListComponent = ({ route, navigation }) => {
   const [isCardMenuVisible, setCardMenuVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [cards, setCards] = useState([]);
+  const [averageRating, setAverageRating] = useState(null);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -21,7 +22,14 @@ const CardListComponent = ({ route, navigation }) => {
           throw new Error('Failed to fetch cards');
         }
         const data = await response.json();
-        setCards(data);
+
+        // Calculate and set the average rating for each card
+        const cardsWithAverageRating = data.map((card) => ({
+          ...card,
+          averageRating: calculateAverageRating(card),
+        }));
+
+        setCards(cardsWithAverageRating);
       } catch (error) {
         console.error('Error fetching cards:', error);
       }
@@ -29,6 +37,12 @@ const CardListComponent = ({ route, navigation }) => {
 
     fetchCards();
   }, [name]);
+
+  const calculateAverageRating = (card) => {
+    const totalRating = card.ratings.reduce((sum, rating) => sum + rating.rating, 0);
+    return card.ratings.length > 0 ? totalRating / card.ratings.length : 0;
+  };
+
 
   const handleCardPress = (id) => {
     navigation.navigate('CardComponent', { id });
@@ -46,7 +60,7 @@ const CardListComponent = ({ route, navigation }) => {
         <Text style={{ fontSize: 16, fontWeight: 'bold' }} numberOfLines={1}>
           {item.cardName}
         </Text>
-        <Text>Rating: {item.rating}</Text>
+        <Text>Average Rating: {item.averageRating}</Text>
       </View>
     </TouchableOpacity>
   );
