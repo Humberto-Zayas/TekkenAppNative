@@ -15,7 +15,6 @@ const CardComponent = ({ route }) => {
   const { user } = useAuth();
   const userId = user?.userId; // Make sure userId is defined
 
-
   useEffect(() => {
     const fetchCard = async () => {
       try {
@@ -93,7 +92,7 @@ const CardComponent = ({ route }) => {
           Authorization: `Bearer ${user.token}`,
         },
       });
-  
+
       if (!response.ok) {
         const responseData = await response.json();
         if (responseData.error === 'Card not bookmarked') {
@@ -110,7 +109,7 @@ const CardComponent = ({ route }) => {
     } catch (error) {
       console.error('Error unbookmarking card:', error);
     }
-  };  
+  };
 
   const toggleBookmark = () => {
     if (isBookmarked) {
@@ -131,8 +130,8 @@ const CardComponent = ({ route }) => {
   const renderTableItem = ({ card, index, moveSetType }) => {
     const { move, description, youtubeLink } = card;
 
-    // Exclude __v and YouTube link from rendering
-    if (moveSetType === '__v' || moveSetType === 'youtubeLink') {
+    // Exclude __v, ratings, and YouTube link from rendering
+    if (moveSetType === '__v' || moveSetType === 'youtubeLink' || moveSetType === 'ratings') {
       return null;
     }
 
@@ -155,7 +154,7 @@ const CardComponent = ({ route }) => {
   };
 
   const renderMoveSet = (moveSetType) => {
-    if (moveSetType === '__v' || moveSetType === 'youtubeLink') {
+    if (moveSetType === '__v' || moveSetType === 'youtubeLink' || moveSetType === 'ratings') {
       return null;
     }
 
@@ -188,12 +187,13 @@ const CardComponent = ({ route }) => {
       />
 
       <View style={{ paddingBottom: 64 }}>
+        <Text style={styles.tableTitle}>The Strategy</Text>
+        <Text style={{ marginBottom: 10, marginTop: 10 }}>{card?.cardDescription}</Text>
         {renderMoveSet('heatEngagersData')}
         {Object.keys(card || {}).map((moveSetType) => renderMoveSet(moveSetType))}
 
         <View>
-          <Text style={styles.tableTitle}>The Strategy</Text>
-          <Text style={{ marginTop: 10 }}>{card?.cardDescription}</Text>
+
 
           {card?.youtubeLink && (
             <View style={styles.tableRow}>
