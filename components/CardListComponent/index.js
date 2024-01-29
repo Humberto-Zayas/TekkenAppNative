@@ -43,6 +43,15 @@ const CardListComponent = ({ route, navigation }) => {
     return card.ratings.length > 0 ? totalRating / card.ratings.length : 0;
   };
 
+  const getBackgroundColor = (averageRating) => {
+    if (averageRating >= 4.5) {
+      return 'green'; // High rating, green background
+    } else if (averageRating >= 3) {
+      return 'yellow'; // Medium rating, yellow background
+    } else {
+      return 'red'; // Low rating, red background
+    }
+  };
 
   const handleCardPress = (id) => {
     navigation.navigate('CardComponent', { id });
@@ -50,17 +59,17 @@ const CardListComponent = ({ route, navigation }) => {
 
   const renderCardItem = ({ item }) => (
     <TouchableOpacity
-      style={styles.cardItem}
+      style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]}
       onPress={() => handleCardPress(item._id)}
     >
-      <View style={{ marginRight: 10 }}>
+      {/* <View style={{ marginRight: 10 }}>
         <Image source={item.thumbnail} style={styles.thumbnailImage} />
-      </View>
+      </View> */}
       <View>
-        <Text style={{ fontSize: 16, fontWeight: 'bold' }} numberOfLines={1}>
+        <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }} numberOfLines={1}>
           {item.cardName}
         </Text>
-        <Text>Average Rating: {item.averageRating}</Text>
+        <Text style={{ color: 'white' }}>Average Rating: {item.averageRating}</Text>
       </View>
     </TouchableOpacity>
   );
