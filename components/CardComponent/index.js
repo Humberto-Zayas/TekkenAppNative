@@ -12,7 +12,8 @@ const CardComponent = ({ route }) => {
   const [character, setCharacter] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const [userRating, setUserRating] = useState(null); // State to manage the user's rating
+  const [userRating, setUserRating] = useState(null);
+  const [averageRating, setAverageRating] = useState(null);
   const { user } = useAuth();
   const userId = user?.userId; // Make sure userId is defined
 
@@ -35,6 +36,14 @@ const CardComponent = ({ route }) => {
         // Find character data
         const foundCharacter = characters.find(char => char.name === data.characterName);
         setCharacter(foundCharacter);
+
+        // Calculate the average rating
+        const totalRating = data.ratings ? data.ratings.reduce((sum, rating) => sum + rating.rating, 0) : 0;
+        const calculatedAverageRating =
+          data.ratings && data.ratings.length > 0 ? totalRating / data.ratings.length : 0;
+
+        // Update the state with the calculated average rating
+        setAverageRating(isNaN(calculatedAverageRating) ? 0 : calculatedAverageRating);
 
         // Fetch user bookmarks
         const userBookmarkResponse = await fetch(`${process.env.REACT_APP_API_BASE_URL}/users/${userId}/bookmarks`, {
@@ -208,7 +217,7 @@ const CardComponent = ({ route }) => {
       <HeroComponent
         name={card?.cardName}
         thumbnail={card?.thumbnail}
-        rating={card?.rating}
+        rating={averageRating}
         isBookmarked={isBookmarked}
         toggleBookmark={toggleBookmark}
         onRatingChange={setUserRating}  // Pass setUserRating as the callback
