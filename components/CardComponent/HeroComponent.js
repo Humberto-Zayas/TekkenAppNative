@@ -30,9 +30,21 @@ const HeroComponent = ({ name, thumbnail, rating, isBookmarked, toggleBookmark, 
     return stars;
   };
 
+  const getBackgroundColor = (rating) => {
+    if (rating >= 4.5) {
+      return 'green'; // High rating, green background
+    } else if (rating >= 3) {
+      return 'yellow'; // Medium rating, yellow background
+    } else {
+      return 'red'; // Low rating, red background
+    }
+  };
+
+  const ratingBackgroundColor = getBackgroundColor(selectedRating !== null ? selectedRating : rating);
+
   return (
-    <View style={styles.heroContainer}>
-      <Image source={thumbnail} style={styles.thumbnail} />
+    <View style={[styles.heroContainer, { backgroundColor: ratingBackgroundColor }]}>
+      {/* <Image source={thumbnail} style={styles.thumbnail} /> */}
       <View style={styles.heroInfo}>
         <Text style={styles.heroName}>{name}</Text>
         <Text style={styles.heroRating}>Rating: {selectedRating !== null ? selectedRating : rating}</Text>

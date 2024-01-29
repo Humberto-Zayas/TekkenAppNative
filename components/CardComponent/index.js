@@ -165,12 +165,12 @@ const CardComponent = ({ route }) => {
 
   const renderTableItem = ({ card, index, moveSetType }) => {
     const { move, description, youtubeLink } = card;
-
-    // Exclude __v, ratings, and YouTube link from rendering
-    if (moveSetType === '__v' || moveSetType === 'youtubeLink' || moveSetType === 'ratings') {
+  
+    // Exclude __v, ratings, and lastEditedAt from rendering
+    if (moveSetType === '__v' || moveSetType === 'ratings' || moveSetType === 'lastEditedAt' || moveSetType === 'youtubeLink' || moveSetType === 'createdAt') {
       return null;
     }
-
+  
     return (
       <TouchableOpacity onPress={() => openDrawer(card)}>
         <View style={styles.tableRow}>
@@ -188,9 +188,10 @@ const CardComponent = ({ route }) => {
       </TouchableOpacity>
     );
   };
+  
 
   const renderMoveSet = (moveSetType) => {
-    if (moveSetType === '__v' || moveSetType === 'youtubeLink' || moveSetType === 'ratings') {
+    if (moveSetType === '__v' || moveSetType === 'youtubeLink' || moveSetType === 'ratings' || moveSetType === 'lastEditedAt' || moveSetType === 'createdAt') {
       return null;
     }
 
