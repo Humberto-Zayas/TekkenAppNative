@@ -11,7 +11,6 @@ const CardListComponent = ({ route, navigation }) => {
   const [isCardMenuVisible, setCardMenuVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [cards, setCards] = useState([]);
-  const [averageRating, setAverageRating] = useState(null);
   const { user } = useAuth();
 
   useEffect(() => {
