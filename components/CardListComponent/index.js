@@ -12,7 +12,6 @@ const CardListComponent = ({ route, navigation }) => {
   const [isCardMenuVisible, setCardMenuVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [cards, setCards] = useState([]);
-  const [sortOrder, setSortOrder] = useState('asc');
   const { user } = useAuth();
 
   useEffect(() => {
@@ -30,47 +29,14 @@ const CardListComponent = ({ route, navigation }) => {
           averageRating: calculateAverageRating(card),
         }));
 
-        // Sort the cards locally based on createdAt and sortOrder
-        const sortedCards = cardsWithAverageRating.slice().sort((a, b) => {
-          const dateA = new Date(a.createdAt);
-          const dateB = new Date(b.createdAt);
-
-          if (sortOrder === 'asc') {
-            return dateA - dateB;
-          } else {
-            return dateB - dateA;
-          }
-        });
-
-        setCards(sortedCards);
+        setCards(cardsWithAverageRating);
       } catch (error) {
         console.error('Error fetching cards:', error);
       }
     };
 
     fetchCards();
-  }, [name, sortOrder]);
-
-  const handleSortOrderChange = (order) => {
-    setSortOrder(order);
-  };
-
-  const sortCards = (cards, order) => {
-    // Create a copy of the cards array before sorting
-    const sortedCards = [...cards];
-
-    sortedCards.sort((a, b) => {
-      // Compare createdAt timestamps for sorting
-      const dateA = new Date(a.createdAt).getTime();
-      const dateB = new Date(b.createdAt).getTime();
-
-      return order === 'asc' ? dateA - dateB : dateB - dateA;
-    });
-
-    return sortedCards;
-  };
-
-  const sortedCards = sortCards(cards, sortOrder);
+  }, [name]);
 
   const calculateAverageRating = (card) => {
     const totalRating = card.ratings.reduce((sum, rating) => sum + rating.rating, 0);
@@ -152,36 +118,13 @@ const CardListComponent = ({ route, navigation }) => {
       {showSavedList ? (
         <SavedListComponent navigation={navigation} />
       ) : (
-        <>
-          <View style={styles.sortOrderContainer}>
-            <Text style={styles.sortOrderLabel}>Sort Order:</Text>
-            <TouchableOpacity
-              onPress={() => handleSortOrderChange('asc')}
-              style={[
-                styles.sortOrderButton,
-                { backgroundColor: sortOrder === 'asc' ? 'lightblue' : 'white' },
-              ]}
-            >
-              <Text>Ascending</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => handleSortOrderChange('desc')}
-              style={[
-                styles.sortOrderButton,
-                { backgroundColor: sortOrder === 'desc' ? 'lightblue' : 'white' },
-              ]}
-            >
-              <Text>Descending</Text>
-            </TouchableOpacity>
-          </View>
-          <FlatList
-            contentContainerStyle={styles.flatList}
-            data={cards}
-            keyExtractor={(item) => item._id}
-            renderItem={renderCardItem}
-            showsVerticalScrollIndicator={false}
-          />
-        </>
+        <FlatList
+          contentContainerStyle={styles.flatList}
+          data={cards}
+          keyExtractor={(item) => item._id}
+          renderItem={renderCardItem}
+          showsVerticalScrollIndicator={false}
+        />
       )}
 
       <View style={styles.toggleButtonContainer}>
