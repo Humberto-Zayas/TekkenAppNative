@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, Modal } from 'react-native';
 import SavedListComponent from '../SavedListComponent';
+import LoginSignupModalComponent from './LoginSignupModalComponent';
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
 
@@ -97,45 +98,11 @@ const CardListComponent = ({ route, navigation }) => {
 
   const renderLoginSignupModal = () => {
     return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={showModal}
-        onRequestClose={closeModal}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Authentication Required</Text>
-            <Text style={styles.modalText}>
-              To create cards, you must log in or sign up.
-            </Text>
-            <TouchableOpacity
-              style={styles.modalButton}
-              onPress={() => {
-                closeModal();
-                navigation.navigate('Login', { isSignUp: false });
-              }}
-            >
-              <Text style={styles.modalButtonText}>Login</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalButton}
-              onPress={() => {
-                closeModal();
-                navigation.navigate('Login', { isSignUp: true });
-              }}
-            >
-              <Text style={styles.modalButtonText}>Sign Up</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalButton}
-              onPress={closeModal}
-            >
-              <Text style={styles.modalButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <LoginSignupModalComponent
+        showModal={showModal}
+        closeModal={closeModal}
+        navigation={navigation}
+      />
     );
   };
 
