@@ -12,6 +12,7 @@ const CardListComponent = ({ route, navigation }) => {
   const [isCardMenuVisible, setCardMenuVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [cards, setCards] = useState([]);
+  const [sortOrder, setSortOrder] = useState('ascending'); // Track sorting order
   const { user } = useAuth();
 
   useEffect(() => {
@@ -29,14 +30,17 @@ const CardListComponent = ({ route, navigation }) => {
           averageRating: calculateAverageRating(card),
         }));
 
-        setCards(cardsWithAverageRating);
+        // Sort cards based on sortOrder
+        const sortedCards = sortOrder === 'ascending' ? cardsWithAverageRating : cardsWithAverageRating.reverse();
+        
+        setCards(sortedCards);
       } catch (error) {
         console.error('Error fetching cards:', error);
       }
     };
 
     fetchCards();
-  }, [name]);
+  }, [name, sortOrder]);
 
   const calculateAverageRating = (card) => {
     const totalRating = card.ratings.reduce((sum, rating) => sum + rating.rating, 0);
@@ -96,6 +100,11 @@ const CardListComponent = ({ route, navigation }) => {
     setShowModal(false);
   };
 
+  const toggleSortOrder = () => {
+    // Toggle between ascending and descending order
+    setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
+  };
+
   const renderLoginSignupModal = () => {
     return (
       <LoginSignupModalComponent
@@ -118,13 +127,19 @@ const CardListComponent = ({ route, navigation }) => {
       {showSavedList ? (
         <SavedListComponent navigation={navigation} />
       ) : (
-        <FlatList
-          contentContainerStyle={styles.flatList}
-          data={cards}
-          keyExtractor={(item) => item._id}
-          renderItem={renderCardItem}
-          showsVerticalScrollIndicator={false}
-        />
+        <>
+          <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
+            <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
+          </TouchableOpacity>
+
+          <FlatList
+            contentContainerStyle={styles.flatList}
+            data={cards}
+            keyExtractor={(item) => item._id}
+            renderItem={renderCardItem}
+            showsVerticalScrollIndicator={false}
+          />
+        </>
       )}
 
       <View style={styles.toggleButtonContainer}>
@@ -158,6 +173,5 @@ const CardListComponent = ({ route, navigation }) => {
     </View>
   );
 };
-
 
 export default CardListComponent;
