@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
+import { format } from 'date-fns';
 
 const SavedListComponent = ({ navigation }) => {
   const [bookmarkedCards, setBookmarkedCards] = useState([]);
@@ -63,6 +64,8 @@ const SavedListComponent = ({ navigation }) => {
   };
 
   const renderSavedCardItem = ({ item }) => {
+    const formattedCreatedAt = format(new Date(item.createdAt), 'MMMM dd, yyyy HH:mm:ss');
+
     return (
       <TouchableOpacity style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]} onPress={() => handleSavedCardPress(item._id)}>
         {/* <View style={{ marginRight: 10 }}>
@@ -73,6 +76,10 @@ const SavedListComponent = ({ navigation }) => {
             {item.cardName}
           </Text>
           <Text>Rating: {item.averageRating}</Text>
+          <Text style={{ color: 'white' }}>Creator: {item.username}</Text>
+          <Text style={{ color: 'white' }}>
+            {item.lastEditedAt ? `Last Edited At: ${formattedLastEditedAt}` : `Created: ${formattedCreatedAt}`}
+          </Text>
         </View>
       </TouchableOpacity>
     );

@@ -5,6 +5,7 @@ import LoginSignupModalComponent from './LoginSignupModalComponent';
 import SortAndFilterModal from './SortAndFilterModal';
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
+import { format } from 'date-fns';
 
 const CardListComponent = ({ route, navigation }) => {
   const { character } = route.params;
@@ -25,17 +26,15 @@ const CardListComponent = ({ route, navigation }) => {
 
   const applyFilter = useCallback((filterUsername) => {
     setSelectedUsername(filterUsername);
-  
+
     if (filterUsername === 'All Users') {
-      console.log('Setting cards to originalCards');
       setCards(originalCards); // Reset to the original data
     } else {
       const filteredCards = originalCards.filter((card) => card.username === filterUsername);
-      console.log('Setting cards to filteredCards:', filteredCards);
       setCards(filteredCards);
     }
   }, [originalCards]);
-  
+
 
   const fetchCards = async () => {
     try {
@@ -49,7 +48,7 @@ const CardListComponent = ({ route, navigation }) => {
         averageRating: calculateAverageRating(card),
       }));
       const sortedCards = sortOrder === 'ascending' ? cardsWithAverageRating : cardsWithAverageRating.reverse();
-  
+
       // Save both as initial and current set of cards
       setCards(sortedCards);
       setOriginalCards(sortedCards);
@@ -57,7 +56,7 @@ const CardListComponent = ({ route, navigation }) => {
       console.error('Error fetching cards:', error);
     }
   };
-  
+
   const calculateAverageRating = (card) => {
     const totalRating = card.ratings.reduce((sum, rating) => sum + rating.rating, 0);
     return card.ratings.length > 0 ? totalRating / card.ratings.length : 0;
@@ -77,19 +76,29 @@ const CardListComponent = ({ route, navigation }) => {
     navigation.navigate('CardComponent', { id });
   };
 
-  const renderCardItem = ({ item }) => (
-    <TouchableOpacity
-      style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]}
-      onPress={() => handleCardPress(item._id)}
-    >
-      <View>
-        <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }} numberOfLines={1}>
-          {item.cardName}
-        </Text>
-        <Text style={{ color: 'white' }}>Average Rating: {item.averageRating}</Text>
-      </View>
-    </TouchableOpacity>
-  );
+
+  const renderCardItem = ({ item }) => {
+    const formattedCreatedAt = format(new Date(item.createdAt), 'MMMM dd, yyyy HH:mm:ss');
+
+    return (
+      <TouchableOpacity
+        style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]}
+        onPress={() => handleCardPress(item._id)}
+      >
+        <View>
+          <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }} numberOfLines={1}>
+            {item.cardName}
+          </Text>
+          <Text style={{ color: 'white' }}>Average Rating: {item.averageRating}</Text>
+          <Text style={{ color: 'white' }}>Creator: {item.username}</Text>
+          <Text style={{ color: 'white' }}>
+            {item.lastEditedAt ? `Last Edited At: ${formattedLastEditedAt}` : `Created: ${formattedCreatedAt}`}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
 
   const toggleCardMenu = () => {
     setCardMenuVisible(!isCardMenuVisible);
@@ -131,21 +140,21 @@ const CardListComponent = ({ route, navigation }) => {
 
   useEffect(() => {
     let updatedCards;
-  
+
     // Update cards based on selected username
     if (selectedUsername === 'All Users') {
       updatedCards = originalCards;
     } else {
       updatedCards = originalCards.filter((card) => card.username === selectedUsername);
     }
-  
+
     // Check if the selected username has changed before updating
     if (selectedUsername !== updatedCards) {
       setCards(updatedCards);
     }
   }, [selectedUsername, originalCards]);
-  
-  
+
+
 
   return (
     <View style={styles.container}>

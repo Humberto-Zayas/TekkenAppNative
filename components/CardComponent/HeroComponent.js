@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
+import { format } from 'date-fns';
 
-const HeroComponent = ({ name, thumbnail, rating, isBookmarked, toggleBookmark, onRatingChange }) => {
+const HeroComponent = ({ name, thumbnail, rating, isBookmarked, toggleBookmark, onRatingChange, date, creator }) => {
   const [selectedRating, setSelectedRating] = useState(null);
 
   const handleStarPress = (starNumber) => {
@@ -48,6 +49,10 @@ const HeroComponent = ({ name, thumbnail, rating, isBookmarked, toggleBookmark, 
       <View style={styles.heroInfo}>
         <Text style={styles.heroName}>{name}</Text>
         <Text style={styles.heroRating}>Rating: {selectedRating !== null ? selectedRating : rating}</Text>
+        <Text style={styles.heroRating}>{creator}</Text>
+        <Text style={styles.heroRating}>
+          {date ? format(new Date(date), 'MMM dd, yyyy HH:mm') : 'Not available'}
+        </Text>
       </View>
       <View style={styles.ratingContainer}>
         <TouchableOpacity onPress={handleBookmarkPress}>

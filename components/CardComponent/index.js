@@ -15,7 +15,7 @@ const CardComponent = ({ route }) => {
   const [userRating, setUserRating] = useState(null);
   const [averageRating, setAverageRating] = useState(null);
   const { user } = useAuth();
-  const userId = user?.userId; // Make sure userId is defined
+  const userId = user?.userId;
 
   useEffect(() => {
     const fetchCard = async () => {
@@ -25,7 +25,6 @@ const CardComponent = ({ route }) => {
           return;
         }
 
-        // Fetch card data
         const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/id/${id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch cards');
@@ -33,19 +32,15 @@ const CardComponent = ({ route }) => {
         const data = await response.json();
         setCard(data);
 
-        // Find character data
         const foundCharacter = characters.find(char => char.name === data.characterName);
         setCharacter(foundCharacter);
 
-        // Calculate the average rating
         const totalRating = data.ratings ? data.ratings.reduce((sum, rating) => sum + rating.rating, 0) : 0;
         const calculatedAverageRating =
           data.ratings && data.ratings.length > 0 ? totalRating / data.ratings.length : 0;
 
-        // Update the state with the calculated average rating
         setAverageRating(isNaN(calculatedAverageRating) ? 0 : calculatedAverageRating);
 
-        // Fetch user bookmarks
         const userBookmarkResponse = await fetch(`${process.env.REACT_APP_API_BASE_URL}/users/${userId}/bookmarks`, {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -106,13 +101,11 @@ const CardComponent = ({ route }) => {
       if (!response.ok) {
         const responseData = await response.json();
         if (responseData.error === 'Card not bookmarked') {
-          // Handle case when the card is not bookmarked
           console.log('Card is not bookmarked');
         } else {
           throw new Error('Failed to unbookmark card');
         }
       } else {
-        // Update the local state to reflect the bookmark status
         setIsBookmarked(false);
         console.log('Card unbookmarked successfully!');
       }
@@ -122,21 +115,15 @@ const CardComponent = ({ route }) => {
   };
 
   const rateCard = async () => {
-    try {
-      console.log('User Information:', userId, user?.token);
-      console.log('Card ID:', id);
-      console.log('User Rating:', userRating);
-  
+    try {  
       const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/rate/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${user?.token}`, // Ensure user token is available
+          Authorization: `Bearer ${user?.token}`,
         },
-        body: JSON.stringify({ userId, rating: userRating, username: user?.username }), // Include the user's username
+        body: JSON.stringify({ userId, rating: userRating, username: user?.username })
       });
-  
-      // ... rest of the code
     } catch (error) {
       console.error('Error submitting rating:', error);
     }
@@ -168,7 +155,6 @@ const CardComponent = ({ route }) => {
   const renderTableItem = ({ card, index, moveSetType }) => {
     const { move, description, youtubeLink } = card;
   
-    // Exclude __v, ratings, and lastEditedAt from rendering
     if (moveSetType === '__v' || moveSetType === 'ratings' || moveSetType === 'lastEditedAt' || moveSetType === 'youtubeLink' || moveSetType === 'createdAt') {
       return null;
     }
@@ -191,7 +177,6 @@ const CardComponent = ({ route }) => {
     );
   };
   
-
   const renderMoveSet = (moveSetType) => {
     if (moveSetType === '__v' || moveSetType === 'youtubeLink' || moveSetType === 'ratings' || moveSetType === 'lastEditedAt' || moveSetType === 'createdAt') {
       return null;
@@ -220,10 +205,12 @@ const CardComponent = ({ route }) => {
       <HeroComponent
         name={card?.cardName}
         thumbnail={card?.thumbnail}
+        creator={card?.username}
+        date={card?.lastEditedAt || card?.createdAt} 
         rating={averageRating}
         isBookmarked={isBookmarked}
         toggleBookmark={toggleBookmark}
-        onRatingChange={setUserRating}  // Pass setUserRating as the callback
+        onRatingChange={setUserRating} 
       />
       <View style={{ paddingBottom: 64 }}>
         <Text style={styles.tableTitle}>The Strategy</Text>
