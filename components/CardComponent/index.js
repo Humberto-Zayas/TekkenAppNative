@@ -123,23 +123,25 @@ const CardComponent = ({ route }) => {
 
   const rateCard = async () => {
     try {
-      console.log('userRating before fetch:', userRating);
-
+      console.log('User Information:', userId, user?.token);
+      console.log('Card ID:', id);
+      console.log('User Rating:', userRating);
+  
       const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/rate/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${user?.token}`, // Ensure user token is available
         },
-        body: JSON.stringify({ userId, rating: userRating }), // Include the user's rating
+        body: JSON.stringify({ userId, rating: userRating, username: user?.username }), // Include the user's username
       });
-
+  
       // ... rest of the code
     } catch (error) {
       console.error('Error submitting rating:', error);
     }
   };
-
+  
   // Use useEffect to automatically submit the rating when the userRating state changes
   useEffect(() => {
     if (userRating !== null) {

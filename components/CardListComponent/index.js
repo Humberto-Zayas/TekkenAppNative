@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image, Modal } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
 import SavedListComponent from '../SavedListComponent';
 import LoginSignupModalComponent from './LoginSignupModalComponent';
+import SortAndFilterModal from './SortAndFilterModal';
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
 
@@ -12,36 +13,51 @@ const CardListComponent = ({ route, navigation }) => {
   const [isCardMenuVisible, setCardMenuVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [cards, setCards] = useState([]);
-  const [sortOrder, setSortOrder] = useState('ascending'); // Track sorting order
+  const [originalCards, setOriginalCards] = useState([]);
+  const [sortOrder, setSortOrder] = useState('ascending');
+  const [showSortFilterModal, setShowSortFilterModal] = useState(false);
+  const [selectedUsername, setSelectedUsername] = useState('All Users');
   const { user } = useAuth();
 
-  useEffect(() => {
-    const fetchCards = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/character/${name}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch cards');
-        }
-        const data = await response.json();
+  const toggleSortFilterModal = () => {
+    setShowSortFilterModal(!showSortFilterModal);
+  };
 
-        // Calculate and set the average rating for each card
-        const cardsWithAverageRating = data.map((card) => ({
-          ...card,
-          averageRating: calculateAverageRating(card),
-        }));
+  const applyFilter = useCallback((filterUsername) => {
+    setSelectedUsername(filterUsername);
+  
+    if (filterUsername === 'All Users') {
+      console.log('Setting cards to originalCards');
+      setCards(originalCards); // Reset to the original data
+    } else {
+      const filteredCards = originalCards.filter((card) => card.username === filterUsername);
+      console.log('Setting cards to filteredCards:', filteredCards);
+      setCards(filteredCards);
+    }
+  }, [originalCards]);
+  
 
-        // Sort cards based on sortOrder
-        const sortedCards = sortOrder === 'ascending' ? cardsWithAverageRating : cardsWithAverageRating.reverse();
-        
-        setCards(sortedCards);
-      } catch (error) {
-        console.error('Error fetching cards:', error);
+  const fetchCards = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/character/${name}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch cards');
       }
-    };
-
-    fetchCards();
-  }, [name, sortOrder]);
-
+      const data = await response.json();
+      const cardsWithAverageRating = data.map((card) => ({
+        ...card,
+        averageRating: calculateAverageRating(card),
+      }));
+      const sortedCards = sortOrder === 'ascending' ? cardsWithAverageRating : cardsWithAverageRating.reverse();
+  
+      // Save both as initial and current set of cards
+      setCards(sortedCards);
+      setOriginalCards(sortedCards);
+    } catch (error) {
+      console.error('Error fetching cards:', error);
+    }
+  };
+  
   const calculateAverageRating = (card) => {
     const totalRating = card.ratings.reduce((sum, rating) => sum + rating.rating, 0);
     return card.ratings.length > 0 ? totalRating / card.ratings.length : 0;
@@ -49,11 +65,11 @@ const CardListComponent = ({ route, navigation }) => {
 
   const getBackgroundColor = (averageRating) => {
     if (averageRating >= 4.5) {
-      return 'green'; // High rating, green background
+      return 'green';
     } else if (averageRating >= 3) {
-      return 'yellow'; // Medium rating, yellow background
+      return 'yellow';
     } else {
-      return 'red'; // Low rating, red background
+      return 'red';
     }
   };
 
@@ -66,9 +82,6 @@ const CardListComponent = ({ route, navigation }) => {
       style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]}
       onPress={() => handleCardPress(item._id)}
     >
-      {/* <View style={{ marginRight: 10 }}>
-        <Image source={item.thumbnail} style={styles.thumbnailImage} />
-      </View> */}
       <View>
         <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }} numberOfLines={1}>
           {item.cardName}
@@ -84,11 +97,9 @@ const CardListComponent = ({ route, navigation }) => {
 
   const handleCreateCard = () => {
     setCardMenuVisible(false);
-
     if (!user) {
       setShowModal(true);
     } else {
-      // User is logged in, navigate to 'Create Card'
       navigation.navigate('CreateCardComponent', {
         characterName: name,
         characterImage: image,
@@ -101,7 +112,6 @@ const CardListComponent = ({ route, navigation }) => {
   };
 
   const toggleSortOrder = () => {
-    // Toggle between ascending and descending order
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
   };
 
@@ -114,6 +124,28 @@ const CardListComponent = ({ route, navigation }) => {
       />
     );
   };
+
+  useEffect(() => {
+    fetchCards();
+  }, [name, sortOrder]);
+
+  useEffect(() => {
+    let updatedCards;
+  
+    // Update cards based on selected username
+    if (selectedUsername === 'All Users') {
+      updatedCards = originalCards;
+    } else {
+      updatedCards = originalCards.filter((card) => card.username === selectedUsername);
+    }
+  
+    // Check if the selected username has changed before updating
+    if (selectedUsername !== updatedCards) {
+      setCards(updatedCards);
+    }
+  }, [selectedUsername, originalCards]);
+  
+  
 
   return (
     <View style={styles.container}>
@@ -131,6 +163,10 @@ const CardListComponent = ({ route, navigation }) => {
           <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
             <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
           </TouchableOpacity>
+          {/* 
+          <TouchableOpacity style={styles.sortButton} onPress={toggleSortFilterModal}>
+            <Text style={styles.sortButtonText}>Sort & Filter</Text>
+          </TouchableOpacity> */}
 
           <FlatList
             contentContainerStyle={styles.flatList}
@@ -160,6 +196,14 @@ const CardListComponent = ({ route, navigation }) => {
       <TouchableOpacity style={styles.fab} onPress={toggleCardMenu}>
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>
+      <SortAndFilterModal
+        visible={showSortFilterModal}
+        onClose={toggleSortFilterModal}
+        onSortChange={fetchCards}
+        onFilterChange={applyFilter}
+        cards={cards}
+        selectedUsername={selectedUsername}
+      />
 
       {isCardMenuVisible && (
         <View style={styles.fabMenu}>
