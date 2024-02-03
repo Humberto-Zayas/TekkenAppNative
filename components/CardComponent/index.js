@@ -6,7 +6,7 @@ import { characters } from '../../data/characters';
 import { styles } from './styles';
 import { useAuth } from '../../utils/AuthContext';
 
-const CardComponent = ({ route }) => {
+const CardComponent = ({ route, navigation, }) => {
   const { id } = route.params;
   const [card, setCard] = useState(null);
   const [character, setCharacter] = useState(null);
@@ -152,6 +152,11 @@ const CardComponent = ({ route }) => {
     setSelectedItem(null);
   };
 
+
+  const handleCreatorPress = () => {
+    navigation.navigate('CreatorCardListComponent', {creatorId: card?.userId, creator: card?.username});
+  };
+
   const renderTableItem = ({ card, index, moveSetType }) => {
     const { move, description, youtubeLink } = card;
   
@@ -207,6 +212,7 @@ const CardComponent = ({ route }) => {
         thumbnail={card?.thumbnail}
         creator={card?.username}
         date={card?.lastEditedAt || card?.createdAt} 
+        handleCreatorPress={handleCreatorPress}
         rating={averageRating}
         isBookmarked={isBookmarked}
         toggleBookmark={toggleBookmark}

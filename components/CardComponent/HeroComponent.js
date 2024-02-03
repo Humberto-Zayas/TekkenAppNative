@@ -4,7 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 import { format } from 'date-fns';
 
-const HeroComponent = ({ name, thumbnail, rating, isBookmarked, toggleBookmark, onRatingChange, date, creator }) => {
+const HeroComponent = ({ name, thumbnail, rating, isBookmarked, toggleBookmark, onRatingChange, date, creator, handleCreatorPress }) => {
   const [selectedRating, setSelectedRating] = useState(null);
 
   const handleStarPress = (starNumber) => {
@@ -33,11 +33,11 @@ const HeroComponent = ({ name, thumbnail, rating, isBookmarked, toggleBookmark, 
 
   const getBackgroundColor = (rating) => {
     if (rating >= 4.5) {
-      return 'green'; // High rating, green background
+      return 'green';
     } else if (rating >= 3) {
-      return 'yellow'; // Medium rating, yellow background
+      return 'yellow';
     } else {
-      return 'red'; // Low rating, red background
+      return 'red';
     }
   };
 
@@ -49,7 +49,10 @@ const HeroComponent = ({ name, thumbnail, rating, isBookmarked, toggleBookmark, 
       <View style={styles.heroInfo}>
         <Text style={styles.heroName}>{name}</Text>
         <Text style={styles.heroRating}>Rating: {selectedRating !== null ? selectedRating : rating}</Text>
-        <Text style={styles.heroRating}>{creator}</Text>
+        <Text 
+          onPress={() => handleCreatorPress()}
+          style={styles.heroRating}
+        >{creator}</Text>
         <Text style={styles.heroRating}>
           {date ? format(new Date(date), 'MMM dd, yyyy HH:mm') : 'Not available'}
         </Text>
