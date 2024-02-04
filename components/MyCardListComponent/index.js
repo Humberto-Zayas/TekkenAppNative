@@ -3,16 +3,16 @@ import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
 import { format } from 'date-fns';
+import { FontAwesome } from '@expo/vector-icons';
 
-const CreatorCardListComponent = ({ route, navigation }) => {
-  const { creatorId, creator } = route.params;
+const MyCardListComponent = ({ route, navigation }) => {
   const [cards, setCards] = useState([]);
   const [sortOrder, setSortOrder] = useState('ascending');
   const { user } = useAuth();
 
   const fetchCards = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/user/${creatorId}`);
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/user/${user.userId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch cards');
       }
@@ -78,14 +78,14 @@ const CreatorCardListComponent = ({ route, navigation }) => {
 
   useEffect(() => {
     fetchCards();
-  }, [creatorId, sortOrder]);
+  }, [user]);
 
   return (
     <View style={styles.container}>
       <View style={styles.heroContainer}>
         {/* <Image source={image} style={styles.heroImage} /> */}
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10 }}>
-          {creator}'s Cards
+          {user.username}'s Cards
         </Text>
       </View>
       <View>
@@ -108,4 +108,4 @@ const CreatorCardListComponent = ({ route, navigation }) => {
   );
 };
 
-export default CreatorCardListComponent;
+export default MyCardListComponent;

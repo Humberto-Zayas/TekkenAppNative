@@ -9,6 +9,7 @@ import CardListComponent from './components/CardListComponent';
 import CardComponent from './components/CardComponent';
 import CreateCardComponent from './components/CreateCardComponent';
 import CreatorCardListComponent from './components/CreatorCardListComponent';
+import MyCardListComponent from './components/MyCardListComponent';
 import Login from './components/Login';
 import CustomHeader from './components/CustomHeader';
 
@@ -32,6 +33,7 @@ export default function App() {
           <Stack.Screen name="CardComponent" component={CardComponent} />
           <Stack.Screen name="CreateCardComponent" component={CreateCardComponent} />
           <Stack.Screen name="CreatorCardListComponent" component={CreatorCardListComponent} />
+          <Stack.Screen name="MyCardListComponent" component={MyCardListComponent} />
           <Stack.Screen name="Login" component={Login} />
         </Stack.Navigator>
         <StatusBar style="auto" />

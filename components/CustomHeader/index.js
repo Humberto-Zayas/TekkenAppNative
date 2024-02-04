@@ -15,6 +15,11 @@ const CustomHeader = ({ navigation }) => {
     navigation.navigate('Login', { isSignUp });
   };
 
+  const handleCreatorPress = () => {
+    setMenuVisible(false);
+    navigation.navigate('MyCardListComponent');
+  };
+
   const handleLogout = () => {
     setMenuVisible(false);
     logout();
@@ -47,15 +52,19 @@ const CustomHeader = ({ navigation }) => {
         onRequestClose={() => setMenuVisible(false)}
       >
         <View style={styles.modalContainer}>
-          <TouchableOpacity style={styles.modalContent} onPress={() => setMenuVisible(false)}>
-            <Text style={styles.menuText}>Close Menu</Text>
-          </TouchableOpacity>
-
           <>
             {user ? (
-              <TouchableOpacity style={styles.modalContent} onPress={handleLogout}>
-                <Text style={styles.menuText}>Logout</Text>
-              </TouchableOpacity>
+              <>
+                <TouchableOpacity
+                  style={styles.modalContent}
+                  onPress={handleCreatorPress}
+                >
+                  <Text style={styles.menuText}>My Cards</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.modalContent} onPress={handleLogout}>
+                  <Text style={styles.menuText}>Logout</Text>
+                </TouchableOpacity>
+              </>
             ) : (
               <>
                 <TouchableOpacity
@@ -72,6 +81,9 @@ const CustomHeader = ({ navigation }) => {
                 </TouchableOpacity>
               </>
             )}
+            <TouchableOpacity style={styles.modalContent} onPress={() => setMenuVisible(false)}>
+              <Text style={styles.menuText}>Close Menu</Text>
+            </TouchableOpacity>
           </>
         </View>
       </Modal>
