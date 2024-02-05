@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
@@ -74,7 +74,7 @@ export const styles = StyleSheet.create({
   thumbnail: {
     width: 50,
     height: 50,
-    borderRadius: 25, // Adjust border radius to make it circular
+    borderRadius: 25,
     marginRight: 10,
   },
   heroInfo: {
@@ -101,5 +101,35 @@ export const styles = StyleSheet.create({
   },
   bookmarkIcon: {
     marginVertical: 2,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    margin: 0,
+    backgroundColor: 'transparent',
+  },
+  menuContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    height: 120,
+    borderRadius: 20,
+    shadowColor: 'rgba(0,0,0,0.3)',
+    shadowOffset: {
+      width: 0,
+      height: -15,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  menuItem: {
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  menuItemIcon: {
+    fontSize: 24,
   },
 });

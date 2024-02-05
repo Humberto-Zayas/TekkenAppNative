@@ -208,38 +208,40 @@ const CardComponent = ({ route, navigation, }) => {
   return (
     <ScrollView style={styles.container}>
       {user && card && (
-        <HeroComponent
-          handleCreatorPress={handleCreatorPress}
-          rating={averageRating}
-          isBookmarked={isBookmarked}
-          user={user}
-          card={card}
-          toggleBookmark={toggleBookmark}
-          onRatingChange={setUserRating}
-        />
-      )}
-      <View style={{ paddingBottom: 64 }}>        
-        <Text style={styles.tableTitle}>The Strategy</Text>
-        <Text style={{ marginBottom: 10, marginTop: 10 }}>{card?.cardDescription}</Text>
-        {renderMoveSet('heatEngagersData')}
-        {Object.keys(card || {}).map((moveSetType) => renderMoveSet(moveSetType))}
-        <View>
-          {card?.youtubeLink && (
-            <View style={styles.tableRow}>
-              <Text style={styles.columnLeft}>
-                <Text style={styles.value} numberOfLines={2}>
-                  YouTube Link
-                </Text>
-              </Text>
-              <View style={styles.column}>
-                <Text style={styles.value} numberOfLines={2}>
-                  {card?.youtubeLink}
-                </Text>
-              </View>
+        <>
+          <HeroComponent
+            handleCreatorPress={handleCreatorPress}
+            rating={averageRating}
+            isBookmarked={isBookmarked}
+            user={user}
+            card={card}
+            toggleBookmark={toggleBookmark}
+            onRatingChange={setUserRating}
+          />
+          <View style={{ paddingBottom: 64 }}>        
+            <Text style={styles.tableTitle}>The Strategy</Text>
+            <Text style={{ marginBottom: 10, marginTop: 10 }}>{card?.cardDescription}</Text>
+            {renderMoveSet('heatEngagersData')}
+            {Object.keys(card || {}).map((moveSetType) => renderMoveSet(moveSetType))}
+            <View>
+              {card?.youtubeLink && (
+                <View style={styles.tableRow}>
+                  <Text style={styles.columnLeft}>
+                    <Text style={styles.value} numberOfLines={2}>
+                      YouTube Link
+                    </Text>
+                  </Text>
+                  <View style={styles.column}>
+                    <Text style={styles.value} numberOfLines={2}>
+                      {card?.youtubeLink}
+                    </Text>
+                  </View>
+                </View>
+              )}
             </View>
-          )}
-        </View>
-      </View>
+          </View>
+        </>
+      )}
       <Modal visible={selectedItem !== null} animationType="slide" transparent>
         <ModalComponent selectedItem={selectedItem} closeDrawer={closeDrawer} />
       </Modal>
