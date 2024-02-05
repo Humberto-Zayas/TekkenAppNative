@@ -115,7 +115,7 @@ const CardComponent = ({ route, navigation, }) => {
   };
 
   const rateCard = async () => {
-    try {  
+    try {
       const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/rate/${id}`, {
         method: 'POST',
         headers: {
@@ -128,7 +128,7 @@ const CardComponent = ({ route, navigation, }) => {
       console.error('Error submitting rating:', error);
     }
   };
-  
+
   // Use useEffect to automatically submit the rating when the userRating state changes
   useEffect(() => {
     if (userRating !== null) {
@@ -154,16 +154,16 @@ const CardComponent = ({ route, navigation, }) => {
 
 
   const handleCreatorPress = () => {
-    navigation.navigate('CreatorCardListComponent', {creatorId: card?.userId, creator: card?.username});
+    navigation.navigate('CreatorCardListComponent', { creatorId: card?.userId, creator: card?.username });
   };
 
   const renderTableItem = ({ card, index, moveSetType }) => {
     const { move, description, youtubeLink } = card;
-  
+
     if (moveSetType === '__v' || moveSetType === 'ratings' || moveSetType === 'lastEditedAt' || moveSetType === 'youtubeLink' || moveSetType === 'createdAt') {
       return null;
     }
-  
+
     return (
       <TouchableOpacity onPress={() => openDrawer(card)}>
         <View style={styles.tableRow}>
@@ -181,7 +181,7 @@ const CardComponent = ({ route, navigation, }) => {
       </TouchableOpacity>
     );
   };
-  
+
   const renderMoveSet = (moveSetType) => {
     if (moveSetType === '__v' || moveSetType === 'youtubeLink' || moveSetType === 'ratings' || moveSetType === 'lastEditedAt' || moveSetType === 'createdAt') {
       return null;
@@ -207,18 +207,18 @@ const CardComponent = ({ route, navigation, }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <HeroComponent
-        name={card?.cardName}
-        thumbnail={card?.thumbnail}
-        creator={card?.username}
-        date={card?.lastEditedAt || card?.createdAt} 
-        handleCreatorPress={handleCreatorPress}
-        rating={averageRating}
-        isBookmarked={isBookmarked}
-        toggleBookmark={toggleBookmark}
-        onRatingChange={setUserRating} 
-      />
-      <View style={{ paddingBottom: 64 }}>
+      {user && card && (
+        <HeroComponent
+          handleCreatorPress={handleCreatorPress}
+          rating={averageRating}
+          isBookmarked={isBookmarked}
+          user={user}
+          card={card}
+          toggleBookmark={toggleBookmark}
+          onRatingChange={setUserRating}
+        />
+      )}
+      <View style={{ paddingBottom: 64 }}>        
         <Text style={styles.tableTitle}>The Strategy</Text>
         <Text style={{ marginBottom: 10, marginTop: 10 }}>{card?.cardDescription}</Text>
         {renderMoveSet('heatEngagersData')}

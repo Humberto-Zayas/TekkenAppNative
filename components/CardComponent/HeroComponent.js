@@ -4,7 +4,8 @@ import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 import { format } from 'date-fns';
 
-const HeroComponent = ({ name, thumbnail, rating, isBookmarked, toggleBookmark, onRatingChange, date, creator, handleCreatorPress }) => {
+const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRatingChange, handleCreatorPress }) => {
+  console.log(card, user);
   const [selectedRating, setSelectedRating] = useState(null);
 
   const handleStarPress = (starNumber) => {
@@ -45,19 +46,23 @@ const HeroComponent = ({ name, thumbnail, rating, isBookmarked, toggleBookmark, 
 
   return (
     <View style={[styles.heroContainer, { backgroundColor: ratingBackgroundColor }]}>
-      {/* <Image source={thumbnail} style={styles.thumbnail} /> */}
+      {/* <Image source={card.thumbnail} style={styles.thumbnail} /> */}
       <View style={styles.heroInfo}>
-        <Text style={styles.heroName}>{name}</Text>
+        <Text style={styles.heroName}>{card.cardName}</Text>
         <Text style={styles.heroRating}>Rating: {selectedRating !== null ? selectedRating : rating}</Text>
-        <Text 
-          onPress={() => handleCreatorPress()}
-          style={styles.heroRating}
-        >{creator}</Text>
+        <Text onPress={() => handleCreatorPress()} style={styles.heroRating}>
+          {card.username}
+        </Text>
         <Text style={styles.heroRating}>
-          {date ? format(new Date(date), 'MMM dd, yyyy HH:mm') : 'Not available'}
+          {card.lastEditedAt
+            ? format(new Date(card.lastEditedAt), 'MMM dd, yyyy HH:mm')
+            : format(new Date(card.createdAt), 'MMM dd, yyyy HH:mm')}
         </Text>
       </View>
       <View style={styles.ratingContainer}>
+      {user?.userId === card?.userId && (
+          <Text style={styles.ownCardText}>This is your card</Text>
+        )}
         <TouchableOpacity onPress={handleBookmarkPress}>
           <FontAwesome
             name={isBookmarked ? 'bookmark' : 'bookmark-o'}
