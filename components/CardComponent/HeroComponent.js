@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Modal } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 import { format } from 'date-fns';
+import { REACT_APP_API_BASE_URL } from '@env';
 
 const RatingModal = ({ visible, onClose, onStarPress, selectedRating }) => {
   return (
@@ -31,10 +32,39 @@ const RatingModal = ({ visible, onClose, onStarPress, selectedRating }) => {
   );
 };
 
-const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRatingChange, handleCreatorPress }) => {
+const ConfirmationModal = ({ visible, onClose, onConfirm }) => {
+  return (
+    <Modal animationType="fade" transparent visible={visible}>
+      <TouchableOpacity
+        style={styles.modalContainer}
+        activeOpacity={1}
+        onPressOut={onClose}
+      >
+        <View style={styles.centeredModalContainer}>
+          <View style={styles.centeredMenuContainer}>
+            <Text style={styles.confirmationText}>Are you sure you want to delete this card?</Text>
+            <View style={styles.confirmationButtonsContainer}>
+              <TouchableOpacity onPress={onConfirm}>
+                <FontAwesome name="check" size={24} color="green" style={styles.menuItemIcon} />
+                <Text style={styles.confirmationButtonText}>Delete</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={onClose}>
+                <FontAwesome name="times" size={24} color="red" style={styles.menuItemIcon} />
+                <Text style={styles.confirmationButtonText}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </TouchableOpacity>
+    </Modal>
+  );
+};
+
+const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRatingChange, handleCreatorPress, onDelete }) => {
   const [selectedRating, setSelectedRating] = useState(null);
   const [isMenuVisible, setMenuVisible] = useState(false);
   const [isRatingModalVisible, setRatingModalVisible] = useState(false);
+  const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
 
   const handleStarPress = (starNumber) => {
     setSelectedRating(starNumber);
@@ -61,30 +91,40 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
     setRatingModalVisible(false);
   };
 
-  const handleDeletePress = async () => {
+  const handleDeletePress = () => {
+    setMenuVisible(false)
+    setConfirmationModalVisible(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    console.log(user?.userId)
     try {
       // Assuming you have the card ID in card._id
       const response = await fetch(`${REACT_APP_API_BASE_URL}/cards/${card._id}`, {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${user?.token}`, // Add your access token here
+          Authorization: `Bearer ${user?.token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user: user.userId
+          userId: user.userId,
         }),
       });
 
       if (response.ok) {
-        // Handle success, you might want to refresh your card list or take other actions
         console.log('Card deleted successfully');
+        onDelete();
+        // Optionally, you can perform additional actions after successful deletion
       } else {
-        // Handle errors, show an alert or other feedback to the user
         console.error('Error deleting card:', response.status);
+        // Handle errors, show an alert or other feedback to the user
       }
     } catch (error) {
       console.error('Error deleting card:', error);
       // Handle other errors
+    } finally {
+      // Close the confirmation modal whether the deletion was successful or not
+      setConfirmationModalVisible(false);
     }
   };
 
@@ -164,6 +204,11 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
           </View>
         </TouchableOpacity>
       </Modal>
+      <ConfirmationModal
+        visible={isConfirmationModalVisible}
+        onClose={() => setConfirmationModalVisible(false)}
+        onConfirm={handleConfirmDelete}
+      />
     </View>
   );
 };

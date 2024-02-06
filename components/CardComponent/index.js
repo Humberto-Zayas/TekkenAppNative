@@ -129,6 +129,10 @@ const CardComponent = ({ route, navigation, }) => {
     }
   };
 
+  const onDelete = () => {
+    navigation.goBack();
+  };
+
   // Use useEffect to automatically submit the rating when the userRating state changes
   useEffect(() => {
     if (userRating !== null) {
@@ -217,6 +221,7 @@ const CardComponent = ({ route, navigation, }) => {
             card={card}
             toggleBookmark={toggleBookmark}
             onRatingChange={setUserRating}
+            onDelete={onDelete}
           />
           <View style={{ paddingBottom: 64 }}>        
             <Text style={styles.tableTitle}>The Strategy</Text>
