@@ -5,7 +5,7 @@ import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
 import { format } from 'date-fns';
 
-const SavedListComponent = ({ navigation }) => {
+const SavedListComponent = ({ navigation, characterName }) => {
   const [bookmarkedCards, setBookmarkedCards] = useState([]);
   const [sortOrder, setSortOrder] = useState('ascending');
   const { user } = useAuth();
@@ -14,28 +14,35 @@ const SavedListComponent = ({ navigation }) => {
     const fetchBookmarks = async () => {
       if (user) {
         try {
-          const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/users/${user.userId}/bookmarks`);
+          let url = `${process.env.REACT_APP_API_BASE_URL}/users/${user.userId}/bookmarks`;
+
+          // Append character name to the URL if provided
+          if (characterName) {
+            url += `?characterName=${encodeURIComponent(characterName)}`;
+          }
+
+          const response = await fetch(url);
           if (!response.ok) {
             throw new Error('Failed to fetch bookmarks');
           }
+
           const data = await response.json();
           const cardsWithAverageRating = data.bookmarks.map((card) => ({
             ...card,
             averageRating: calculateAverageRating(card),
           }));
-    
+
           // Sort the cards based on createdAt field
           const sortedBookmarks = sortOrder === 'ascending'
             ? cardsWithAverageRating.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
             : cardsWithAverageRating.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    
+
           setBookmarkedCards(sortedBookmarks);
         } catch (error) {
           console.error('Error fetching bookmarks:', error);
         }
       }
     };
-    
 
     fetchBookmarks();
   }, [user, sortOrder]);
@@ -89,18 +96,25 @@ const SavedListComponent = ({ navigation }) => {
     if (user) {
       return (
         <>
-        <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
-            <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
-          </TouchableOpacity>
-          <FlatList
-          contentContainerStyle={styles.flatList}
-          data={bookmarkedCards}
-          keyExtractor={(item) => item._id}
-          renderItem={renderSavedCardItem}
-          showsVerticalScrollIndicator={false}
-        />
+          {bookmarkedCards.length === 0 ? (
+            <Text style={styles.noCardsText}>
+              {`You currently have no bookmarked cards${characterName ? ` for ${characterName}` : ''}.`}
+            </Text>
+          ) : (
+            <>
+              <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
+                <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
+              </TouchableOpacity>
+              <FlatList
+                contentContainerStyle={styles.flatList}
+                data={bookmarkedCards}
+                keyExtractor={(item) => item._id}
+                renderItem={renderSavedCardItem}
+                showsVerticalScrollIndicator={false}
+              />
+            </>
+          )}
         </>
-        
       );
     } else {
       return (
@@ -124,6 +138,7 @@ const SavedListComponent = ({ navigation }) => {
       );
     }
   };
+  
 
   return <View>{renderContent()}</View>;
 };

@@ -58,4 +58,24 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  cab:{
+    backgroundColor: 'blue',
+    width: 36,
+    height: 36,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 3,
+    marginTop: 10,
+    marginLeft: 'auto',
+    marginRight: 'auto'
+  },
+  cabText: {
+    fontSize: 18,
+    color: 'white',
+    fontWeight: 'bold'
+  },
+  noCardsText: {
+    fontSize: 18
+  }
 });

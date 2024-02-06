@@ -159,7 +159,7 @@ const CardListComponent = ({ route, navigation }) => {
         </Text>
       </View>
       {showSavedList ? (
-        <SavedListComponent navigation={navigation} />
+        <SavedListComponent characterName={name} navigation={navigation} />
       ) : (
         <>
           {cards.length === 0 ? (
