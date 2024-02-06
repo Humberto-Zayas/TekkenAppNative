@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
 import { format } from 'date-fns';
 import { useFocusEffect } from '@react-navigation/native';
+import SavedListComponent from '../SavedListComponent';
 
 const MyCardListComponent = ({ navigation }) => {
   const [cards, setCards] = useState([]);
   const [sortOrder, setSortOrder] = useState('ascending');
+  const [showSavedList, setShowSavedList] = useState(false); // New state to toggle between card list and saved list
   const { user } = useAuth();
 
   const fetchCards = async () => {
@@ -33,16 +35,6 @@ const MyCardListComponent = ({ navigation }) => {
   const calculateAverageRating = (card) => {
     const totalRating = card.ratings.reduce((sum, rating) => sum + rating.rating, 0);
     return card.ratings.length > 0 ? totalRating / card.ratings.length : 0;
-  };
-
-  const getBackgroundColor = (averageRating) => {
-    if (averageRating >= 4.5) {
-      return 'green';
-    } else if (averageRating >= 3) {
-      return 'yellow';
-    } else {
-      return 'red';
-    }
   };
 
   const handleCardPress = (id) => {
@@ -75,6 +67,10 @@ const MyCardListComponent = ({ navigation }) => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
   };
 
+  const toggleSavedList = () => {
+    setShowSavedList(!showSavedList);
+  };
+
   useFocusEffect(
     useCallback(() => {
       fetchCards();
@@ -89,29 +85,49 @@ const MyCardListComponent = ({ navigation }) => {
         </Text>
       </View>
       <View>
-        {cards.length === 0 ? (
-          <>
-            <Text style={styles.noCardsText}>
-              {`You currently have no cards. Why don't you create one!`}
-            </Text>
-            <TouchableOpacity style={styles.cab} onPress={() => { navigation.navigate('Home')}}>
-              <Text style={styles.cabText}>+</Text>
-            </TouchableOpacity>
-          </>
+        {showSavedList ? (
+          <SavedListComponent navigation={navigation} />
         ) : (
           <>
-            <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
-              <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
-            </TouchableOpacity>
-            <FlatList
-              contentContainerStyle={styles.flatList}
-              data={cards}
-              keyExtractor={(item) => item._id}
-              renderItem={renderCardItem}
-              showsVerticalScrollIndicator={false}
-            />
+            {cards.length === 0 ? (
+              <>
+                <Text style={styles.noCardsText}>
+                  {`You currently have no cards. Why don't you create one!`}
+                </Text>
+                <TouchableOpacity style={styles.cab} onPress={() => { navigation.navigate('Home')}}>
+                  <Text style={styles.cabText}>+</Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
+                  <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
+                </TouchableOpacity>
+                <FlatList
+                  contentContainerStyle={styles.flatList}
+                  data={cards}
+                  keyExtractor={(item) => item._id}
+                  renderItem={renderCardItem}
+                  showsVerticalScrollIndicator={false}
+                />
+              </>
+            )}
           </>
         )}
+        <View style={styles.toggleButtonContainer}>
+        <TouchableOpacity
+          style={[styles.toggleButton, { marginRight: 10 }]}
+          onPress={() => setShowSavedList(false)}
+        >
+          <Text style={styles.toggleButtonText}>Show All Cards</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.toggleButton}
+          onPress={() => setShowSavedList(true)}
+        >
+          <Text style={styles.toggleButtonText}>Show Saved List</Text>
+        </TouchableOpacity>
+      </View>
       </View>
     </View>
   );
