@@ -3,9 +3,9 @@ import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
 import { format } from 'date-fns';
-import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect hook
+import { useFocusEffect } from '@react-navigation/native';
 
-const MyCardListComponent = ({ route, navigation }) => {
+const MyCardListComponent = ({ navigation }) => {
   const [cards, setCards] = useState([]);
   const [sortOrder, setSortOrder] = useState('ascending');
   const { user } = useAuth();
@@ -49,7 +49,6 @@ const MyCardListComponent = ({ route, navigation }) => {
     navigation.navigate('CardComponent', { id });
   };
 
-
   const renderCardItem = ({ item }) => {
     const formattedCreatedAt = format(new Date(item.createdAt), 'MMMM dd, yyyy HH:mm:ss');
 
@@ -78,34 +77,41 @@ const MyCardListComponent = ({ route, navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-      // Fetch cards data whenever the screen gains focus
       fetchCards();
-    }, [user]) // Fetch data whenever user changes
+    }, [user])
   );
 
   return (
     <View style={styles.container}>
       <View style={styles.heroContainer}>
-        {/* <Image source={image} style={styles.heroImage} /> */}
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10 }}>
           {user.username}'s Cards
         </Text>
       </View>
       <View>
-        <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
-          <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
-        </TouchableOpacity>
-        {/* 
-          <TouchableOpacity style={styles.sortButton} onPress={toggleSortFilterModal}>
-            <Text style={styles.sortButtonText}>Sort & Filter</Text>
-          </TouchableOpacity> */}
-        <FlatList
-          contentContainerStyle={styles.flatList}
-          data={cards}
-          keyExtractor={(item) => item._id}
-          renderItem={renderCardItem}
-          showsVerticalScrollIndicator={false}
-        />
+        {cards.length === 0 ? (
+          <>
+            <Text style={styles.noCardsText}>
+              {`You currently have no cards. Why don't you create one!`}
+            </Text>
+            <TouchableOpacity style={styles.cab} onPress={() => { navigation.navigate('Home')}}>
+              <Text style={styles.cabText}>+</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
+              <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
+            </TouchableOpacity>
+            <FlatList
+              contentContainerStyle={styles.flatList}
+              data={cards}
+              keyExtractor={(item) => item._id}
+              renderItem={renderCardItem}
+              showsVerticalScrollIndicator={false}
+            />
+          </>
+        )}
       </View>
     </View>
   );

@@ -79,12 +79,28 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     elevation: 3,
   },
+  cab:{
+    backgroundColor: 'blue',
+    width: 36,
+    height: 36,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 3,
+    marginTop: 10,
+    marginLeft: 'auto',
+    marginRight: 'auto'
+  },
   fabText: {
     fontSize: 24,
     color: 'white',
     fontWeight: 'bold',
   },
-  // Floating Action Menu Styles
+  cabText: {
+    fontSize: 18,
+    color: 'white',
+    fontWeight: 'bold'
+  },
   fabMenu: {
     position: 'absolute',
     bottom: 180,
@@ -132,4 +148,7 @@ export const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
+  noCardsText: {
+    fontSize: 18
+  }
 });

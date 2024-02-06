@@ -98,7 +98,6 @@ const CardListComponent = ({ route, navigation }) => {
     );
   };
 
-
   const toggleCardMenu = () => {
     setCardMenuVisible(!isCardMenuVisible);
   };
@@ -140,20 +139,16 @@ const CardListComponent = ({ route, navigation }) => {
   useEffect(() => {
     let updatedCards;
 
-    // Update cards based on selected username
     if (selectedUsername === 'All Users') {
       updatedCards = originalCards;
     } else {
       updatedCards = originalCards.filter((card) => card.username === selectedUsername);
     }
 
-    // Check if the selected username has changed before updating
     if (selectedUsername !== updatedCards) {
       setCards(updatedCards);
     }
   }, [selectedUsername, originalCards]);
-
-
 
   return (
     <View style={styles.container}>
@@ -163,26 +158,34 @@ const CardListComponent = ({ route, navigation }) => {
           {name}
         </Text>
       </View>
-
       {showSavedList ? (
         <SavedListComponent navigation={navigation} />
       ) : (
         <>
-          <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
-            <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
-          </TouchableOpacity>
-          {/* 
-          <TouchableOpacity style={styles.sortButton} onPress={toggleSortFilterModal}>
-            <Text style={styles.sortButtonText}>Sort & Filter</Text>
-          </TouchableOpacity> */}
+          {cards.length === 0 ? (
+            <>
+              <Text style={styles.noCardsText}>
+                {`There are currently no cards${name ? ` for ${name}` : ''}. Why don't you add one?`}
+              </Text>
+              <TouchableOpacity style={styles.cab} onPress={handleCreateCard}>
+                <Text style={styles.cabText}>+</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
+                <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
+              </TouchableOpacity>
 
-          <FlatList
-            contentContainerStyle={styles.flatList}
-            data={cards}
-            keyExtractor={(item) => item._id}
-            renderItem={renderCardItem}
-            showsVerticalScrollIndicator={false}
-          />
+              <FlatList
+                contentContainerStyle={styles.flatList}
+                data={cards}
+                keyExtractor={(item) => item._id}
+                renderItem={renderCardItem}
+                showsVerticalScrollIndicator={false}
+              />
+            </>
+          )}
         </>
       )}
 
