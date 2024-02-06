@@ -61,6 +61,33 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
     setRatingModalVisible(false);
   };
 
+  const handleDeletePress = async () => {
+    try {
+      // Assuming you have the card ID in card._id
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/cards/${card._id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${user?.token}`, // Add your access token here
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user: user.userId
+        }),
+      });
+
+      if (response.ok) {
+        // Handle success, you might want to refresh your card list or take other actions
+        console.log('Card deleted successfully');
+      } else {
+        // Handle errors, show an alert or other feedback to the user
+        console.error('Error deleting card:', response.status);
+      }
+    } catch (error) {
+      console.error('Error deleting card:', error);
+      // Handle other errors
+    }
+  };
+
   const getBackgroundColor = (rating) => {
     if (rating >= 4.5) {
       return 'green';
@@ -122,7 +149,7 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
               <TouchableOpacity style={styles.menuItem}>
                 <FontAwesome name="edit" size={24} color="blue" style={styles.menuItemIcon} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.menuItem}>
+              <TouchableOpacity style={styles.menuItem} onPress={handleDeletePress}>
                 <FontAwesome name="trash" size={24} color="red" style={styles.menuItemIcon} />
               </TouchableOpacity>
               <TouchableOpacity onPress={handleBookmarkPress}>
