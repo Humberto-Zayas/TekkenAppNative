@@ -3,7 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
 import { format } from 'date-fns';
-import { FontAwesome } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect hook
 
 const MyCardListComponent = ({ route, navigation }) => {
   const [cards, setCards] = useState([]);
@@ -76,9 +76,12 @@ const MyCardListComponent = ({ route, navigation }) => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
   };
 
-  useEffect(() => {
-    fetchCards();
-  }, [user]);
+  useFocusEffect(
+    useCallback(() => {
+      // Fetch cards data whenever the screen gains focus
+      fetchCards();
+    }, [user]) // Fetch data whenever user changes
+  );
 
   return (
     <View style={styles.container}>
