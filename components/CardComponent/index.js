@@ -71,6 +71,10 @@ const CardComponent = ({ route, navigation, }) => {
     }
   };
 
+  const handleMoveSetLinkPress = (moveSetName, moves) => {
+    navigation.navigate('CardDetailComponent', { moveSetName, moves }); 
+  };
+
   const bookmarkCard = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/users/${userId}/bookmark/${id}`, {
@@ -206,9 +210,16 @@ const CardComponent = ({ route, navigation, }) => {
           <View style={{ paddingBottom: 64 }}>
             <Text style={styles.tableTitle}>The Strategy</Text>
             <Text style={{ marginBottom: 10, marginTop: 10 }}>{card?.cardDescription}</Text>
-            {renderMoveSet('heatEngagersData')}
-            {renderMoveSet('punisherData')}
-            {renderMoveSet('moveFlowChartData')}
+            {/* Render links to move sets */}
+            <TouchableOpacity onPress={() => handleMoveSetLinkPress('HeatEngagers', card?.heatEngagersData || [])}>
+              <Text style={styles.link}>Heat Engagers</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleMoveSetLinkPress('Punishers', card?.punisherData || [])}>
+              <Text style={styles.link}>Punishers</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleMoveSetLinkPress('Move Flow Chart', card?.moveFlowChartData || [])}>
+              <Text style={styles.link}>Move Flow Chart</Text>
+            </TouchableOpacity>
             <View>
               {card?.youtubeLink && (
                 <View style={styles.tableRow}>
