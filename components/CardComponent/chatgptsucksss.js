@@ -5,7 +5,6 @@ import ModalComponent from './ModalComponent';
 import { characters } from '../../data/characters';
 import { styles } from './styles';
 import { useAuth } from '../../utils/AuthContext';
-import CardDetailComponent from './CardDetailComponent';
 
 const CardComponent = ({ route, navigation, }) => {
   const { id } = route.params;
@@ -141,6 +140,7 @@ const CardComponent = ({ route, navigation, }) => {
     navigation.goBack();
   };
 
+  // Use useEffect to automatically submit the rating when the userRating state changes
   useEffect(() => {
     if (userRating !== null) {
       rateCard();
@@ -163,8 +163,34 @@ const CardComponent = ({ route, navigation, }) => {
     setSelectedItem(null);
   };
 
+
   const handleCreatorPress = () => {
     navigation.navigate('CreatorCardListComponent', { creatorId: card?.userId, creator: card?.username });
+  };
+
+  const renderTableItem = ({ card, index, moveSetType }) => {
+    const { move, description, youtubeLink } = card;
+
+    if (moveSetType === '__v' || moveSetType === 'ratings' || moveSetType === 'lastEditedAt' || moveSetType === 'youtubeLink' || moveSetType === 'createdAt') {
+      return null;
+    }
+
+    return (
+      <TouchableOpacity onPress={() => openDrawer(card)}>
+        <View style={styles.tableRow}>
+          <View style={styles.columnLeft}>
+            <Text style={styles.value} numberOfLines={2}>
+              {move}
+            </Text>
+          </View>
+          <View style={styles.column}>
+            <Text style={styles.value} numberOfLines={2}>
+              {description}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
   };
 
   const renderMoveSet = (moveSetType) => {
@@ -179,12 +205,14 @@ const CardComponent = ({ route, navigation, }) => {
     }
 
     return (
-      <CardDetailComponent
-        key={moveSetType}
-        moveSetType={moveSetType}
-        moves={moves}
-        openDrawer={openDrawer}
-      />
+      <View style={styles.flatList} key={moveSetType}>
+        <Text style={styles.tableTitle}>{moveSetType}</Text>
+        {moves.map((item, index) => (
+          <View key={`${index}_${moveSetType}`}>
+            {renderTableItem({ card: item, index, moveSetType })}
+          </View>
+        ))}
+      </View>
     );
   };
 
@@ -203,12 +231,11 @@ const CardComponent = ({ route, navigation, }) => {
             onDelete={onDelete}
             navigation={navigation}
           />
-          <View style={{ paddingBottom: 64 }}>
+          <View style={{ paddingBottom: 64 }}>        
             <Text style={styles.tableTitle}>The Strategy</Text>
             <Text style={{ marginBottom: 10, marginTop: 10 }}>{card?.cardDescription}</Text>
             {renderMoveSet('heatEngagersData')}
-            {renderMoveSet('punisherData')}
-            {renderMoveSet('moveFlowChartData')}
+            {Object.keys(card || {}).map((moveSetType) => renderMoveSet(moveSetType))}
             <View>
               {card?.youtubeLink && (
                 <View style={styles.tableRow}>
