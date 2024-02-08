@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Modal, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import HeroComponent from './HeroComponent';
-import ModalComponent from './ModalComponent';
 import { characters } from '../../data/characters';
 import { styles } from './styles';
 import { useAuth } from '../../utils/AuthContext';
-import CardDetailComponent from './CardDetailComponent';
 
 const CardComponent = ({ route, navigation, }) => {
   const { id } = route.params;
   const [card, setCard] = useState(null);
   const [character, setCharacter] = useState(null);
-  const [selectedItem, setSelectedItem] = useState(null);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [userRating, setUserRating] = useState(null);
   const [averageRating, setAverageRating] = useState(null);
@@ -72,7 +69,11 @@ const CardComponent = ({ route, navigation, }) => {
   };
 
   const handleMoveSetLinkPress = (moveSetName, moves) => {
-    navigation.navigate('CardDetailComponent', { moveSetName, moves }); 
+    if (moveSetName === 'HeatEngagers') {
+      navigation.navigate('CardDetailComponent', { moveSetName, moves: character?.heatEngagersData });
+    } else {
+      navigation.navigate('CardDetailComponent', { moveSetName, moves }); 
+    }
   };
 
   const bookmarkCard = async () => {
@@ -159,37 +160,8 @@ const CardComponent = ({ route, navigation, }) => {
     }
   };
 
-  const openDrawer = (item) => {
-    setSelectedItem(item);
-  };
-
-  const closeDrawer = () => {
-    setSelectedItem(null);
-  };
-
   const handleCreatorPress = () => {
     navigation.navigate('CreatorCardListComponent', { creatorId: card?.userId, creator: card?.username });
-  };
-
-  const renderMoveSet = (moveSetType) => {
-    if (moveSetType === '__v' || moveSetType === 'youtubeLink' || moveSetType === 'ratings' || moveSetType === 'lastEditedAt' || moveSetType === 'createdAt') {
-      return null;
-    }
-
-    const moves = moveSetType === 'heatEngagersData' ? character?.heatEngagersData || [] : card?.[moveSetType] || [];
-
-    if (!Array.isArray(moves)) {
-      return null;
-    }
-
-    return (
-      <CardDetailComponent
-        key={moveSetType}
-        moveSetType={moveSetType}
-        moves={moves}
-        openDrawer={openDrawer}
-      />
-    );
   };
 
   return (
@@ -210,7 +182,6 @@ const CardComponent = ({ route, navigation, }) => {
           <View style={{ paddingBottom: 64 }}>
             <Text style={styles.tableTitle}>The Strategy</Text>
             <Text style={{ marginBottom: 10, marginTop: 10 }}>{card?.cardDescription}</Text>
-            {/* Render links to move sets */}
             <TouchableOpacity onPress={() => handleMoveSetLinkPress('HeatEngagers', card?.heatEngagersData || [])}>
               <Text style={styles.link}>Heat Engagers</Text>
             </TouchableOpacity>
@@ -239,9 +210,6 @@ const CardComponent = ({ route, navigation, }) => {
           </View>
         </>
       )}
-      <Modal visible={selectedItem !== null} animationType="slide" transparent>
-        <ModalComponent selectedItem={selectedItem} closeDrawer={closeDrawer} />
-      </Modal>
     </ScrollView>
   );
 };
