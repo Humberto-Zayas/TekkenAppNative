@@ -18,50 +18,57 @@ const CardComponent = ({ route, navigation, }) => {
   const userId = user?.userId;
 
   useEffect(() => {
-    const fetchCard = async () => {
-      try {
-        if (!userId) {
-          console.error('User ID is undefined');
-          return;
-        }
-
-        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/id/${id}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch cards');
-        }
-        const data = await response.json();
-        setCard(data);
-
-        const foundCharacter = characters.find(char => char.name === data.characterName);
-        setCharacter(foundCharacter);
-
-        const totalRating = data.ratings ? data.ratings.reduce((sum, rating) => sum + rating.rating, 0) : 0;
-        const calculatedAverageRating =
-          data.ratings && data.ratings.length > 0 ? totalRating / data.ratings.length : 0;
-
-        setAverageRating(isNaN(calculatedAverageRating) ? 0 : calculatedAverageRating);
-
-        const userBookmarkResponse = await fetch(`${process.env.REACT_APP_API_BASE_URL}/users/${userId}/bookmarks`, {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        });
-
-        if (userBookmarkResponse.ok) {
-          const userBookmarkData = await userBookmarkResponse.json();
-          const bookmarked = userBookmarkData.bookmarks.some(bookmark => bookmark._id === id);
-          setIsBookmarked(bookmarked);
-        } else {
-          setIsBookmarked(false);
-          console.error('Failed to fetch user bookmarks');
-        }
-      } catch (error) {
-        console.error('Error fetching card:', error);
-      }
-    };
-
     fetchCard();
   }, [id, userId, user]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchCard();
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  const fetchCard = async () => {
+    try {
+      if (!userId) {
+        console.error('User ID is undefined');
+        return;
+      }
+
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/id/${id}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch cards');
+      }
+      const data = await response.json();
+      setCard(data);
+
+      const foundCharacter = characters.find(char => char.name === data.characterName);
+      setCharacter(foundCharacter);
+
+      const totalRating = data.ratings ? data.ratings.reduce((sum, rating) => sum + rating.rating, 0) : 0;
+      const calculatedAverageRating =
+        data.ratings && data.ratings.length > 0 ? totalRating / data.ratings.length : 0;
+
+      setAverageRating(isNaN(calculatedAverageRating) ? 0 : calculatedAverageRating);
+
+      const userBookmarkResponse = await fetch(`${process.env.REACT_APP_API_BASE_URL}/users/${userId}/bookmarks`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+
+      if (userBookmarkResponse.ok) {
+        const userBookmarkData = await userBookmarkResponse.json();
+        const bookmarked = userBookmarkData.bookmarks.some(bookmark => bookmark._id === id);
+        setIsBookmarked(bookmarked);
+      } else {
+        setIsBookmarked(false);
+        console.error('Failed to fetch user bookmarks');
+      }
+    } catch (error) {
+      console.error('Error fetching card:', error);
+    }
+  };
 
   const bookmarkCard = async () => {
     try {
@@ -222,6 +229,7 @@ const CardComponent = ({ route, navigation, }) => {
             toggleBookmark={toggleBookmark}
             onRatingChange={setUserRating}
             onDelete={onDelete}
+            navigation={navigation}
           />
           <View style={{ paddingBottom: 64 }}>        
             <Text style={styles.tableTitle}>The Strategy</Text>

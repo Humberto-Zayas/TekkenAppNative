@@ -60,7 +60,7 @@ const ConfirmationModal = ({ visible, onClose, onConfirm }) => {
   );
 };
 
-const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRatingChange, handleCreatorPress, onDelete }) => {
+const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRatingChange, handleCreatorPress, onDelete, navigation }) => {
   const [selectedRating, setSelectedRating] = useState(null);
   const [isMenuVisible, setMenuVisible] = useState(false);
   const [isRatingModalVisible, setRatingModalVisible] = useState(false);
@@ -91,6 +91,11 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
     setRatingModalVisible(false);
   };
 
+  const handleEditPress = (card) => {
+    setMenuVisible(false);
+    navigation.navigate('EditCardComponent', {cardData: card})
+  };
+
   const handleDeletePress = () => {
     setMenuVisible(false)
     setConfirmationModalVisible(true);
@@ -99,7 +104,6 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
   const handleConfirmDelete = async () => {
     console.log(user?.userId)
     try {
-      // Assuming you have the card ID in card._id
       const response = await fetch(`${REACT_APP_API_BASE_URL}/cards/${card._id}`, {
         method: 'DELETE',
         headers: {
@@ -114,16 +118,12 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
       if (response.ok) {
         console.log('Card deleted successfully');
         onDelete();
-        // Optionally, you can perform additional actions after successful deletion
       } else {
         console.error('Error deleting card:', response.status);
-        // Handle errors, show an alert or other feedback to the user
       }
     } catch (error) {
       console.error('Error deleting card:', error);
-      // Handle other errors
     } finally {
-      // Close the confirmation modal whether the deletion was successful or not
       setConfirmationModalVisible(false);
     }
   };
@@ -187,7 +187,7 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
           <View style={styles.modalContainer}>
             <View style={styles.menuContainer}>
               <TouchableOpacity style={styles.menuItem}>
-                <FontAwesome name="edit" size={24} color="blue" style={styles.menuItemIcon} />
+                <FontAwesome name="edit" size={24} color="blue" style={styles.menuItemIcon} onPress={() => handleEditPress(card)} />
               </TouchableOpacity>
               <TouchableOpacity style={styles.menuItem} onPress={handleDeletePress}>
                 <FontAwesome name="trash" size={24} color="red" style={styles.menuItemIcon} />

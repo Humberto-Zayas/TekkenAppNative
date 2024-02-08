@@ -9,7 +9,7 @@ import SavedListComponent from '../SavedListComponent';
 const MyCardListComponent = ({ navigation }) => {
   const [cards, setCards] = useState([]);
   const [sortOrder, setSortOrder] = useState('ascending');
-  const [showSavedList, setShowSavedList] = useState(false); // New state to toggle between card list and saved list
+  const [showSavedList, setShowSavedList] = useState(false); 
   const { user } = useAuth();
 
   const fetchCards = async () => {
@@ -36,6 +36,17 @@ const MyCardListComponent = ({ navigation }) => {
     const totalRating = card.ratings.reduce((sum, rating) => sum + rating.rating, 0);
     return card.ratings.length > 0 ? totalRating / card.ratings.length : 0;
   };
+
+  const getBackgroundColor = (averageRating) => {
+    if (averageRating >= 4.5) {
+      return 'green';
+    } else if (averageRating >= 3) {
+      return 'yellow';
+    } else {
+      return 'red';
+    }
+  };
+
 
   const handleCardPress = (id) => {
     navigation.navigate('CardComponent', { id });
