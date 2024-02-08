@@ -54,7 +54,8 @@ const MyCardListComponent = ({ navigation }) => {
 
   const renderCardItem = ({ item }) => {
     const formattedCreatedAt = format(new Date(item.createdAt), 'MMMM dd, yyyy HH:mm:ss');
-
+    const formattedLastEditedAt = item.lastEditedAt ? format(new Date(item.lastEditedAt), 'MMMM dd, yyyy HH:mm:ss') : null;
+  
     return (
       <TouchableOpacity
         style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]}
@@ -73,6 +74,7 @@ const MyCardListComponent = ({ navigation }) => {
       </TouchableOpacity>
     );
   };
+  
 
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
