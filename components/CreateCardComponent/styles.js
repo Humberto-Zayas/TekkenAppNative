@@ -5,6 +5,7 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     padding: 20,
+    flex: 1
   },
   title: {
     fontSize: 18,
@@ -39,32 +40,45 @@ export const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'start',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    marginTop: 100,
+    padding: 0
   },
   modalContent: {
     width: '80%',
     backgroundColor: 'white',
-    paddingTop: 90,
     padding: 20,
     borderRadius: 10,
     marginBottom: 20,
   },
   closeButton: {
-    backgroundColor: 'blue',
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
+    alignSelf: 'flex-start',
+    marginLeft: 20
   },
   plusButton: {
     backgroundColor: 'blue',
     padding: 8,
-    borderRadius: 28,
+    borderRadius: 10, // Changed from 28 to 10
     alignItems: 'center',
     marginBottom: 20,
-    width: 32,
-    alignSelf: 'center'
+    width: 150, // Increased width for better touch area
+    alignSelf: 'center',
+    justifyContent: 'center', // Added to center text vertically
+  },
+  link: {
+    backgroundColor: 'blue',
+    padding: 10,
+    borderRadius: 10, // Changed from 28 to 10
+    marginBottom: 20,
+    width: 150, // Increased width for better touch area
+    alignSelf: 'center',
+    textAlign: 'center', // Added to center text horizontally
+    color: 'white',
+    fontWeight: 'bold',
   },
   flatList: {
     borderRadius: 10,
@@ -72,6 +86,8 @@ export const styles = StyleSheet.create({
     borderColor: 'lightgray',
     overflow: 'hidden',
     marginBottom: 16,
+    width: '100%',
+    height: '100%', // Adjust this value as needed
   },
   tableTitle: {
     fontSize: 18,
@@ -98,4 +114,26 @@ export const styles = StyleSheet.create({
     padding: 8,
     alignItems: 'start',
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+    paddingHorizontal: 5
+  },
+  link: {
+    backgroundColor: 'blue',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginHorizontal: 5,
+    height: 100,
+    width: '50%',
+  },
+  linkText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    lineHeight: 75
+  },  
 });
