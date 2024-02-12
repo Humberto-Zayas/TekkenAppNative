@@ -14,7 +14,6 @@ const CreateCardComponent = ({ route, navigation }) => {
   const [cardDescription, setCardDescription] = useState('');
   const [youtubeLink, setYoutubeLink] = useState('');
   const [punisherData, setPunisherData] = useState([]);
-  console.log(punisherData)
   const [moveFlowChartData, setMoveFlowChartData] = useState([]);
 
   const handleCardNameChange = (name) => {
@@ -127,6 +126,7 @@ const CreateCardComponent = ({ route, navigation }) => {
           onClose={() => setShowMoveFlowChart(false)}
           setMoveFlowChartData={setMoveFlowChartData}
           moveFlowChartData={moveFlowChartData}
+          frameData={alisaFrameData}
         />
       </Modal>
 
