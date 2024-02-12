@@ -5,6 +5,7 @@ import PunisherComponent from './PunisherComponent';
 import MoveFlowChartComponent from './MoveFlowChartComponent';
 import alisaFrameData from '../../data/alisaFrameData';
 import { styles } from './styles';
+import { useAuth } from '../../utils/AuthContext';
 
 const CreateCardComponent = ({ route, navigation }) => {
   const { characterName, characterImage } = route.params;
@@ -15,6 +16,7 @@ const CreateCardComponent = ({ route, navigation }) => {
   const [youtubeLink, setYoutubeLink] = useState('');
   const [punisherData, setPunisherData] = useState([]);
   const [moveFlowChartData, setMoveFlowChartData] = useState([]);
+  const { user } = useAuth();
 
   const handleCardNameChange = (name) => {
     setCardName(name);
@@ -40,10 +42,11 @@ const CreateCardComponent = ({ route, navigation }) => {
     }
 
     try {
-      const response = await fetch('YOUR_API_ENDPOINT', {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${user?.token}`,
         },
         body: JSON.stringify({
           cardName,

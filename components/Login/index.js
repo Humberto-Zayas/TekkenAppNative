@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Alert, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { REACT_APP_API_BASE_URL } from '@env';
-import { useAuth } from '../../utils/AuthContext'; // Adjust the path accordingly
+import { useAuth } from '../../utils/AuthContext'; 
 
 const Login = ({ route }) => {
   const { isSignUp } = route.params || { isSignUp: false };
