@@ -39,11 +39,11 @@ export const styles = StyleSheet.create({
     padding: 10,
   },
   modalContainer: {
-    flex: 1,
+    // flex: 1,
     justifyContent: 'start',
     alignItems: 'center',
     marginTop: 100,
-    padding: 0
+    padding: 20
   },
   modalContent: {
     width: '80%',
@@ -87,7 +87,6 @@ export const styles = StyleSheet.create({
     overflow: 'hidden',
     marginBottom: 16,
     width: '100%',
-    height: '100%', // Adjust this value as needed
   },
   tableTitle: {
     fontSize: 18,
@@ -104,15 +103,15 @@ export const styles = StyleSheet.create({
     borderBottomColor: 'lightgray',
   },
   columnLeft: {
-    width: '30%',
+    width: '23%',
     padding: 8,
     alignItems: 'center',
     justifyContent: 'center',
   },
   column: {
-    width: '60%',
+    width: '55%',
     padding: 8,
-    alignItems: 'start',
+    alignItems: 'flex-start',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -136,4 +135,31 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 75
   },  
+  deleteIcon: {
+    width: '9%',
+    paddingRight: 5,
+    justifyContent: 'center'
+  },
+  moveDetails: {
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'lightgray',
+    width: '100%',
+  },
+  row: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightgray',
+  },
+  column: {
+    flex: 1,
+    padding: 10,
+  },
+  propertyName: {
+    fontWeight: 'bold',
+  },
+  propertyValue: {
+    marginLeft: 10,
+  },
+  
 });

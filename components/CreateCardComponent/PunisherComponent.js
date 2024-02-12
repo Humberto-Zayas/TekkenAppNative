@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, Modal, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Modal, ScrollView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 
 const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }) => {
-  const [newPunisher, setNewPunisher] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedMove, setSelectedMove] = useState(null);
+  const [detailMove, setDetailMove] = useState(null);
 
-  const addPunisher = () => {
-    if (newPunisher.trim() === '') return;
-    setPunisherData([...punisherData, newPunisher]);
-    setNewPunisher('');
+  const addPunisher = (move) => {
+    setPunisherData([...punisherData, move]);
+    setModalVisible(false);
   };
 
   const deletePunisher = (index) => {
@@ -21,30 +19,59 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
   };
 
   const handleMovePress = (move) => {
-    setSelectedMove(move);
-    setModalVisible(true);
+    setDetailMove(move)
   };
 
-  const MoveDetailsModal = () => (
+  const filterFrameData = () => {
+    const punisherMoveInputs = punisherData.map((punisher) => punisher.input);
+    return frameData.filter((move) => !punisherMoveInputs.includes(move.input));
+  };
+
+  const MoveListModal = () => (
     <Modal
       visible={modalVisible}
-      animationType="fade"
-
+      animationType="slide"
       onRequestClose={() => setModalVisible(false)}
     >
       <View style={styles.modalContainer}>
-        {/* Display move details */}
-        <Text>Input: {selectedMove?.input}</Text>
-        <Text>Hit Level: {selectedMove?.hitLevel}</Text>
-        <Text>Damage: {selectedMove?.damage}</Text>
-        <Text>Startup Frame: {selectedMove?.startupFrame}</Text>
-        <Text>Block Frame: {selectedMove?.blockFrame}</Text>
-        <Text>Hit Frame: {selectedMove?.hitFrame}</Text>
-        <Text>Notes: {selectedMove?.notes}</Text>
-        {/* You can add more fields here if needed */}
+        <Text style={styles.header}>Choose Move</Text>
+        <FlatList
+          data={filterFrameData()}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.moveItem} onPress={() => addPunisher(item)}>
+              <Text>{item.input}</Text>
+              <Text>{item.notes}</Text>
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+        />
+        <TouchableOpacity onPress={() => setModalVisible(null)} style={styles.closeButton}>
+          <FontAwesome name="times" size={20} color="black" />
+        </TouchableOpacity>
+      </View>
+    </Modal>
+  );
 
-        {/* Close button */}
-        <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
+  const MoveDetailsModal = () => (
+    <Modal
+      visible={detailMove !== null}
+      animationType="fade"
+      onRequestClose={() => setDetailMove(null)}
+    >
+      <View style={styles.modalContainer}>
+        <Text style={styles.header}>Move Details</Text>
+        {detailMove && (
+          <ScrollView style={styles.moveDetails}>
+            <Text>Input: {detailMove.input}</Text>
+            <Text>Hit Level: {detailMove.hitLevel}</Text>
+            <Text>Damage: {detailMove.damage}</Text>
+            <Text>Startup Frame: {detailMove.startupFrame}</Text>
+            <Text>Block Frame: {detailMove.blockFrame}</Text>
+            <Text>Hit Frame: {detailMove.hitFrame}</Text>
+            <Text>Notes: {detailMove.notes}</Text>
+          </ScrollView>
+        )}
+        <TouchableOpacity onPress={() => setDetailMove(null)} style={styles.closeButton}>
           <FontAwesome name="times" size={20} color="black" />
         </TouchableOpacity>
       </View>
@@ -53,42 +80,31 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
 
   return (
     <View style={styles.modalContainer}>
+      <TouchableOpacity onPress={() => onClose()} style={styles.closeButton}>
+        <FontAwesome name="times" size={20} color="black" />
+      </TouchableOpacity>
       <Text style={styles.header}>Punishers</Text>
-      <View style={styles.modalContainer}>
-        <ScrollView style={styles.flatList}>
-          {frameData.map((item, index) => (
-            <TouchableOpacity key={index} style={styles.tableRow} onPress={() => handleMovePress(item)}>
-              <View style={styles.columnLeft}>
-                <Text>{item.input}</Text>
-              </View>
-              <View style={styles.column}>
-                <Text>{item.notes}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
-
-      {/* List of punishers */}
       <FlatList
+        style={styles.flatList}
         data={punisherData}
         renderItem={({ item, index }) => (
-          <View style={styles.punisherItem}>
-            <Text>{item.move}</Text>
-            <TouchableOpacity onPress={() => deletePunisher(index)}>
-              <FontAwesome name="trash" size={20} color="red" />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity style={styles.punisherItem} onPress={() => handleMovePress(item)}>
+            <View style={styles.tableRow}>
+              <Text style={styles.columnLeft}>{item.input}</Text>
+              <Text style={styles.column}>{item.notes}</Text>
+              <TouchableOpacity style={styles.deleteIcon} onPress={() => deletePunisher(index)}>
+                <FontAwesome name="trash" size={20} color="red" />
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
         )}
         keyExtractor={(item, index) => index.toString()}
+        ListEmptyComponent={() => <Text style={styles.emptyList}>No punishers added yet</Text>}
       />
-
-      {/* Plus button to open modal */}
       <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.plusButton}>
         <FontAwesome name="plus" size={20} color="white" />
       </TouchableOpacity>
-
-      {/* Render move details modal */}
+      <MoveListModal />
       <MoveDetailsModal />
     </View>
   );
