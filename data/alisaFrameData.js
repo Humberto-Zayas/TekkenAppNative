@@ -1,4 +1,4 @@
-const alisaFrameData = [
+const rawAlisaFrameData = [
   {
     "input": "1",
     "hitLevel": "h",
@@ -7,7 +7,6 @@ const alisaFrameData = [
     "blockFrame": -2,
     "hitFrame": 9,
     "notes": "Combo from 1st CH",
-    "linksTo": ["f+1"]
   },
   {
     "input": "1,1",
@@ -17,7 +16,6 @@ const alisaFrameData = [
     "blockFrame": -7,
     "hitFrame": 4,
     "notes": "Combo from 1st CH",
-    "linksTo": ["f+1"]
   },
   {
     "input": "1+2",
@@ -27,7 +25,6 @@ const alisaFrameData = [
     "blockFrame": -9,
     "hitFrame": "KND",
     "notes": "KND",
-    "linksTo": []
   },
   {
     "input": "1,2",
@@ -37,7 +34,6 @@ const alisaFrameData = [
     "blockFrame": -8,
     "hitFrame": "3a",
     "notes": "Combo from 1st CH",
-    "linksTo": ["f+4"]
   },
   {
     "input": "1,2,3",
@@ -47,7 +43,6 @@ const alisaFrameData = [
     "blockFrame": -2,
     "hitFrame": "KND",
     "notes": "Chip on block. Link to f+4. Can interrupt with up to i15 if previous hit is blocked",
-    "linksTo": ["f+4"]
   },
   {
     "input": "1+2+3+4",
@@ -57,8 +52,19 @@ const alisaFrameData = [
     "blockFrame": "",
     "hitFrame": "",
     "notes": "Cannot block for 5 seconds. CH state for 5 seconds",
-    "linksTo": []
   }
-]
+];
+
+const alisaFrameData = rawAlisaFrameData.map(item => ({
+  move: item.input,
+  description: item.notes,
+  hitLevel: item.hitLevel,
+  damage: Array.isArray(item.damage) ? item.damage : [item.damage],
+  startupFrame: item.startupFrame,
+  blockFrame: item.blockFrame,
+  hitFrame: item.hitFrame,
+  counterHitFrame: item.counterHitFrame ? item.counterHitFrame : '',
+  additionalNotes: '', // This will be added by the user
+}));
 
 export default alisaFrameData;

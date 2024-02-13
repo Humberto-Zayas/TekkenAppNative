@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
 import SavedListComponent from '../SavedListComponent';
 import LoginSignupModalComponent from './LoginSignupModalComponent';
@@ -133,9 +134,15 @@ const CardListComponent = ({ route, navigation }) => {
     );
   };
 
-  useEffect(() => {
-    fetchCards();
-  }, [name, sortOrder]);
+  // useEffect(() => {
+  //   fetchCards();
+  // }, [name, sortOrder]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchCards();
+    }, [name, sortOrder])
+  );
 
   useEffect(() => {
     let updatedCards;

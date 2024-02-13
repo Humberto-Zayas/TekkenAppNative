@@ -15,6 +15,7 @@ const CreateCardComponent = ({ route, navigation }) => {
   const [cardDescription, setCardDescription] = useState('');
   const [youtubeLink, setYoutubeLink] = useState('');
   const [punisherData, setPunisherData] = useState([]);
+
   const [moveFlowChartData, setMoveFlowChartData] = useState([]);
   const { user } = useAuth();
 
@@ -55,6 +56,8 @@ const CreateCardComponent = ({ route, navigation }) => {
           youtubeLink,
           punisherData,
           moveFlowChartData,
+          userId: user?.userId,
+          username: user?.username
         }),
       });
 
