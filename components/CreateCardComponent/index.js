@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { View, TextInput, ScrollView, Modal, TouchableOpacity, Text, Button, Alert } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 import HeroCreateComponent from './HeroCreateComponent';
 import PunisherComponent from './PunisherComponent';
 import MoveFlowChartComponent from './MoveFlowChartComponent';
 import alisaFrameData from '../../data/alisaFrameData';
 import { styles } from './styles';
 import { useAuth } from '../../utils/AuthContext';
+import tags from '../../data/tags';
 
 const CreateCardComponent = ({ route, navigation }) => {
   const { characterName, characterImage } = route.params;
@@ -13,11 +15,12 @@ const CreateCardComponent = ({ route, navigation }) => {
   const [showMoveFlowChart, setShowMoveFlowChart] = useState(false);
   const [cardName, setCardName] = useState('');
   const [cardDescription, setCardDescription] = useState('');
+  const [selectedTags, setSelectedTags] = useState([]);
   const [youtubeLink, setYoutubeLink] = useState('');
   const [punisherData, setPunisherData] = useState([]);
-
   const [moveFlowChartData, setMoveFlowChartData] = useState([]);
   const { user } = useAuth();
+  console.log(selectedTags)
 
   const handleCardNameChange = (name) => {
     setCardName(name);
@@ -30,6 +33,15 @@ const CreateCardComponent = ({ route, navigation }) => {
   const handleYouTubeLinkChange = (youtubeLink) => {
     setYoutubeLink(youtubeLink);
   }
+
+  const handleTagPress = (tag) => {
+    const tagIndex = selectedTags.findIndex(t => t.name === tag.name);
+    if (tagIndex !== -1) {
+      setSelectedTags(selectedTags.filter(t => t.name !== tag.name));
+    } else {
+      setSelectedTags([...selectedTags, { name: tag.name }]);
+    }
+  };  
 
   const handleSave = async () => {
     if (!cardName || !cardDescription) {
@@ -57,7 +69,8 @@ const CreateCardComponent = ({ route, navigation }) => {
           punisherData,
           moveFlowChartData,
           userId: user?.userId,
-          username: user?.username
+          username: user?.username,
+          tags: selectedTags
         }),
       });
 
@@ -143,6 +156,23 @@ const CreateCardComponent = ({ route, navigation }) => {
         onChangeText={handleYouTubeLinkChange}
         numberOfLines={1}
       />
+
+      <View style={styles.tagsContainer}>
+        {tags.map(tag => (
+          <TouchableOpacity
+            key={tag.name}
+            style={[styles.tag, selectedTags.findIndex(t => t.name === tag.name) !== -1 && styles.selectedTag]}
+            onPress={() => handleTagPress(tag)}
+          >
+            <Text style={styles.tagText}>{tag.name}</Text>
+            {selectedTags.findIndex(t => t.name === tag.name) !== -1 ? (
+              <FontAwesome name="check" size={16} color="green" />
+            ) : (
+              <FontAwesome name="times" size={16} color="red" />
+            )}
+          </TouchableOpacity>
+        ))}
+      </View>
 
       <Button title="Save Card" onPress={handleSave} />
     </ScrollView>
