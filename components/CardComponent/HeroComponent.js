@@ -1,11 +1,21 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, Pressable } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 import { format } from 'date-fns';
 import { REACT_APP_API_BASE_URL } from '@env';
 
-const RatingModal = ({ visible, onClose, onStarPress, selectedRating }) => {
+const RatingModal = ({ visible, onClose, onStarPress, selectedRating, card }) => {
+  const handleTagPress = (tag) => {
+    // Implement your logic here, for example:
+    console.log(`Pressed tag: ${tag.name}`);
+  };
+
+  // Define handleTagLongPress function to handle long press on a tag
+  const handleTagLongPress = (tag) => {
+    // Implement your long press logic here, for example:
+    console.log(`Long pressed tag: ${tag.name}`);
+  };
   return (
     <Modal animationType="slide" visible={visible} transparent>
       <TouchableOpacity
@@ -15,22 +25,28 @@ const RatingModal = ({ visible, onClose, onStarPress, selectedRating }) => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.menuContainer}>
-            {[1, 2, 3, 4, 5].map((i) => (
-              <TouchableOpacity key={i} onPress={() => onStarPress(i)}>
-                <FontAwesome
-                  name={selectedRating !== null && selectedRating >= i ? 'star' : 'star-o'}
-                  size={24}
-                  color="gold"
-                  style={styles.starIcon}
-                />
-              </TouchableOpacity>
-            ))}
+            <View style={styles.tagsContainer}>
+              {card?.tags.map((tag) => (
+                <Pressable
+                  key={tag._id}
+                  onPress={() => handleTagPress(tag)}
+                  onLongPress={() => handleTagLongPress(tag)} // Add the onLongPress handler
+                >
+                  <View style={styles.tag}>
+                    <Text style={styles.tagText}>{tag.name}</Text>
+                    <FontAwesome name="hand-pointer-o" size={16} color="blue" />
+                  </View>
+                </Pressable>
+              ))}
+            </View>
+
           </View>
         </View>
       </TouchableOpacity>
     </Modal>
   );
 };
+
 
 const ConfirmationModal = ({ visible, onClose, onConfirm }) => {
   return (
@@ -93,7 +109,7 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
 
   const handleEditPress = (card) => {
     setMenuVisible(false);
-    navigation.navigate('EditCardComponent', {cardData: card})
+    navigation.navigate('EditCardComponent', { cardData: card })
   };
 
   const handleDeletePress = () => {
@@ -171,6 +187,7 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
         onClose={closeRatingModal}
         onStarPress={handleStarPress}
         selectedRating={selectedRating}
+        card={card}
       />
       <Modal
         animationType="slide"

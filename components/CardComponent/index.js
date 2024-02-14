@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useImperativeHandle } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import HeroComponent from './HeroComponent';
 import { characters } from '../../data/characters';
@@ -32,6 +32,8 @@ const CardComponent = ({ route, navigation, }) => {
         console.error('User ID is undefined');
         return;
       }
+
+      console.log(`card id: ${id}`, `userId: ${userId}`)
   
       const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/id/${id}?userId=${userId}`);
       if (!response.ok) {
@@ -45,6 +47,7 @@ const CardComponent = ({ route, navigation, }) => {
       console.error('Error fetching card:', error);
     }
   };
+
   const handleMoveSetLinkPress = (moveSetName, moves) => {
     if (moveSetName === 'HeatEngagers') {
       navigation.navigate('CardDetailComponent', { moveSetName, moves: character?.heatEngagersData });

@@ -43,9 +43,9 @@ export const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    marginTop: 50,
-    marginHorizontal: 20,
-    backgroundColor: 'white',
+    justifyContent: 'flex-end',
+    margin: 0,
+    backgroundColor: 'transparent',
   },
   modalContent: {
     padding: 20,
@@ -102,18 +102,14 @@ export const styles = StyleSheet.create({
   bookmarkIcon: {
     marginVertical: 2,
   },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    margin: 0,
-    backgroundColor: 'transparent',
-  },
   menuContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: 'white',
-    height: 120,
+    height: 'auto',
+    paddingHorizontal: 10,
+    paddingVertical: 50,
     borderRadius: 20,
     shadowColor: 'rgba(0,0,0,0.3)',
     shadowOffset: {
@@ -163,5 +159,25 @@ export const styles = StyleSheet.create({
   confirmationButtonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+  },
+  tagsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: 10,
+  },
+  tag: {
+    backgroundColor: '#e0e0e0',
+    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    margin: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  selectedTag: {
+    backgroundColor: 'lightblue',
+  },
+  tagText: {
+    marginRight: 5,
   },
 });
