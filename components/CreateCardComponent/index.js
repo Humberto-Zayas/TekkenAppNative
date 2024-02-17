@@ -20,7 +20,6 @@ const CreateCardComponent = ({ route, navigation }) => {
   const [punisherData, setPunisherData] = useState([]);
   const [moveFlowChartData, setMoveFlowChartData] = useState([]);
   const { user } = useAuth();
-  console.log(selectedTags)
 
   const handleCardNameChange = (name) => {
     setCardName(name);

@@ -52,7 +52,8 @@ const CreatorCardListComponent = ({ route, navigation }) => {
 
   const renderCardItem = ({ item }) => {
     const formattedCreatedAt = format(new Date(item.createdAt), 'MMMM dd, yyyy HH:mm:ss');
-
+    const formattedLastEditedAt = item.lastEditedAt ? format(new Date(item.lastEditedAt), 'MMMM dd, yyyy HH:mm:ss') : null;
+    
     return (
       <TouchableOpacity
         style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]}

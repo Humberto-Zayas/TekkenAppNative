@@ -168,16 +168,41 @@ export const styles = StyleSheet.create({
   tag: {
     backgroundColor: '#e0e0e0',
     borderRadius: 20,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     margin: 5,
     flexDirection: 'row',
     alignItems: 'center',
+    position: 'relative'
   },
   selectedTag: {
     backgroundColor: 'lightblue',
   },
   tagText: {
-    marginRight: 5,
+    marginRight: 5
+  },
+  tooltipContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 9999, // Ensure the tooltip is above other elements
+  },
+  tooltipContent: {
+    backgroundColor: '#ffffff',
+    borderRadius: 5,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  tooltipButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 5,
   },
 });

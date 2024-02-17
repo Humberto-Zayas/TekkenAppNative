@@ -6,16 +6,7 @@ import { format } from 'date-fns';
 import { REACT_APP_API_BASE_URL } from '@env';
 
 const RatingModal = ({ visible, onClose, onStarPress, selectedRating, card }) => {
-  const handleTagPress = (tag) => {
-    // Implement your logic here, for example:
-    console.log(`Pressed tag: ${tag.name}`);
-  };
 
-  // Define handleTagLongPress function to handle long press on a tag
-  const handleTagLongPress = (tag) => {
-    // Implement your long press logic here, for example:
-    console.log(`Long pressed tag: ${tag.name}`);
-  };
   return (
     <Modal animationType="slide" visible={visible} transparent>
       <TouchableOpacity
@@ -29,24 +20,32 @@ const RatingModal = ({ visible, onClose, onStarPress, selectedRating, card }) =>
               {card?.tags.map((tag) => (
                 <Pressable
                   key={tag._id}
-                  onPress={() => handleTagPress(tag)}
-                  onLongPress={() => handleTagLongPress(tag)} // Add the onLongPress handler
                 >
                   <View style={styles.tag}>
                     <Text style={styles.tagText}>{tag.name}</Text>
-                    <FontAwesome name="hand-pointer-o" size={16} color="blue" />
+                    {/* <FontAwesome name="hand-pointer-o" size={16} color="blue" /> */}
                   </View>
                 </Pressable>
               ))}
             </View>
-
+            <View>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <TouchableOpacity key={i} onPress={() => onStarPress(i)}>
+                  <FontAwesome
+                    name={selectedRating !== null && selectedRating >= i ? 'star' : 'star-o'}
+                    size={24}
+                    color="gold"
+                    style={styles.starIcon}
+                  />
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
         </View>
       </TouchableOpacity>
     </Modal>
   );
 };
-
 
 const ConfirmationModal = ({ visible, onClose, onConfirm }) => {
   return (
@@ -171,16 +170,16 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
         </Text>
       </View>
       <View style={styles.ratingContainer}>
-        {user?.userId === card?.userId && (
-          <>
-            <TouchableOpacity onPress={openMenu}>
-              <FontAwesome name="ellipsis-h" size={24} color="blue" style={styles.menuIcon} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={openRatingModal}>
-              <FontAwesome name="star" size={24} color="gold" style={styles.starIcon} />
-            </TouchableOpacity>
-          </>
-        )}
+        {/* {user?.userId === card?.userId && ( */}
+
+        <TouchableOpacity onPress={openMenu}>
+          <FontAwesome name="ellipsis-h" size={24} color="blue" style={styles.menuIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={openRatingModal}>
+          <FontAwesome name="star" size={24} color="gold" style={styles.starIcon} />
+        </TouchableOpacity>
+        {/* )} */}
+
       </View>
       <RatingModal
         visible={isRatingModalVisible}
@@ -203,12 +202,18 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
         >
           <View style={styles.modalContainer}>
             <View style={styles.menuContainer}>
-              <TouchableOpacity style={styles.menuItem}>
-                <FontAwesome name="edit" size={24} color="blue" style={styles.menuItemIcon} onPress={() => handleEditPress(card)} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.menuItem} onPress={handleDeletePress}>
-                <FontAwesome name="trash" size={24} color="red" style={styles.menuItemIcon} />
-              </TouchableOpacity>
+              <>
+                {user?.userId === card?.userId && (
+                  <>
+                    <TouchableOpacity style={styles.menuItem}>
+                      <FontAwesome name="edit" size={24} color="blue" style={styles.menuItemIcon} onPress={() => handleEditPress(card)} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.menuItem} onPress={handleDeletePress}>
+                      <FontAwesome name="trash" size={24} color="red" style={styles.menuItemIcon} />
+                    </TouchableOpacity>
+                  </>
+                )}
+              </>
               <TouchableOpacity onPress={handleBookmarkPress}>
                 <FontAwesome
                   name={isBookmarked ? 'bookmark' : 'bookmark-o'}
