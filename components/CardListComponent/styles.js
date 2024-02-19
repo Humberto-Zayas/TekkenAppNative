@@ -150,5 +150,25 @@ export const styles = StyleSheet.create({
   },
   noCardsText: {
     fontSize: 18
-  }
+  },
+  tagsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: 10,
+  },
+  tag: {
+    backgroundColor: '#e0e0e0',
+    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    margin: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  selectedTag: {
+    backgroundColor: 'lightblue',
+  },
+  tagText: {
+    marginRight: 5,
+  },
 });

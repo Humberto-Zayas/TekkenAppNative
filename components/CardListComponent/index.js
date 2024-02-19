@@ -21,6 +21,7 @@ const CardListComponent = ({ route, navigation }) => {
   const [showSortFilterModal, setShowSortFilterModal] = useState(false);
   const [selectedUsername, setSelectedUsername] = useState('All Users');
   const [selectedTags, setSelectedTags] = useState([]);
+  console.log(selectedTags)
   const { user } = useAuth();
 
   const toggleSortFilterModal = () => {
@@ -40,26 +41,25 @@ const CardListComponent = ({ route, navigation }) => {
 
   const handleTagClick = (tag) => {
     // Check if the tag is already selected
-    const index = selectedTags.indexOf(tag);
+    const index = selectedTags.findIndex(t => t.name === tag.name);
     if (index === -1) {
-      // If not selected, add it to selectedTags state
+      // If not selected, add the tag object to selectedTags state
       setSelectedTags([...selectedTags, tag]);
     } else {
       // If already selected, remove it from selectedTags state
-      const updatedTags = [...selectedTags];
-      updatedTags.splice(index, 1);
+      const updatedTags = selectedTags.filter(t => t.name !== tag.name);
       setSelectedTags(updatedTags);
     }
-  };
+  };  
 
   const fetchCards = async () => {
     try {
       let queryParams = `${process.env.REACT_APP_API_BASE_URL}/cards/character/${name}`;
       if (selectedTags.length > 0) {
-        const encodedTags = selectedTags.map(tag => encodeURIComponent(tag));
-        queryParams += `?tags=${encodedTags.join(',')}`;
+        const tagNames = selectedTags.map(tag => tag.name);
+        queryParams += `?tags=${tagNames.join(',')}`;
       }
-  
+
       const response = await fetch(queryParams);
       if (!response.ok) {
         throw new Error('Failed to fetch cards');
@@ -70,7 +70,7 @@ const CardListComponent = ({ route, navigation }) => {
         averageRating: calculateAverageRating(card),
       }));
       const sortedCards = sortOrder === 'ascending' ? cardsWithAverageRating : cardsWithAverageRating.reverse();
-  
+
       // Save both as initial and current set of cards
       setCards(sortedCards);
       setOriginalCards(sortedCards);
@@ -78,7 +78,6 @@ const CardListComponent = ({ route, navigation }) => {
       console.error('Error fetching cards:', error);
     }
   };
-   
 
   const calculateAverageRating = (card) => {
     const totalRating = card.ratings.reduce((sum, rating) => sum + rating.rating, 0);
@@ -193,14 +192,20 @@ const CardListComponent = ({ route, navigation }) => {
         <SavedListComponent characterName={name} navigation={navigation} />
       ) : (
         <>
-          {tags.map((tag) => (
-            <TouchableOpacity
-              onPress={() => handleTagClick(tag.name)}
-              key={tag.name}
-            >
-              <Text>{tag.name}</Text>
-            </TouchableOpacity>
-          ))}
+          <View style={styles.tagsContainer}>
+            {tags.map((tag) => (
+              <TouchableOpacity
+                onPress={() => handleTagClick(tag)}
+                style={[
+                  styles.tag,
+                  selectedTags.some(t => t.name === tag.name) && styles.selectedTag
+                ]}
+                key={tag.name}
+              >
+                <Text style={styles.tagText}>{tag.name}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
           {cards.length === 0 ? (
             <>
               <Text style={styles.noCardsText}>
