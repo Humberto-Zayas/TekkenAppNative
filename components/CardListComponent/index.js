@@ -7,6 +7,7 @@ import SortAndFilterModal from './SortAndFilterModal';
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
 import { format } from 'date-fns';
+import tags from '../../data/tags';
 
 const CardListComponent = ({ route, navigation }) => {
   const { character } = route.params;
@@ -19,6 +20,7 @@ const CardListComponent = ({ route, navigation }) => {
   const [sortOrder, setSortOrder] = useState('ascending');
   const [showSortFilterModal, setShowSortFilterModal] = useState(false);
   const [selectedUsername, setSelectedUsername] = useState('All Users');
+  const [selectedTags, setSelectedTags] = useState([]);
   const { user } = useAuth();
 
   const toggleSortFilterModal = () => {
@@ -36,10 +38,29 @@ const CardListComponent = ({ route, navigation }) => {
     }
   }, [originalCards]);
 
+  const handleTagClick = (tag) => {
+    // Check if the tag is already selected
+    const index = selectedTags.indexOf(tag);
+    if (index === -1) {
+      // If not selected, add it to selectedTags state
+      setSelectedTags([...selectedTags, tag]);
+    } else {
+      // If already selected, remove it from selectedTags state
+      const updatedTags = [...selectedTags];
+      updatedTags.splice(index, 1);
+      setSelectedTags(updatedTags);
+    }
+  };
 
   const fetchCards = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/character/${name}`);
+      let queryParams = `${process.env.REACT_APP_API_BASE_URL}/cards/character/${name}`;
+      if (selectedTags.length > 0) {
+        const encodedTags = selectedTags.map(tag => encodeURIComponent(tag));
+        queryParams += `?tags=${encodedTags.join(',')}`;
+      }
+  
+      const response = await fetch(queryParams);
       if (!response.ok) {
         throw new Error('Failed to fetch cards');
       }
@@ -49,7 +70,7 @@ const CardListComponent = ({ route, navigation }) => {
         averageRating: calculateAverageRating(card),
       }));
       const sortedCards = sortOrder === 'ascending' ? cardsWithAverageRating : cardsWithAverageRating.reverse();
-
+  
       // Save both as initial and current set of cards
       setCards(sortedCards);
       setOriginalCards(sortedCards);
@@ -57,6 +78,7 @@ const CardListComponent = ({ route, navigation }) => {
       console.error('Error fetching cards:', error);
     }
   };
+   
 
   const calculateAverageRating = (card) => {
     const totalRating = card.ratings.reduce((sum, rating) => sum + rating.rating, 0);
@@ -134,12 +156,13 @@ const CardListComponent = ({ route, navigation }) => {
     );
   };
 
-  // useEffect(() => {
-  //   fetchCards();
-  // }, [name, sortOrder]);
+  useEffect(() => {
+    fetchCards();
+  }, [name, selectedTags]);
 
   useFocusEffect(
     useCallback(() => {
+      setSelectedTags([]); // this would reset the tags when navigating back
       fetchCards();
     }, [name, sortOrder])
   );
@@ -170,6 +193,14 @@ const CardListComponent = ({ route, navigation }) => {
         <SavedListComponent characterName={name} navigation={navigation} />
       ) : (
         <>
+          {tags.map((tag) => (
+            <TouchableOpacity
+              onPress={() => handleTagClick(tag.name)}
+              key={tag.name}
+            >
+              <Text>{tag.name}</Text>
+            </TouchableOpacity>
+          ))}
           {cards.length === 0 ? (
             <>
               <Text style={styles.noCardsText}>
@@ -184,6 +215,7 @@ const CardListComponent = ({ route, navigation }) => {
               <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
                 <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
               </TouchableOpacity>
+
 
               <FlatList
                 contentContainerStyle={styles.flatList}
