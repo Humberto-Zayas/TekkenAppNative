@@ -21,7 +21,11 @@ const CardListComponent = ({ route, navigation }) => {
   const [showSortFilterModal, setShowSortFilterModal] = useState(false);
   const [selectedUsername, setSelectedUsername] = useState('All Users');
   const [selectedTags, setSelectedTags] = useState([]);
-  console.log(selectedTags)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(2); // Number of items per page
+  const [totalPages, setTotalPages] = useState(0);
+  const [pageSize, setPageSize] = useState(2); // Number of items per page
+
   const { user } = useAuth();
 
   const toggleSortFilterModal = () => {
@@ -50,11 +54,11 @@ const CardListComponent = ({ route, navigation }) => {
       const updatedTags = selectedTags.filter(t => t.name !== tag.name);
       setSelectedTags(updatedTags);
     }
-  };  
+  };
 
-  const fetchCards = async () => {
+  const fetchCards = async (page = 1) => {
     try {
-      let queryParams = `${process.env.REACT_APP_API_BASE_URL}/cards/character/${name}`;
+      let queryParams = `${process.env.REACT_APP_API_BASE_URL}/cards/character/${name}?page=${page}`;
       if (selectedTags.length > 0) {
         const tagNames = selectedTags.map(tag => tag.name);
         queryParams += `?tags=${tagNames.join(',')}`;
@@ -64,6 +68,9 @@ const CardListComponent = ({ route, navigation }) => {
       if (!response.ok) {
         throw new Error('Failed to fetch cards');
       }
+      // Extract total count from response headers
+      const totalCount = response.headers.get('X-Total-Count');
+      const totalPages = Math.ceil(totalCount / pageSize); // Calculate total pages
       const data = await response.json();
       const cardsWithAverageRating = data.map((card) => ({
         ...card,
@@ -74,6 +81,10 @@ const CardListComponent = ({ route, navigation }) => {
       // Save both as initial and current set of cards
       setCards(sortedCards);
       setOriginalCards(sortedCards);
+      // Set the total count state
+      setTotalCount(totalCount);
+      setTotalPages(totalPages);
+
     } catch (error) {
       console.error('Error fetching cards:', error);
     }
@@ -156,12 +167,13 @@ const CardListComponent = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    fetchCards();
-  }, [name, selectedTags]);
+    fetchCards(currentPage);
+  }, [name, selectedTags, currentPage]);
 
   useFocusEffect(
     useCallback(() => {
-      setSelectedTags([]); // this would reset the tags when navigating back
+      setSelectedTags([]);
+      setCurrentPage(1);
       fetchCards();
     }, [name, sortOrder])
   );
@@ -179,6 +191,18 @@ const CardListComponent = ({ route, navigation }) => {
       setCards(updatedCards);
     }
   }, [selectedUsername, originalCards]);
+
+  // Handle previous page navigation
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  // Handle next page navigation
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
 
   return (
     <View style={styles.container}>
@@ -233,6 +257,28 @@ const CardListComponent = ({ route, navigation }) => {
           )}
         </>
       )}
+
+      {/* Pagination Controls */}
+      <View style={styles.paginationContainer}>
+        <TouchableOpacity onPress={handlePreviousPage} disabled={currentPage === 1}>
+          <Text style={styles.paginationText}>{'<'}</Text>
+        </TouchableOpacity>
+
+        {/* Render pagination buttons or components based on total pages */}
+        {Array.from(Array(totalPages).keys()).map((pageNumber) => (
+          <TouchableOpacity
+            key={pageNumber}
+            onPress={() => setCurrentPage(pageNumber + 1)}
+            style={[styles.pageNumberButton, currentPage === pageNumber + 1 && styles.currentPageNumber]}
+          >
+            <Text style={styles.paginationText}>{pageNumber + 1}</Text>
+          </TouchableOpacity>
+        ))}
+
+        <TouchableOpacity onPress={handleNextPage} disabled={currentPage === totalPages}>
+          <Text style={styles.paginationText}>{'>'}</Text>
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.toggleButtonContainer}>
         <TouchableOpacity
