@@ -11,5 +11,5 @@ export const styles = StyleSheet.create({
     backgroundColor: 'lightblue',
     padding: 7,
     borderRadius: 20
-  }
+  },
 });

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Image, ScrollView } from 'react-native';
+// import { LinearGradient } from 'expo-linear-gradient';
 import SavedListComponent from '../SavedListComponent';
 import LoginSignupModalComponent from './LoginSignupModalComponent';
 import Pagination from '../Pagination';
@@ -44,7 +45,7 @@ const CardListComponent = ({ route, navigation }) => {
       let queryParams = `${process.env.REACT_APP_API_BASE_URL}/cards/character/${name}?page=${page}`;
       if (selectedTags.length > 0) {
         const tagNames = selectedTags.map(tag => tag.name);
-        queryParams += `?tags=${tagNames.join(',')}`;
+        queryParams += `&tags=${tagNames.join(',')}`; // Use & to append additional query parameters
       }
 
       const response = await fetch(queryParams);
@@ -167,24 +168,54 @@ const CardListComponent = ({ route, navigation }) => {
       ) : (
         <>
           <View style={styles.tagsContainer}>
-            {tags.map((tag) => (
+            <ScrollView style={styles.scrollViewContainer} horizontal={true} showsHorizontalScrollIndicator={false}>
+              {tags.map((tag) => (
+                <TouchableOpacity
+                  onPress={() => handleTagClick(tag)}
+                  style={[
+                    styles.tag,
+                    selectedTags.some(t => t.name === tag.name) && styles.selectedTag
+                  ]}
+                  key={tag.name}
+                >
+                  <Text style={styles.tagText}>{tag.name}</Text>
+                </TouchableOpacity>
+              ))}
               <TouchableOpacity
-                onPress={() => handleTagClick(tag)}
-                style={[
-                  styles.tag,
-                  selectedTags.some(t => t.name === tag.name) && styles.selectedTag
-                ]}
-                key={tag.name}
+                onPress={() => handleTagClick('YouTube')}
+                style={styles.tag}
               >
-                <Text style={styles.tagText}>{tag.name}</Text>
+                <Text style={styles.tagText}>YouTube</Text>
               </TouchableOpacity>
-            ))}
+              <TouchableOpacity
+                onPress={() => handleTagClick('Twitch')}
+                style={styles.tag}
+              >
+                <Text style={styles.tagText}>Twitch</Text>
+              </TouchableOpacity>
+            </ScrollView>
+            {/* <LinearGradient
+              colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
+              style={styles.gradient}
+              start={{ x: 0.5, y: 0 }}
+              end={{ x: 1, y: 0 }}
+            /> */}
           </View>
-          {cards.length === 0 ? (
+          {cards.length === 0 && selectedTags.length === 0 ? (
             <>
               <Text style={styles.noCardsText}>
                 {`There are currently no cards${name ? ` for ${name}` : ''}. Why don't you add one?`}
               </Text>
+              <TouchableOpacity style={styles.cab} onPress={handleCreateCard}>
+                <Text style={styles.cabText}>+</Text>
+              </TouchableOpacity>
+            </>
+          ) : cards.length === 0 && selectedTags.length > 0 ? (
+            <>
+              <Text style={styles.noCardsText}>
+                {`There are currently no cards for ${selectedTags.length > 0 ? `the following tags: ${selectedTags.map(tag => tag.name).join(', ')}` : ''}${name ? ` for ${name}` : ''}. Why don't you add one?`}
+              </Text>
+
               <TouchableOpacity style={styles.cab} onPress={handleCreateCard}>
                 <Text style={styles.cabText}>+</Text>
               </TouchableOpacity>
@@ -195,7 +226,6 @@ const CardListComponent = ({ route, navigation }) => {
                 <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
               </TouchableOpacity>
 
-
               <FlatList
                 contentContainerStyle={styles.flatList}
                 data={cards}
@@ -205,17 +235,18 @@ const CardListComponent = ({ route, navigation }) => {
               />
             </>
           )}
+
         </>
       )}
-
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        handlePreviousPage={handlePreviousPage}
-        handleNextPage={handleNextPage}
-        setCurrentPage={setCurrentPage} 
-      />
-
+      {cards.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          handlePreviousPage={handlePreviousPage}
+          handleNextPage={handleNextPage}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
       <View style={styles.toggleButtonContainer}>
         <TouchableOpacity
           style={[styles.toggleButton, { marginRight: 10 }]}

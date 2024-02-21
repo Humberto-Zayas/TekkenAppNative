@@ -153,7 +153,7 @@ export const styles = StyleSheet.create({
   },
   tagsContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    // flexWrap: 'wrap',
     marginTop: 10,
   },
   tag: {
@@ -181,5 +181,8 @@ export const styles = StyleSheet.create({
     backgroundColor: 'lightblue',
     padding: 7,
     borderRadius: 20
+  },
+  scrollViewContainer: {
+    backgroundColor: 'pink'
   }
 });
