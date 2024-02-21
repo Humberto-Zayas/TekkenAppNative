@@ -3,8 +3,9 @@ import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
 import SavedListComponent from '../SavedListComponent';
 import LoginSignupModalComponent from './LoginSignupModalComponent';
-import SortAndFilterModal from './SortAndFilterModal';
+import Pagination from '../Pagination';
 import { useAuth } from '../../utils/AuthContext';
+import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
 import { styles } from './styles';
 import { format } from 'date-fns';
 import tags from '../../data/tags';
@@ -16,32 +17,14 @@ const CardListComponent = ({ route, navigation }) => {
   const [isCardMenuVisible, setCardMenuVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [cards, setCards] = useState([]);
-  const [originalCards, setOriginalCards] = useState([]);
   const [sortOrder, setSortOrder] = useState('ascending');
-  const [showSortFilterModal, setShowSortFilterModal] = useState(false);
-  const [selectedUsername, setSelectedUsername] = useState('All Users');
   const [selectedTags, setSelectedTags] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(2); // Number of items per page
+  const [totalCount, setTotalCount] = useState(0); // Number of items per page
   const [totalPages, setTotalPages] = useState(0);
-  const [pageSize, setPageSize] = useState(2); // Number of items per page
+  const [pageSize, setPageSize] = useState(10); // Number of items per page
 
   const { user } = useAuth();
-
-  const toggleSortFilterModal = () => {
-    setShowSortFilterModal(!showSortFilterModal);
-  };
-
-  const applyFilter = useCallback((filterUsername) => {
-    setSelectedUsername(filterUsername);
-
-    if (filterUsername === 'All Users') {
-      setCards(originalCards); // Reset to the original data
-    } else {
-      const filteredCards = originalCards.filter((card) => card.username === filterUsername);
-      setCards(filteredCards);
-    }
-  }, [originalCards]);
 
   const handleTagClick = (tag) => {
     // Check if the tag is already selected
@@ -80,28 +63,11 @@ const CardListComponent = ({ route, navigation }) => {
 
       // Save both as initial and current set of cards
       setCards(sortedCards);
-      setOriginalCards(sortedCards);
-      // Set the total count state
       setTotalCount(totalCount);
       setTotalPages(totalPages);
 
     } catch (error) {
       console.error('Error fetching cards:', error);
-    }
-  };
-
-  const calculateAverageRating = (card) => {
-    const totalRating = card.ratings.reduce((sum, rating) => sum + rating.rating, 0);
-    return card.ratings.length > 0 ? totalRating / card.ratings.length : 0;
-  };
-
-  const getBackgroundColor = (averageRating) => {
-    if (averageRating >= 4.5) {
-      return 'green';
-    } else if (averageRating >= 3) {
-      return 'yellow';
-    } else {
-      return 'red';
     }
   };
 
@@ -166,6 +132,16 @@ const CardListComponent = ({ route, navigation }) => {
     );
   };
 
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
   useEffect(() => {
     fetchCards(currentPage);
   }, [name, selectedTags, currentPage]);
@@ -177,32 +153,6 @@ const CardListComponent = ({ route, navigation }) => {
       fetchCards();
     }, [name, sortOrder])
   );
-
-  useEffect(() => {
-    let updatedCards;
-
-    if (selectedUsername === 'All Users') {
-      updatedCards = originalCards;
-    } else {
-      updatedCards = originalCards.filter((card) => card.username === selectedUsername);
-    }
-
-    if (selectedUsername !== updatedCards) {
-      setCards(updatedCards);
-    }
-  }, [selectedUsername, originalCards]);
-
-  // Handle previous page navigation
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  // Handle next page navigation
-  const handleNextPage = () => {
-    setCurrentPage(currentPage + 1);
-  };
 
   return (
     <View style={styles.container}>
@@ -258,27 +208,13 @@ const CardListComponent = ({ route, navigation }) => {
         </>
       )}
 
-      {/* Pagination Controls */}
-      <View style={styles.paginationContainer}>
-        <TouchableOpacity onPress={handlePreviousPage} disabled={currentPage === 1}>
-          <Text style={styles.paginationText}>{'<'}</Text>
-        </TouchableOpacity>
-
-        {/* Render pagination buttons or components based on total pages */}
-        {Array.from(Array(totalPages).keys()).map((pageNumber) => (
-          <TouchableOpacity
-            key={pageNumber}
-            onPress={() => setCurrentPage(pageNumber + 1)}
-            style={[styles.pageNumberButton, currentPage === pageNumber + 1 && styles.currentPageNumber]}
-          >
-            <Text style={styles.paginationText}>{pageNumber + 1}</Text>
-          </TouchableOpacity>
-        ))}
-
-        <TouchableOpacity onPress={handleNextPage} disabled={currentPage === totalPages}>
-          <Text style={styles.paginationText}>{'>'}</Text>
-        </TouchableOpacity>
-      </View>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        handlePreviousPage={handlePreviousPage}
+        handleNextPage={handleNextPage}
+        setCurrentPage={setCurrentPage} 
+      />
 
       <View style={styles.toggleButtonContainer}>
         <TouchableOpacity
@@ -298,14 +234,6 @@ const CardListComponent = ({ route, navigation }) => {
       <TouchableOpacity style={styles.fab} onPress={toggleCardMenu}>
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>
-      <SortAndFilterModal
-        visible={showSortFilterModal}
-        onClose={toggleSortFilterModal}
-        onSortChange={fetchCards}
-        onFilterChange={applyFilter}
-        cards={cards}
-        selectedUsername={selectedUsername}
-      />
 
       {isCardMenuVisible && (
         <View style={styles.fabMenu}>
