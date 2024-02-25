@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
+import Pagination from '../Pagination';
+import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
 import { format } from 'date-fns';
@@ -8,6 +10,10 @@ const CreatorCardListComponent = ({ route, navigation }) => {
   const { creatorId, creator } = route.params;
   const [cards, setCards] = useState([]);
   const [sortOrder, setSortOrder] = useState('ascending');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0); // Number of items per page
+  const [totalPages, setTotalPages] = useState(0);
+  const [pageSize, setPageSize] = useState(10); // Number of items per page
   const { user } = useAuth();
 
   const fetchCards = async () => {
@@ -16,6 +22,8 @@ const CreatorCardListComponent = ({ route, navigation }) => {
       if (!response.ok) {
         throw new Error('Failed to fetch cards');
       }
+      const totalCount = response.headers.get('X-Total-Count');
+      const totalPages = Math.ceil(totalCount / pageSize); // Calculate total pages
       const data = await response.json();
       const cardsWithAverageRating = data.map((card) => ({
         ...card,
@@ -25,24 +33,21 @@ const CreatorCardListComponent = ({ route, navigation }) => {
 
       // Save both as initial and current set of cards
       setCards(sortedCards);
+      setTotalCount(totalCount);
+      setTotalPages(totalPages);
     } catch (error) {
       console.error('Error fetching cards:', error);
     }
   };
 
-  const calculateAverageRating = (card) => {
-    const totalRating = card.ratings.reduce((sum, rating) => sum + rating.rating, 0);
-    return card.ratings.length > 0 ? totalRating / card.ratings.length : 0;
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
-  const getBackgroundColor = (averageRating) => {
-    if (averageRating >= 4.5) {
-      return 'green';
-    } else if (averageRating >= 3) {
-      return 'yellow';
-    } else {
-      return 'red';
-    }
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1);
   };
 
   const handleCardPress = (id) => {
@@ -53,7 +58,7 @@ const CreatorCardListComponent = ({ route, navigation }) => {
   const renderCardItem = ({ item }) => {
     const formattedCreatedAt = format(new Date(item.createdAt), 'MMMM dd, yyyy HH:mm:ss');
     const formattedLastEditedAt = item.lastEditedAt ? format(new Date(item.lastEditedAt), 'MMMM dd, yyyy HH:mm:ss') : null;
-    
+
     return (
       <TouchableOpacity
         style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]}
@@ -104,7 +109,19 @@ const CreatorCardListComponent = ({ route, navigation }) => {
           renderItem={renderCardItem}
           showsVerticalScrollIndicator={false}
         />
+
       </View>
+      {cards.length > 0 && (
+        <View style={styles.bottomContainer}>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            handlePreviousPage={handlePreviousPage}
+            handleNextPage={handleNextPage}
+            setCurrentPage={setCurrentPage}
+          />
+        </View>
+      )}
     </View>
   );
 };

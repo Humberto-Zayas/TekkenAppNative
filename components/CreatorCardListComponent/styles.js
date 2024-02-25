@@ -6,6 +6,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     padding: 20,
+    paddingBottom: 0,
     position: 'relative',
   },
   flatList: {
@@ -13,6 +14,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     justifyContent: 'center',
+    paddingBottom: 160
   },
   cardItem: {
     flexDirection: 'row',
@@ -132,4 +134,12 @@ export const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
+  bottomContainer: {
+    marginTop: 'auto',
+    width: '100%',
+    paddingBottom: 40,
+    paddingTop: 10,
+    backgroundColor: '#f2f2f2',
+    zIndex: 999
+  }
 });

@@ -171,18 +171,4 @@ export const styles = StyleSheet.create({
   tagText: {
     marginRight: 5,
   },
-  paginationContainer: {
-    flexDirection: 'row',
-    width: '90%',
-    marginTop: 10,
-    justifyContent: 'space-around'
-  },
-  paginationText: {
-    backgroundColor: 'lightblue',
-    padding: 7,
-    borderRadius: 20
-  },
-  scrollViewContainer: {
-    backgroundColor: 'pink'
-  }
 });

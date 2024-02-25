@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, FlatList, TouchableOpacity, Image, ScrollView } from 'react-native';
-// import { LinearGradient } from 'expo-linear-gradient';
 import SavedListComponent from '../SavedListComponent';
 import LoginSignupModalComponent from './LoginSignupModalComponent';
 import Pagination from '../Pagination';
@@ -21,9 +20,11 @@ const CardListComponent = ({ route, navigation }) => {
   const [sortOrder, setSortOrder] = useState('ascending');
   const [selectedTags, setSelectedTags] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0); // Number of items per page
+  const [totalCount, setTotalCount] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [pageSize, setPageSize] = useState(10); // Number of items per page
+  const [pageSize, setPageSize] = useState(10);
+  const [youtubeQuery, setYouTubeQuery] = useState(false);
+  const [twitchQuery, setTwitchQuery] = useState(false);
 
   const { user } = useAuth();
 
@@ -43,9 +44,21 @@ const CardListComponent = ({ route, navigation }) => {
   const fetchCards = async (page = 1) => {
     try {
       let queryParams = `${process.env.REACT_APP_API_BASE_URL}/cards/character/${name}?page=${page}`;
+
+      // Append selected tags to query parameters
       if (selectedTags.length > 0) {
         const tagNames = selectedTags.map(tag => tag.name);
-        queryParams += `&tags=${tagNames.join(',')}`; // Use & to append additional query parameters
+        queryParams += `&tags=${tagNames.join(',')}`;
+      }
+
+      // Append YouTube query parameter if true
+      if (youtubeQuery) {
+        queryParams += '&YouTube=true';
+      }
+
+      // Append Twitch query parameter if true
+      if (twitchQuery) {
+        queryParams += '&Twitch=true';
       }
 
       const response = await fetch(queryParams);
@@ -66,7 +79,6 @@ const CardListComponent = ({ route, navigation }) => {
       setCards(sortedCards);
       setTotalCount(totalCount);
       setTotalPages(totalPages);
-
     } catch (error) {
       console.error('Error fetching cards:', error);
     }
@@ -145,7 +157,7 @@ const CardListComponent = ({ route, navigation }) => {
 
   useEffect(() => {
     fetchCards(currentPage);
-  }, [name, selectedTags, currentPage]);
+  }, [name, selectedTags, currentPage, youtubeQuery, twitchQuery]);
 
   useFocusEffect(
     useCallback(() => {
@@ -182,40 +194,24 @@ const CardListComponent = ({ route, navigation }) => {
                 </TouchableOpacity>
               ))}
               <TouchableOpacity
-                onPress={() => handleTagClick('YouTube')}
+                onPress={() => setYouTubeQuery(!youtubeQuery)}
                 style={styles.tag}
               >
                 <Text style={styles.tagText}>YouTube</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => handleTagClick('Twitch')}
+                onPress={() => setTwitchQuery(!twitchQuery)}
                 style={styles.tag}
               >
                 <Text style={styles.tagText}>Twitch</Text>
               </TouchableOpacity>
             </ScrollView>
-            {/* <LinearGradient
-              colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
-              style={styles.gradient}
-              start={{ x: 0.5, y: 0 }}
-              end={{ x: 1, y: 0 }}
-            /> */}
           </View>
-          {cards.length === 0 && selectedTags.length === 0 ? (
+          {cards.length === 0 && selectedTags.length === 0 && !youtubeQuery && !twitchQuery ? (
             <>
               <Text style={styles.noCardsText}>
                 {`There are currently no cards${name ? ` for ${name}` : ''}. Why don't you add one?`}
               </Text>
-              <TouchableOpacity style={styles.cab} onPress={handleCreateCard}>
-                <Text style={styles.cabText}>+</Text>
-              </TouchableOpacity>
-            </>
-          ) : cards.length === 0 && selectedTags.length > 0 ? (
-            <>
-              <Text style={styles.noCardsText}>
-                {`There are currently no cards for ${selectedTags.length > 0 ? `the following tags: ${selectedTags.map(tag => tag.name).join(', ')}` : ''}${name ? ` for ${name}` : ''}. Why don't you add one?`}
-              </Text>
-
               <TouchableOpacity style={styles.cab} onPress={handleCreateCard}>
                 <Text style={styles.cabText}>+</Text>
               </TouchableOpacity>
@@ -225,7 +221,21 @@ const CardListComponent = ({ route, navigation }) => {
               <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
                 <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
               </TouchableOpacity>
-
+              {selectedTags.length > 0 && cards.length === 0 && (
+                <Text style={styles.noCardsText}>
+                  {`There are currently no cards for the following tag: ${selectedTags.map(tag => tag.name).join(', ')}`}
+                </Text>
+              )}
+              {youtubeQuery && cards.filter(card => card.youtubeLink).length === 0 && (
+                <Text style={styles.noCardsText}>
+                  There are currently no cards with a YouTube link.
+                </Text>
+              )}
+              {twitchQuery && cards.filter(card => card.twitchLink).length === 0 && (
+                <Text style={styles.noCardsText}>
+                  There are currently no cards with a Twitch link.
+                </Text>
+              )}
               <FlatList
                 contentContainerStyle={styles.flatList}
                 data={cards}
@@ -235,7 +245,6 @@ const CardListComponent = ({ route, navigation }) => {
               />
             </>
           )}
-
         </>
       )}
       {cards.length > 0 && (

@@ -17,6 +17,7 @@ const CreateCardComponent = ({ route, navigation }) => {
   const [cardDescription, setCardDescription] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
   const [youtubeLink, setYoutubeLink] = useState('');
+  const [twitchLink, setTwitchLink] = useState('');
   const [punisherData, setPunisherData] = useState([]);
   const [moveFlowChartData, setMoveFlowChartData] = useState([]);
   const { user } = useAuth();
@@ -33,6 +34,10 @@ const CreateCardComponent = ({ route, navigation }) => {
     setYoutubeLink(youtubeLink);
   }
 
+  const handleTwitchLinkChange = (twitchLink) => {
+    setTwitchLink(twitchLink);
+  }
+
   const handleTagPress = (tag) => {
     const tagIndex = selectedTags.findIndex(t => t.name === tag.name);
     if (tagIndex !== -1) {
@@ -40,7 +45,7 @@ const CreateCardComponent = ({ route, navigation }) => {
     } else {
       setSelectedTags([...selectedTags, { name: tag.name }]);
     }
-  };  
+  };
 
   const handleSave = async () => {
     if (!cardName || !cardDescription) {
@@ -80,6 +85,7 @@ const CreateCardComponent = ({ route, navigation }) => {
       setCardName('');
       setCardDescription('');
       setYoutubeLink('');
+      setTwitchLink('');
       setPunisherData([]);
       setMoveFlowChartData([]);
       setShowPunishers(false);
@@ -153,6 +159,14 @@ const CreateCardComponent = ({ route, navigation }) => {
         placeholder="YouTube Link"
         value={youtubeLink}
         onChangeText={handleYouTubeLinkChange}
+        numberOfLines={1}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Twitch Link"
+        value={twitchLink}
+        onChangeText={handleTwitchLinkChange}
         numberOfLines={1}
       />
 

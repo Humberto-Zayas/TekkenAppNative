@@ -97,7 +97,7 @@ const MyCardListComponent = ({ navigation }) => {
           {user.username}'s Cards
         </Text>
       </View>
-      <View>
+    
         {showSavedList ? (
           <SavedListComponent navigation={navigation} />
         ) : (
@@ -141,7 +141,7 @@ const MyCardListComponent = ({ navigation }) => {
           <Text style={styles.toggleButtonText}>Show Saved List</Text>
         </TouchableOpacity>
       </View>
-      </View>
+    
     </View>
   );
 };
