@@ -243,18 +243,18 @@ const CardListComponent = ({ route, navigation }) => {
                 renderItem={renderCardItem}
                 showsVerticalScrollIndicator={false}
               />
+              {cards.length > 10 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  handlePreviousPage={handlePreviousPage}
+                  handleNextPage={handleNextPage}
+                  setCurrentPage={setCurrentPage}
+                />
+              )}
             </>
           )}
         </>
-      )}
-      {cards.length > 0 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          handlePreviousPage={handlePreviousPage}
-          handleNextPage={handleNextPage}
-          setCurrentPage={setCurrentPage}
-        />
       )}
       <View style={styles.toggleButtonContainer}>
         <TouchableOpacity

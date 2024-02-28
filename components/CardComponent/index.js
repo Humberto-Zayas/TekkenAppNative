@@ -32,8 +32,6 @@ const CardComponent = ({ route, navigation, }) => {
         console.error('User ID is undefined');
         return;
       }
-
-      console.log(`card id: ${id}`, `userId: ${userId}`)
   
       const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/id/${id}?userId=${userId}`);
       if (!response.ok) {

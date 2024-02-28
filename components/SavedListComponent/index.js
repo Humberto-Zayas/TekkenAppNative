@@ -4,10 +4,16 @@ import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
 import { format } from 'date-fns';
+import Pagination from '../Pagination';
+import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
 
 const SavedListComponent = ({ navigation, characterName }) => {
   const [bookmarkedCards, setBookmarkedCards] = useState([]);
   const [sortOrder, setSortOrder] = useState('ascending');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0); // Number of items per page
+  const [totalPages, setTotalPages] = useState(0);
+  const [pageSize, setPageSize] = useState(10); // Number of items per page
   const { user } = useAuth();
 
   useEffect(() => {
@@ -25,6 +31,8 @@ const SavedListComponent = ({ navigation, characterName }) => {
           if (!response.ok) {
             throw new Error('Failed to fetch bookmarks');
           }
+          const totalCount = response.headers.get('X-Total-Count');
+          const totalPages = Math.ceil(totalCount / pageSize); // Calculate total pages
 
           const data = await response.json();
           const cardsWithAverageRating = data.bookmarks.map((card) => ({
@@ -38,6 +46,8 @@ const SavedListComponent = ({ navigation, characterName }) => {
             : cardsWithAverageRating.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
           setBookmarkedCards(sortedBookmarks);
+          setTotalCount(totalCount);
+          setTotalPages(totalPages);
         } catch (error) {
           console.error('Error fetching bookmarks:', error);
         }
@@ -55,20 +65,16 @@ const SavedListComponent = ({ navigation, characterName }) => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
   };
 
-  const calculateAverageRating = (card) => {
-    const totalRating = card.ratings.reduce((sum, rating) => sum + rating.rating, 0);
-    return card.ratings.length > 0 ? totalRating / card.ratings.length : 0;
-  };
-
-  const getBackgroundColor = (averageRating) => {
-    if (averageRating >= 4.5) {
-      return 'green';
-    } else if (averageRating >= 3) {
-      return 'yellow';
-    } else {
-      return 'red';
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
     }
   };
+
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
 
   const renderSavedCardItem = ({ item }) => {
     const formattedCreatedAt = format(new Date(item.createdAt), 'MMMM dd, yyyy HH:mm:ss');
@@ -139,9 +145,26 @@ const SavedListComponent = ({ navigation, characterName }) => {
       );
     }
   };
-  
 
-  return <View>{renderContent()}</View>;
+
+  return (
+    <View>
+      {renderContent()
+      }
+      {bookmarkedCards.length > 10 && (
+        <View style={styles.bottomContainer}>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            handlePreviousPage={handlePreviousPage}
+            handleNextPage={handleNextPage}
+            setCurrentPage={setCurrentPage}
+          />
+        </View>
+      )}
+
+    </View>
+  )
 };
 
 

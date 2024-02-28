@@ -109,19 +109,19 @@ const CreatorCardListComponent = ({ route, navigation }) => {
           renderItem={renderCardItem}
           showsVerticalScrollIndicator={false}
         />
-
+        {cards.length > 0 && (
+          <View style={styles.bottomContainer}>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              handlePreviousPage={handlePreviousPage}
+              handleNextPage={handleNextPage}
+              setCurrentPage={setCurrentPage}
+            />
+          </View>
+        )}
       </View>
-      {cards.length > 0 && (
-        <View style={styles.bottomContainer}>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            handlePreviousPage={handlePreviousPage}
-            handleNextPage={handleNextPage}
-            setCurrentPage={setCurrentPage}
-          />
-        </View>
-      )}
+
     </View>
   );
 };

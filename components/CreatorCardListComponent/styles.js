@@ -14,7 +14,6 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     justifyContent: 'center',
-    paddingBottom: 160
   },
   cardItem: {
     flexDirection: 'row',
@@ -137,7 +136,7 @@ export const styles = StyleSheet.create({
   bottomContainer: {
     marginTop: 'auto',
     width: '100%',
-    paddingBottom: 40,
+    paddingBottom: 100,
     paddingTop: 10,
     backgroundColor: '#f2f2f2',
     zIndex: 999
