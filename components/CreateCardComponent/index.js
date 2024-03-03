@@ -4,6 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import HeroCreateComponent from './HeroCreateComponent';
 import PunisherComponent from './PunisherComponent';
 import MoveFlowChartComponent from './MoveFlowChartComponent';
+import FollowUpsComponent from './FollowUpsComponent';
 import alisaFrameData from '../../data/alisaFrameData';
 import { styles } from './styles';
 import { useAuth } from '../../utils/AuthContext';
@@ -13,6 +14,7 @@ const CreateCardComponent = ({ route, navigation }) => {
   const { characterName, characterImage } = route.params;
   const [showPunishers, setShowPunishers] = useState(false);
   const [showMoveFlowChart, setShowMoveFlowChart] = useState(false);
+  const [showFollowUps, setShowFollowUps] = useState(false);
   const [cardName, setCardName] = useState('');
   const [cardDescription, setCardDescription] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
@@ -20,6 +22,7 @@ const CreateCardComponent = ({ route, navigation }) => {
   const [twitchLink, setTwitchLink] = useState('');
   const [punisherData, setPunisherData] = useState([]);
   const [moveFlowChartData, setMoveFlowChartData] = useState([]);
+  const [followUpData, setFollowUpData] = useState([]);
   const { user } = useAuth();
 
   const handleCardNameChange = (name) => {
@@ -127,6 +130,9 @@ const CreateCardComponent = ({ route, navigation }) => {
         <TouchableOpacity onPress={() => setShowMoveFlowChart(true)} style={styles.link}>
           <Text style={styles.linkText}>Move Flow Chart</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => setShowFollowUps(true)} style={styles.link}>
+          <Text style={styles.linkText}>Set Follow Up/Mini Combos</Text>
+        </TouchableOpacity>
       </View>
       <Modal
         visible={showPunishers}
@@ -150,6 +156,19 @@ const CreateCardComponent = ({ route, navigation }) => {
           onClose={() => setShowMoveFlowChart(false)}
           setMoveFlowChartData={setMoveFlowChartData}
           moveFlowChartData={moveFlowChartData}
+          frameData={alisaFrameData}
+        />
+      </Modal>
+
+      <Modal
+        visible={showFollowUps}
+        animationType="slide"
+        onRequestClose={() => setShowPunishers(false)}
+      >
+        <FollowUpsComponent
+          onClose={() => setShowFollowUps(false)}
+          setFollowUpData={setFollowUpData}
+          followUpData={followUpData}
           frameData={alisaFrameData}
         />
       </Modal>
