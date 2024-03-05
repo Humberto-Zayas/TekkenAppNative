@@ -5,16 +5,15 @@ import { styles } from './styles';
 
 const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedMove, setSelectedMove] = useState(null); // Single move selection at a time
+  const [selectedMove, setSelectedMove] = useState(null); // Track the first move selection
 
   const addFollowUp = (move2) => {
-    // Assuming selectedMove is already set for move1
     const newFollowUp = {
       move1: selectedMove,
       move2: move2,
     };
     setFollowUpData([...followUpData, newFollowUp]);
-    setSelectedMove(null); // Reset selection
+    setSelectedMove(null); // Reset after pairing
     setModalVisible(false);
   };
 
@@ -26,37 +25,51 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
 
   const handleMoveSelect = (move) => {
     if (!selectedMove) {
-      setSelectedMove(move); // Select first move
-      setModalVisible(false); // Re-open modal for second move selection
+      setSelectedMove(move); // First move selected
+      // Do not close modal here if you want it to stay open for the second selection
     } else {
-      addFollowUp(move); // Add pair when second move is selected
+      addFollowUp(move); // Second move selected, add the pair
     }
   };
 
   const handleAddFollowUpPress = () => {
-    setModalVisible(true); // Open modal to select the first move
+    setModalVisible(true); // To select the first move
   };
 
   const filteredFrameData = () => {
-    // This will return frameData excluding moves already selected as move1 or move2 in followUpData
     return frameData.filter((frameMove) =>
       !followUpData.some((followUp) =>
         [followUp.move1?.move, followUp.move2?.move].includes(frameMove.move))
     );
   };
 
+  const renderListData = () => {
+    // Temporarily include the selected first move if it hasn't been paired yet
+    const listData = [...followUpData];
+    if (selectedMove) {
+      listData.push({ move1: selectedMove, move2: null }); // Temporarily show the selected first move
+    }
+    return listData;
+  };
+
   const MoveListModal = () => (
     <Modal
       visible={modalVisible}
       animationType="slide"
-      onRequestClose={() => setModalVisible(false)}
+      onRequestClose={() => {
+        setModalVisible(false);
+        if (selectedMove) {
+          // If a move was selected but not paired, reset it
+          setSelectedMove(null);
+        }
+      }}
     >
       <View style={styles.modalContainer}>
         <Text style={styles.header}>
           Select {selectedMove ? 'the second move' : 'a move'}
         </Text>
         <FlatList
-          data={filteredFrameData()}
+          data={frameData}
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.moveItem}
@@ -68,9 +81,9 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
           )}
           keyExtractor={(item) => item.move}
         />
-        <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
+        {/* <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
           <FontAwesome name="times" size={20} color="black" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </Modal>
   );
@@ -83,7 +96,7 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
       <Text style={styles.header}>Follow Ups</Text>
       <FlatList
         style={styles.flatList}
-        data={followUpData}
+        data={renderListData()}
         renderItem={({ item, index }) => (
           <View style={styles.tableRow}>
             <Text style={styles.columnLeft}>{item.move1.move}</Text>
@@ -94,12 +107,7 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
           </View>
         )}
         keyExtractor={(_, index) => index.toString()}
-        ListEmptyComponent={(
-          <View style={styles.tableRow}>
-            <Text style={styles.columnLeft}>Select First Move/Text</Text>
-            <Text style={styles.columnRight}>Add Follow Up</Text>
-          </View>
-        )}
+        ListEmptyComponent={<Text style={styles.emptyList}>No follow ups added yet</Text>}
       />
       <TouchableOpacity onPress={handleAddFollowUpPress} style={styles.plusButton}>
         <FontAwesome name="plus" size={20} color="white" />
