@@ -115,10 +115,10 @@ export const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     marginBottom: 10,
-    paddingHorizontal: 5
   },
   link: {
     backgroundColor: 'blue',
@@ -126,8 +126,9 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 10,
     marginHorizontal: 5,
+    marginBottom: 10,
     height: 100,
-    width: '50%',
+    width: '47%',
   },
   linkText: {
     color: 'white',

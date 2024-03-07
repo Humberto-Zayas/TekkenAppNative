@@ -1,147 +1,118 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, Modal, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Modal } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 
 const MoveFlowChartComponent = ({ onClose, setMoveFlowChartData, moveFlowChartData, frameData }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [detailMove, setDetailMove] = useState(null);
+  const [selectedMove, setSelectedMove] = useState(null); // Track the first move selection
 
-  const addMoveFlowChart = (move) => {
-    setMoveFlowChartData([...moveFlowChartData, move]);
+  const addFollowUp = (move2) => {
+    const newFollowUp = {
+      move1: selectedMove,
+      move2: move2,
+    };
+    setMoveFlowChartData([...moveFlowChartData, newFollowUp]);
+    setSelectedMove(null); // Reset after pairing
     setModalVisible(false);
   };
 
-  const deleteMoveFlowChart = (index) => {
-    const updatedMoveFlowChart = [...moveFlowChartData];
-    updatedMoveFlowChart.splice(index, 1);
-    setMoveFlowChartData(updatedMoveFlowChart);
+  const deleteFollowUp = (index) => {
+    const updatedFollowUps = [...moveFlowChartData];
+    updatedFollowUps.splice(index, 1);
+    setMoveFlowChartData(updatedFollowUps);
   };
 
-  const handleMovePress = (move) => {
-    setDetailMove(move)
+  const handleMoveSelect = (move) => {
+    if (!selectedMove) {
+      setSelectedMove(move); // First move selected
+      // Do not close modal here if you want it to stay open for the second selection
+    } else {
+      addFollowUp(move); // Second move selected, add the pair
+    }
   };
 
-  const filterFrameData = () => {
-    const moveFlowChartInputs = moveFlowChartData.map((moveFlowChart) => moveFlowChart.move);
-    return frameData.filter((move) => !moveFlowChartInputs.includes(move.move));
+  const handleAddFollowUpPress = () => {
+    setModalVisible(true); // To select the first move
   };
 
-  const MoveDetailsModal = () => (
+  const filteredFrameData = () => {
+    return frameData.filter((frameMove) =>
+      !moveFlowChartData.some((followUp) =>
+        [followUp.move1?.move, followUp.move2?.move].includes(frameMove.move))
+    );
+  };
+
+  const renderListData = () => {
+    // Temporarily include the selected first move if it hasn't been paired yet
+    const listData = [...moveFlowChartData];
+    if (selectedMove) {
+      listData.push({ move1: selectedMove, move2: null }); // Temporarily show the selected first move
+    }
+    return listData;
+  };
+
+  const MoveListModal = () => (
     <Modal
-      visible={detailMove !== null}
-      animationType="fade"
-      onRequestClose={() => setDetailMove(null)}
+      visible={modalVisible}
+      animationType="slide"
+      onRequestClose={() => {
+        setModalVisible(false);
+        if (selectedMove) {
+          // If a move was selected but not paired, reset it
+          setSelectedMove(null);
+        }
+      }}
     >
       <View style={styles.modalContainer}>
-        <Text style={styles.header}>Move Details</Text>
-        {detailMove && (
-          <ScrollView style={styles.moveDetails}>
-            <Text>Move: {detailMove.move}</Text>
-            <Text>Description: {detailMove.description}</Text>
-            <Text>Hit Level: {detailMove.hitLevel}</Text>
-            <Text>Damage: {Array.isArray(detailMove.damage) ? detailMove.damage.join(', ') : detailMove.damage}</Text>
-            <Text>Startup Frame: {detailMove.startupFrame}</Text>
-            <Text>Block Frame: {detailMove.blockFrame}</Text>
-            <Text>Hit Frame: {detailMove.hitFrame}</Text>
-            <Text>User notes: {detailMove.notes}</Text>
-          </ScrollView>
-        )}
-        <TouchableOpacity onPress={() => setDetailMove(null)} style={styles.closeButton}>
+        <Text style={styles.header}>
+          Select {selectedMove ? 'the second move' : 'a move'}
+        </Text>
+        <FlatList
+          data={frameData}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.moveItem}
+              onPress={() => handleMoveSelect(item)}
+            >
+              <Text>{item.move}</Text>
+              <Text>{item.description}</Text>
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item) => item.move}
+        />
+        {/* <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
           <FontAwesome name="times" size={20} color="black" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </Modal>
   );
 
-  const MoveListModal = () => {
-    const [selectedMove, setSelectedMove] = useState(null);
-    const [context, setContext] = useState('');
-
-    const handleMoveSelect = (move) => {
-      setSelectedMove(move);
-    };
-
-    const handleAddMove = () => {
-      if (selectedMove) {
-        const moveWithDetail = { ...selectedMove, notes: context, damage: Array.isArray(selectedMove.damage) ? selectedMove.damage : [selectedMove.damage] };
-        addMoveFlowChart(moveWithDetail);
-        setContext('');
-        setModalVisible(false);
-      }
-    };
-
-    return (
-      <Modal
-        visible={modalVisible}
-        animationType="slide"
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <Text style={styles.header}>Choose Move</Text>
-          {selectedMove ? (
-            <View style={styles.selectedMoveContainer}>
-              <Text>{selectedMove.move}</Text>
-              <Text>{selectedMove.description}</Text>
-              <TextInput
-                style={styles.contextInput}
-                placeholder="Add context..."
-                value={context}
-                onChangeText={(text) => setContext(text)}
-                multiline
-              />
-              <TouchableOpacity style={styles.addButton} onPress={handleAddMove}>
-                <Text>Add Move</Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <FlatList
-              data={filterFrameData()}
-              renderItem={({ item }) => (
-                <TouchableOpacity style={styles.moveItem} onPress={() => handleMoveSelect(item)}>
-                  <Text>{item.move}</Text>
-                  <Text>{item.description}</Text>
-                </TouchableOpacity>
-              )}
-              keyExtractor={(item, index) => index.toString()}
-            />
-          )}
-          <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
-            <FontAwesome name="times" size={20} color="black" />
-          </TouchableOpacity>
-        </View>
-      </Modal>
-    );
-  };
-
   return (
     <View style={styles.modalContainer}>
-      <TouchableOpacity onPress={() => onClose()} style={styles.closeButton}>
+      <TouchableOpacity onPress={onClose} style={styles.closeButton}>
         <FontAwesome name="times" size={20} color="black" />
       </TouchableOpacity>
-      <Text style={styles.header}>Move Flow Chart</Text>
+      <Text style={styles.header}>Flowcharts</Text>
       <FlatList
         style={styles.flatList}
-        data={moveFlowChartData}
+        data={renderListData()}
         renderItem={({ item, index }) => (
-          <TouchableOpacity style={styles.punisherItem} onPress={() => handleMovePress(item)}>
-            <View style={styles.tableRow}>
-              <Text style={styles.columnLeft}>{item.move}</Text>
-              <Text style={styles.column}>{item.description}</Text>
-              <TouchableOpacity style={styles.deleteIcon} onPress={() => deleteMoveFlowChart(index)}>
-                <FontAwesome name="trash" size={20} color="red" />
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
+          <View style={styles.tableRow}>
+            <Text style={styles.columnLeft}>{item.move1.move}</Text>
+            <Text style={styles.columnRight}>{item.move2 ? ` ${item.move2.move}` : ''}</Text>
+            <TouchableOpacity style={styles.deleteIcon} onPress={() => deleteFollowUp(index)}>
+              <FontAwesome name="trash" size={20} color="red" />
+            </TouchableOpacity>
+          </View>
         )}
-        keyExtractor={(item, index) => index.toString()}
-        ListEmptyComponent={() => <Text style={styles.emptyList}>No move flow charts added yet</Text>}
+        keyExtractor={(_, index) => index.toString()}
+        ListEmptyComponent={<Text style={styles.emptyList}>No follow ups added yet</Text>}
       />
-      <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.plusButton}>
+      <TouchableOpacity onPress={handleAddFollowUpPress} style={styles.plusButton}>
         <FontAwesome name="plus" size={20} color="white" />
       </TouchableOpacity>
       <MoveListModal />
-      <MoveDetailsModal />
     </View>
   );
 };

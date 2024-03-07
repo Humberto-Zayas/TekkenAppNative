@@ -96,7 +96,7 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
             </View>
           ) : (
             <FlatList
-              data={filterFrameData()}
+              data={frameData}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={styles.moveItem}

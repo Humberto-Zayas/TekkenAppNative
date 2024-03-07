@@ -15,6 +15,7 @@ const CreateCardComponent = ({ route, navigation }) => {
   const [showPunishers, setShowPunishers] = useState(false);
   const [showMoveFlowChart, setShowMoveFlowChart] = useState(false);
   const [showFollowUps, setShowFollowUps] = useState(false);
+  const [showCombos, setShowCombos] = useState(false);
   const [cardName, setCardName] = useState('');
   const [cardDescription, setCardDescription] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
@@ -23,6 +24,7 @@ const CreateCardComponent = ({ route, navigation }) => {
   const [punisherData, setPunisherData] = useState([]);
   const [moveFlowChartData, setMoveFlowChartData] = useState([]);
   const [followUpData, setFollowUpData] = useState([]);
+  const [comboData, setComboData] = useState([]);
   const { user } = useAuth();
 
   const handleCardNameChange = (name) => {
@@ -91,7 +93,8 @@ const CreateCardComponent = ({ route, navigation }) => {
       setTwitchLink('');
       setPunisherData([]);
       setMoveFlowChartData([]);
-      setShowPunishers(false);
+      setComboData([]);
+      setShowPunishers([]);
       setShowMoveFlowChart(false);
 
       // Show a success message
@@ -133,6 +136,9 @@ const CreateCardComponent = ({ route, navigation }) => {
         <TouchableOpacity onPress={() => setShowFollowUps(true)} style={styles.link}>
           <Text style={styles.linkText}>Set Follow Up/Mini Combos</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => setShowFollowUps(true)} style={styles.link}>
+          <Text style={styles.linkText}>Combos</Text>
+        </TouchableOpacity>
       </View>
       <Modal
         visible={showPunishers}
@@ -169,6 +175,19 @@ const CreateCardComponent = ({ route, navigation }) => {
           onClose={() => setShowFollowUps(false)}
           setFollowUpData={setFollowUpData}
           followUpData={followUpData}
+          frameData={alisaFrameData}
+        />
+      </Modal>
+
+      <Modal
+        visible={showCombos}
+        animationType="slide"
+        onRequestClose={() => setShowCombos(false)}
+      >
+        <FollowUpsComponent
+          onClose={() => setShowCombos(false)}
+          setComboData={setComboData}
+          comboData={comboData}
           frameData={alisaFrameData}
         />
       </Modal>
