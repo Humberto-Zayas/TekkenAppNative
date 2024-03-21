@@ -74,6 +74,10 @@ const ComboComponent = ({ onClose, comboData, setComboData, frameData }) => {
         )}
         keyExtractor={(_, index) => index.toString()}
       />
+      {/* When this button is clicked, show the steps below */}
+       <TouchableOpacity style={styles.plusButton}>
+        <FontAwesome name="plus" size={20} color="white" />
+      </TouchableOpacity>
       {/* Combo Starter List Step */}
       <FlatList
         style={styles.moveList}
