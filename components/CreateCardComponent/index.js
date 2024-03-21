@@ -5,6 +5,7 @@ import HeroCreateComponent from './HeroCreateComponent';
 import PunisherComponent from './PunisherComponent';
 import MoveFlowChartComponent from './MoveFlowChartComponent';
 import FollowUpsComponent from './FollowUpsComponent';
+import ComboComponent from './ComboComponent';
 import alisaFrameData from '../../data/alisaFrameData';
 import { styles } from './styles';
 import { useAuth } from '../../utils/AuthContext';
@@ -136,7 +137,7 @@ const CreateCardComponent = ({ route, navigation }) => {
         <TouchableOpacity onPress={() => setShowFollowUps(true)} style={styles.link}>
           <Text style={styles.linkText}>Set Follow Up/Mini Combos</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setShowFollowUps(true)} style={styles.link}>
+        <TouchableOpacity onPress={() => setShowCombos(true)} style={styles.link}>
           <Text style={styles.linkText}>Combos</Text>
         </TouchableOpacity>
       </View>
@@ -184,7 +185,7 @@ const CreateCardComponent = ({ route, navigation }) => {
         animationType="slide"
         onRequestClose={() => setShowCombos(false)}
       >
-        <FollowUpsComponent
+        <ComboComponent
           onClose={() => setShowCombos(false)}
           setComboData={setComboData}
           comboData={comboData}
