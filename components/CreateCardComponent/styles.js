@@ -5,6 +5,7 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     padding: 20,
+    paddingVertical: 40,
     flex: 1
   },
   title: {
