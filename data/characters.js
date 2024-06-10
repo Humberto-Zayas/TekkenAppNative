@@ -7,7 +7,7 @@ export const characters = [
     heatEngagersData: [
       { 
         id: '1',
-        move: 'df1+2',
+        move: 'Alisa is different',
         description: 'Engages opponent with powerful attacks',
         hitLevel: 'Mid',
         damage: '30',
