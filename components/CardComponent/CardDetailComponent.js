@@ -29,6 +29,22 @@ const CardDetailComponent = ({ route, navigation }) => {
     </TouchableOpacity>
   );
 
+  const renderCombo = (combo, index) => (
+    <TouchableOpacity key={`${index}_${moveSetName}`} onPress={() => openDrawer(combo)}>
+      <View style={styles.tableRow}>
+      <View style={styles.column}>
+          <Text>{combo.comboStarters.join(', ')}</Text>
+        </View>
+        <View style={styles.columnLeft}>
+          <Text>{combo.comboRoute}</Text>
+        </View>
+        {/* <View style={styles.column}>
+          <Text>{combo.difficulty}</Text>
+        </View> */}
+      </View>
+    </TouchableOpacity>
+  );
+
   return (
     <ScrollView style={styles.container}>
       <Text>{moveSetName}</Text>
@@ -40,6 +56,8 @@ const CardDetailComponent = ({ route, navigation }) => {
               {renderMove(item.move2, `${index}_move2`)}
             </View>
           );
+        } else if (item.comboRoute) {
+          return renderCombo(item, index);
         }
         return renderMove(item, index);
       })}

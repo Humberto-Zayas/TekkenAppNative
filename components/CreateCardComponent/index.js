@@ -59,7 +59,7 @@ const CreateCardComponent = ({ route, navigation }) => {
       return;
     }
 
-    if (punisherData.length < 3 || moveFlowChartData.length < 3) {
+    if (punisherData.length < 3 || moveFlowChartData.length < 3 || comboData.length < 3) {
       alert('Please add at least 3 moves in both Punishers and Move/Flowchart data sets.');
       return;
     }
@@ -78,6 +78,7 @@ const CreateCardComponent = ({ route, navigation }) => {
           youtubeLink,
           punisherData,
           moveFlowChartData,
+          comboData,
           userId: user?.userId,
           username: user?.username,
           tags: selectedTags

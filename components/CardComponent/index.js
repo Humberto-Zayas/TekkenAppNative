@@ -177,6 +177,9 @@ const CardComponent = ({ route, navigation, }) => {
             <TouchableOpacity onPress={() => handleMoveSetLinkPress('Move Flow Chart', card?.moveFlowChartData || [])}>
               <Text style={styles.link}>Move Flow Chart</Text>
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleMoveSetLinkPress('Combos', card?.comboData || [])}>
+              <Text style={styles.link}>Combos</Text>
+            </TouchableOpacity>
             <View>
               {card?.youtubeLink && (
                 <View style={styles.tableRow}>
