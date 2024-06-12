@@ -18,7 +18,6 @@ const EditCardComponent = ({ route, navigation }) => {
   const { cardData } = route.params;
   const characterName = cardData.characterName;
   const character = characters.find((char) => char.name === characterName);
-
   const [cardName, setCardName] = useState(cardData.cardName);
   const [cardDescription, setCardDescription] = useState(cardData.cardDescription);
   const [youtubeLink, setYoutubeLink] = useState(cardData.youtubeLink);
@@ -28,7 +27,6 @@ const EditCardComponent = ({ route, navigation }) => {
   const [followUpData, setFollowUpData] = useState(cardData.followUpData);
   const [comboData, setComboData] = useState(cardData.comboData);
   const [selectedTags, setSelectedTags] = useState(cardData.tags || []);
-
   const [showPunishers, setShowPunishers] = useState(false);
   const [showMoveFlowChart, setShowMoveFlowChart] = useState(false);
   const [showFollowUps, setShowFollowUps] = useState(false);

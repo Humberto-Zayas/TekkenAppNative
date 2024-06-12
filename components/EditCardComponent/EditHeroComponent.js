@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Image, StyleSheet } from 'react-native';
 
-const EditHeroComponent = ({ cardName, thumbnail, onCardNameChange }) => {
+const EditHeroComponent = ({ name, thumbnail, onCardNameChange }) => {
   return (
     <View style={styles.heroContainer}>
       <Image source={thumbnail} style={styles.thumbnail} />
@@ -9,7 +9,7 @@ const EditHeroComponent = ({ cardName, thumbnail, onCardNameChange }) => {
         <TextInput
           style={styles.heroNameInput}
           placeholder="Enter A Card Name"
-          value={cardName}
+          value={name}
           onChangeText={(text) => onCardNameChange(text)}
         />
       </View>
