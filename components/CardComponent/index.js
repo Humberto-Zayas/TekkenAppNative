@@ -40,14 +40,14 @@ const CardComponent = ({ route, navigation, }) => {
         console.error('User ID is undefined');
         return;
       }
-  
+
       const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/id/${id}?userId=${userId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch cards');
       }
       const data = await response.json();
       setCard(data);
-  
+
       // Other logic remains unchanged
     } catch (error) {
       console.error('Error fetching card:', error);
@@ -58,7 +58,7 @@ const CardComponent = ({ route, navigation, }) => {
     if (moveSetName === 'HeatEngagers') {
       navigation.navigate('CardDetailComponent', { moveSetName, moves: character?.heatEngagersData });
     } else {
-      navigation.navigate('CardDetailComponent', { moveSetName, moves }); 
+      navigation.navigate('CardDetailComponent', { moveSetName, moves });
     }
   };
 
@@ -176,6 +176,9 @@ const CardComponent = ({ route, navigation, }) => {
             </TouchableOpacity>
             <TouchableOpacity onPress={() => handleMoveSetLinkPress('Move Flow Chart', card?.moveFlowChartData || [])}>
               <Text style={styles.link}>Move Flow Chart</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleMoveSetLinkPress('', card?.followUpData || [])}>
+              <Text style={styles.link}>Gauranteed Follow Ups</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => handleMoveSetLinkPress('Combos', card?.comboData || [])}>
               <Text style={styles.link}>Combos</Text>

@@ -78,6 +78,7 @@ const CreateCardComponent = ({ route, navigation }) => {
           youtubeLink,
           punisherData,
           moveFlowChartData,
+          followUpData,
           comboData,
           userId: user?.userId,
           username: user?.username,
