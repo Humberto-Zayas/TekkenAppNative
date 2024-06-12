@@ -76,6 +76,7 @@ const CreateCardComponent = ({ route, navigation }) => {
           characterName,
           cardDescription,
           youtubeLink,
+          twitchLink,
           punisherData,
           moveFlowChartData,
           followUpData,

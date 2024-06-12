@@ -198,6 +198,20 @@ const CardComponent = ({ route, navigation, }) => {
                   </View>
                 </View>
               )}
+              {card?.twitchLink && (
+                <View style={styles.tableRow}>
+                  <Text style={styles.columnLeft}>
+                    <Text style={styles.value} numberOfLines={2}>
+                      Twitch Link
+                    </Text>
+                  </Text>
+                  <View style={styles.column}>
+                    <Text style={styles.value} numberOfLines={2}>
+                      {card?.twitchLink}
+                    </Text>
+                  </View>
+                </View>
+              )}
             </View>
           </View>
         </>
