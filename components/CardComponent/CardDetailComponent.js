@@ -5,7 +5,6 @@ import ModalComponent from './ModalComponent';
 
 const CardDetailComponent = ({ route, navigation }) => {
   const { moveSetName, moves } = route.params;
-  console.log(moves);
   const [selectedItem, setSelectedItem] = useState(null);
 
   const openDrawer = (item) => {

@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useImperativeHandle } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import HeroComponent from './HeroComponent';
 import { characters } from '../../data/characters';
 import { styles } from './styles';
 import { useAuth } from '../../utils/AuthContext';
+import { fetchCardById, bookmarkCardById, unbookmarkCardById, rateCardById } from '../../utils/api';
 
-const CardComponent = ({ route, navigation, }) => {
+const CardComponent = ({ route, navigation }) => {
   const { id } = route.params;
   const [card, setCard] = useState(null);
   const [character, setCharacter] = useState(null);
@@ -26,7 +27,6 @@ const CardComponent = ({ route, navigation, }) => {
     return unsubscribe;
   }, [navigation]);
 
-
   useEffect(() => {
     if (card?.characterName) {
       const foundCharacter = characters.find(c => c.name === card.characterName);
@@ -40,15 +40,8 @@ const CardComponent = ({ route, navigation, }) => {
         console.error('User ID is undefined');
         return;
       }
-
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/id/${id}?userId=${userId}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch cards');
-      }
-      const data = await response.json();
+      const data = await fetchCardById(id, userId);
       setCard(data);
-
-      // Other logic remains unchanged
     } catch (error) {
       console.error('Error fetching card:', error);
     }
@@ -62,74 +55,28 @@ const CardComponent = ({ route, navigation, }) => {
     }
   };
 
-  const bookmarkCard = async () => {
+  const toggleBookmark = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/users/${userId}/bookmark/${id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
-
-      if (!response.ok) {
-        const responseData = await response.json();
-        if (responseData.error === 'Card already bookmarked') {
-          Alert.alert('Already Bookmarked', 'This card is already bookmarked!');
-        } else {
-          throw new Error('Failed to bookmark card');
-        }
+      if (isBookmarked) {
+        await unbookmarkCardById(userId, id, user.token);
+        setIsBookmarked(false);
+        console.log('Card unbookmarked successfully!');
       } else {
+        await bookmarkCardById(userId, id, user.token);
         setIsBookmarked(true);
         console.log('Card bookmarked successfully!');
       }
     } catch (error) {
-      console.error('Error bookmarking card:', error);
-    }
-  };
-
-  const unbookmarkCard = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/users/${userId}/unbookmark/${id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
-
-      if (!response.ok) {
-        const responseData = await response.json();
-        if (responseData.error === 'Card not bookmarked') {
-          console.log('Card is not bookmarked');
-        } else {
-          throw new Error('Failed to unbookmark card');
-        }
-      } else {
-        setIsBookmarked(false);
-        console.log('Card unbookmarked successfully!');
-      }
-    } catch (error) {
-      console.error('Error unbookmarking card:', error);
+      console.error('Error toggling bookmark:', error);
     }
   };
 
   const rateCard = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/rate/${id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${user?.token}`,
-        },
-        body: JSON.stringify({ userId, rating: userRating, username: user?.username })
-      });
+      await rateCardById(id, userId, userRating, user?.username, user?.token);
     } catch (error) {
       console.error('Error submitting rating:', error);
     }
-  };
-
-  const onDelete = () => {
-    navigation.goBack();
   };
 
   useEffect(() => {
@@ -138,16 +85,12 @@ const CardComponent = ({ route, navigation, }) => {
     }
   }, [userRating]);
 
-  const toggleBookmark = () => {
-    if (isBookmarked) {
-      unbookmarkCard();
-    } else {
-      bookmarkCard();
-    }
-  };
-
   const handleCreatorPress = () => {
     navigation.navigate('CreatorCardListComponent', { creatorId: card?.userId, creator: card?.username });
+  };
+
+  const onDelete = () => {
+    navigation.goBack();
   };
 
   return (
