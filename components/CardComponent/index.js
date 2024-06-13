@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome from @expo/vector-icons
 import HeroComponent from './HeroComponent';
 import { characters } from '../../data/characters';
 import { styles } from './styles';
@@ -111,20 +112,25 @@ const CardComponent = ({ route, navigation }) => {
           <View style={{ paddingBottom: 64 }}>
             <Text style={styles.tableTitle}>The Strategy</Text>
             <Text style={{ marginBottom: 10, marginTop: 10 }}>{card?.cardDescription}</Text>
-            <TouchableOpacity onPress={() => handleMoveSetLinkPress('HeatEngagers', card?.heatEngagersData || [])}>
-              <Text style={styles.link}>Heat Engagers</Text>
+            <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('HeatEngagers', card?.heatEngagersData || [])}>
+              <FontAwesome name="external-link" size={16} color="white" />
+              <Text style={styles.linkText}>Heat Engagers</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleMoveSetLinkPress('Punishers', card?.punisherData || [])}>
-              <Text style={styles.link}>Punishers</Text>
+            <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('Punishers', card?.punisherData || [])}>
+              <FontAwesome name="external-link" size={16} color="white" />
+              <Text style={styles.linkText}>Punishers</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleMoveSetLinkPress('Move Flow Chart', card?.moveFlowChartData || [])}>
-              <Text style={styles.link}>Move Flow Chart</Text>
+            <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('Move Flow Chart', card?.moveFlowChartData || [])}>
+              <FontAwesome name="external-link" size={16} color="white" />
+              <Text style={styles.linkText}>Move Flow Chart</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleMoveSetLinkPress('', card?.followUpData || [])}>
-              <Text style={styles.link}>Gauranteed Follow Ups</Text>
+            <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('', card?.followUpData || [])}>
+              <FontAwesome name="external-link" size={16} color="white" />
+              <Text style={styles.linkText}>Guaranteed Follow Ups</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleMoveSetLinkPress('Combos', card?.comboData || [])}>
-              <Text style={styles.link}>Combos</Text>
+            <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('Combos', card?.comboData || [])}>
+              <FontAwesome name="external-link" size={16} color="white" />
+              <Text style={styles.linkText}>Combos</Text>
             </TouchableOpacity>
             <View>
               {card?.youtubeLink && (

@@ -205,4 +205,17 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 5,
   },
+  link: {
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 20,
+    marginBottom: 10,
+    flexDirection: 'row', // Add this to position text and icon in a row
+    alignItems: 'center', // Center align the items
+  },
+  linkText: {
+    marginLeft: 8, // Space between the icon and text
+    color: 'white', // Text color
+    fontWeight: 'bold',
+  },
 });
