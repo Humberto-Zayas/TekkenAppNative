@@ -104,14 +104,14 @@ const CardComponent = ({ route, navigation }) => {
             isBookmarked={isBookmarked}
             user={user}
             card={card}
+            image={character?.image}
             toggleBookmark={toggleBookmark}
             onRatingChange={setUserRating}
             onDelete={onDelete}
             navigation={navigation}
           />
           <View style={{ paddingBottom: 64 }}>
-            <Text style={styles.tableTitle}>The Strategy</Text>
-            <Text style={{ marginBottom: 10, marginTop: 10 }}>{card?.cardDescription}</Text>
+            <Text style={{ margin: 8, marginBottom: 16, fontSize: 16 }}>{card?.cardDescription}</Text>
             <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('HeatEngagers', card?.heatEngagersData || [])}>
               <FontAwesome name="external-link" size={16} color="white" />
               <Text style={styles.linkText}>Heat Engagers</Text>
@@ -132,33 +132,19 @@ const CardComponent = ({ route, navigation }) => {
               <FontAwesome name="external-link" size={16} color="white" />
               <Text style={styles.linkText}>Combos</Text>
             </TouchableOpacity>
-            <View>
+            <View style={{marginTop: 8}}>
               {card?.youtubeLink && (
-                <View style={styles.tableRow}>
-                  <Text style={styles.columnLeft}>
-                    <Text style={styles.value} numberOfLines={2}>
-                      YouTube Link
-                    </Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <FontAwesome name="youtube" size={32} color="red" style={{ marginRight: 8 }} />
+                  <Text>
+                    {card?.youtubeLink}
                   </Text>
-                  <View style={styles.column}>
-                    <Text style={styles.value} numberOfLines={2}>
-                      {card?.youtubeLink}
-                    </Text>
-                  </View>
                 </View>
               )}
               {card?.twitchLink && (
-                <View style={styles.tableRow}>
-                  <Text style={styles.columnLeft}>
-                    <Text style={styles.value} numberOfLines={2}>
-                      Twitch Link
-                    </Text>
-                  </Text>
-                  <View style={styles.column}>
-                    <Text style={styles.value} numberOfLines={2}>
-                      {card?.twitchLink}
-                    </Text>
-                  </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <FontAwesome name="twitch" size={32} color="purple" style={{ marginRight: 8 }} />
+                  <Text> {card?.twitchLink} </Text>
                 </View>
               )}
             </View>

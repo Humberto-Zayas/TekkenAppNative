@@ -1,5 +1,49 @@
 // utils/api.js
-import { REACT_APP_API_BASE_URL } from '@env';
+import { REACT_APP_API_BASE_URL } from '@env'
+import { calculateAverageRating } from './utils';
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+export const fetchCardsByCharacter = async (characterName, page = 1, selectedTags = [], youtubeQuery = false, twitchQuery = false, pageSize = 10) => {
+  try {
+    let queryParams = `${API_BASE_URL}/cards/character/${characterName}?page=${page}`;
+
+    // Append selected tags to query parameters
+    if (selectedTags.length > 0) {
+      const tagNames = selectedTags.map(tag => tag.name);
+      queryParams += `&tags=${tagNames.join(',')}`;
+    }
+
+    // Append YouTube query parameter if true
+    if (youtubeQuery) {
+      queryParams += '&YouTube=true';
+    }
+
+    // Append Twitch query parameter if true
+    if (twitchQuery) {
+      queryParams += '&Twitch=true';
+    }
+
+    const response = await fetch(queryParams);
+    if (!response.ok) {
+      throw new Error('Failed to fetch cards');
+    }
+
+    const totalCount = response.headers.get('X-Total-Count');
+    const totalPages = Math.ceil(totalCount / pageSize);
+    const data = await response.json();
+
+    const cardsWithAverageRating = data.map((card) => ({
+      ...card,
+      averageRating: calculateAverageRating(card),
+    }));
+
+    return { cards: cardsWithAverageRating, totalCount, totalPages };
+  } catch (error) {
+    console.error('Error fetching cards:', error);
+    throw error;
+  }
+};
 
 export const fetchCardById = async (id, userId) => {
   try {

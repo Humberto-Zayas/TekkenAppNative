@@ -1,3 +1,4 @@
+// CardListComponent.js
 import React, { useState, useEffect, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, FlatList, TouchableOpacity, Image, ScrollView } from 'react-native';
@@ -5,10 +6,11 @@ import SavedListComponent from '../SavedListComponent';
 import LoginSignupModalComponent from './LoginSignupModalComponent';
 import Pagination from '../Pagination';
 import { useAuth } from '../../utils/AuthContext';
-import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
+import { getBackgroundColor } from '../../utils/utils';
 import { styles } from './styles';
 import { format } from 'date-fns';
 import tags from '../../data/tags';
+import { fetchCardsByCharacter } from '../../utils/api'; // Import the API function
 
 const CardListComponent = ({ route, navigation }) => {
   const { character } = route.params;
@@ -29,13 +31,10 @@ const CardListComponent = ({ route, navigation }) => {
   const { user } = useAuth();
 
   const handleTagClick = (tag) => {
-    // Check if the tag is already selected
     const index = selectedTags.findIndex(t => t.name === tag.name);
     if (index === -1) {
-      // If not selected, add the tag object to selectedTags state
       setSelectedTags([...selectedTags, tag]);
     } else {
-      // If already selected, remove it from selectedTags state
       const updatedTags = selectedTags.filter(t => t.name !== tag.name);
       setSelectedTags(updatedTags);
     }
@@ -43,42 +42,12 @@ const CardListComponent = ({ route, navigation }) => {
 
   const fetchCards = async (page = 1) => {
     try {
-      let queryParams = `${process.env.REACT_APP_API_BASE_URL}/cards/character/${name}?page=${page}`;
+      const { cards: fetchedCards, totalCount: fetchedTotalCount, totalPages: fetchedTotalPages } = await fetchCardsByCharacter(name, page, selectedTags, youtubeQuery, twitchQuery, pageSize);
+      const sortedCards = sortOrder === 'ascending' ? fetchedCards : fetchedCards.reverse();
 
-      // Append selected tags to query parameters
-      if (selectedTags.length > 0) {
-        const tagNames = selectedTags.map(tag => tag.name);
-        queryParams += `&tags=${tagNames.join(',')}`;
-      }
-
-      // Append YouTube query parameter if true
-      if (youtubeQuery) {
-        queryParams += '&YouTube=true';
-      }
-
-      // Append Twitch query parameter if true
-      if (twitchQuery) {
-        queryParams += '&Twitch=true';
-      }
-
-      const response = await fetch(queryParams);
-      if (!response.ok) {
-        throw new Error('Failed to fetch cards');
-      }
-      // Extract total count from response headers
-      const totalCount = response.headers.get('X-Total-Count');
-      const totalPages = Math.ceil(totalCount / pageSize); // Calculate total pages
-      const data = await response.json();
-      const cardsWithAverageRating = data.map((card) => ({
-        ...card,
-        averageRating: calculateAverageRating(card),
-      }));
-      const sortedCards = sortOrder === 'ascending' ? cardsWithAverageRating : cardsWithAverageRating.reverse();
-
-      // Save both as initial and current set of cards
       setCards(sortedCards);
-      setTotalCount(totalCount);
-      setTotalPages(totalPages);
+      setTotalCount(fetchedTotalCount);
+      setTotalPages(fetchedTotalPages);
     } catch (error) {
       console.error('Error fetching cards:', error);
     }

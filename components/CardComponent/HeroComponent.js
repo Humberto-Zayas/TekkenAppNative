@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, Pressable, Image } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 import { format } from 'date-fns';
@@ -75,7 +75,7 @@ const ConfirmationModal = ({ visible, onClose, onConfirm }) => {
   );
 };
 
-const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRatingChange, handleCreatorPress, onDelete, navigation }) => {
+const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRatingChange, handleCreatorPress, onDelete, navigation, image }) => {
   const [selectedRating, setSelectedRating] = useState(null);
   const [isMenuVisible, setMenuVisible] = useState(false);
   const [isRatingModalVisible, setRatingModalVisible] = useState(false);
@@ -156,7 +156,9 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
   const ratingBackgroundColor = getBackgroundColor(selectedRating !== null ? selectedRating : rating);
 
   return (
-    <View style={[styles.heroContainer, { backgroundColor: ratingBackgroundColor }]}>
+    // <View style={[styles.heroContainer, { backgroundColor: ratingBackgroundColor }]}>
+    <View style={[styles.heroContainer]}>
+      <Image source={image} style={styles.heroImage} />
       <View style={styles.heroInfo}>
         <Text style={styles.heroName}>{card.cardName}</Text>
         <Text style={styles.heroRating}>Rating: {selectedRating !== null ? selectedRating : rating}</Text>
@@ -165,8 +167,8 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
         </Text>
         <Text style={styles.heroRating}>
           {card.lastEditedAt
-            ? `Last Edited: ${format(new Date(card.lastEditedAt), 'MMM dd, yyyy HH:mm')}`
-            : `Created: ${format(new Date(card.createdAt), 'MMM dd, yyyy HH:mm')}`}
+            ? `Last Edited: ${format(new Date(card.lastEditedAt), 'MMM dd, yyyy')}`
+            : `Created: ${format(new Date(card.createdAt), 'MMM dd, yyyy')}`}
         </Text>
       </View>
       <View style={styles.ratingContainer}>

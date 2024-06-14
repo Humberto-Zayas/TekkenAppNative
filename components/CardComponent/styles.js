@@ -3,11 +3,11 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    paddingBottom: 50,
+    padding: 8,
+    paddingBottom: 48,
   },
   flatList: {
-    borderRadius: 10,
+    borderRadius: 8,
     borderWidth: 1,
     borderColor: 'lightgray',
     overflow: 'hidden',
@@ -67,9 +67,14 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center', // Align to the bottom of the container
     justifyContent: 'space-between', // Align to the right
-    marginBottom: 10,
-    width: '100%', // Make the component full width
-    paddingHorizontal: 10, // Add padding for better spacing
+    marginBottom: 8,
+    // width: '100%', // Make the component full width
+    paddingHorizontal: 0, // Add padding for better spacing
+  },
+  heroImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 100,
   },
   thumbnail: {
     width: 50,
@@ -189,8 +194,8 @@ export const styles = StyleSheet.create({
   },
   tooltipContent: {
     backgroundColor: '#ffffff',
-    borderRadius: 5,
-    padding: 10,
+    borderRadius: 8,
+    padding: 8,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -206,10 +211,10 @@ export const styles = StyleSheet.create({
     marginVertical: 5,
   },
   link: {
-    backgroundColor: 'red',
-    padding: 10,
-    borderRadius: 20,
-    marginBottom: 10,
+    backgroundColor: 'gray',
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 8,
     flexDirection: 'row', // Add this to position text and icon in a row
     alignItems: 'center', // Center align the items
   },
@@ -218,4 +223,7 @@ export const styles = StyleSheet.create({
     color: 'white', // Text color
     fontWeight: 'bold',
   },
+  socialLink: {
+    alignSelf: 'start'
+  }
 });
