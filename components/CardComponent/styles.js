@@ -225,5 +225,29 @@ export const styles = StyleSheet.create({
   },
   socialLink: {
     alignSelf: 'start'
-  }
+  },
+  tableHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    paddingBottom: 8,
+    marginBottom: 8,
+  },
+  tableRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  columnLeft: {
+    flex: 1,
+  },
+  column: {
+    flex: 1,
+  },
+  headerText: {
+    fontWeight: 'bold',
+  },
 });

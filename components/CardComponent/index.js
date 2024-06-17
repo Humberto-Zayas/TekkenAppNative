@@ -124,7 +124,7 @@ const CardComponent = ({ route, navigation }) => {
               <FontAwesome name="external-link" size={16} color="white" />
               <Text style={styles.linkText}>Move Flow Chart</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('', card?.followUpData || [])}>
+            <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('Follow Ups', card?.followUpData || [])}>
               <FontAwesome name="external-link" size={16} color="white" />
               <Text style={styles.linkText}>Guaranteed Follow Ups</Text>
             </TouchableOpacity>
