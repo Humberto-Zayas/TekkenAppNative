@@ -132,7 +132,7 @@ const CardComponent = ({ route, navigation }) => {
               <FontAwesome name="external-link" size={16} color="white" />
               <Text style={styles.linkText}>Combos</Text>
             </TouchableOpacity>
-            <View style={{marginTop: 8}}>
+            <View style={{ marginTop: 8 }}>
               {card?.youtubeLink && (
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <FontAwesome name="youtube" size={32} color="red" style={{ marginRight: 8 }} />

@@ -127,3 +127,25 @@ export const rateCardById = async (cardId, userId, rating, username, token) => {
     throw error;
   }
 };
+
+export const createCard = async (cardData, token) => {
+  try {
+    const response = await fetch(`${REACT_APP_API_BASE_URL}/cards/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(cardData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to save the card.');
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('Error saving the card:', error);
+    throw error;
+  }
+};

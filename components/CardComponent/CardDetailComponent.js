@@ -29,12 +29,14 @@ const CardDetailComponent = ({ route, navigation }) => {
   );
 
   const renderCombo = (combo, index) => (
-    <TouchableOpacity key={`${index}_${moveSetName}`} onPress={() => openDrawer(combo)}>
+    <TouchableOpacity key={`${index}_${moveSetName}`}>
       <View style={styles.tableRow}>
-        <View style={styles.column}>
-          <Text>{combo.comboStarters.join(', ')}</Text>
-        </View>
         <View style={styles.columnLeft}>
+          {combo.comboStarters.map((starter, starterIndex) => (
+            <Text key={starterIndex}>{starter}</Text>
+          ))}
+        </View>
+        <View style={styles.column}>
           <Text>{combo.comboRoute}</Text>
         </View>
       </View>
@@ -43,7 +45,7 @@ const CardDetailComponent = ({ route, navigation }) => {
 
   const renderHeader = () => {
     switch (moveSetName) {
-      case 'HeatEngagers':
+      case 'Heat Engagers':
       case 'Punishers':
         return (
           <View style={styles.tableHeader}>
@@ -56,7 +58,7 @@ const CardDetailComponent = ({ route, navigation }) => {
           </View>
         );
       case 'Move Flow Chart':
-      case 'Follow Ups':
+      case 'Guaranteed Follow Ups':
         return (
           <View style={styles.tableHeader}>
             <View style={styles.columnLeft}>
@@ -84,27 +86,28 @@ const CardDetailComponent = ({ route, navigation }) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <Text>{moveSetName}</Text>
       {renderHeader()}
-      {moves.map((item, index) => {
-        if (item.move1 && item.move2) {
-          return (
-            <View key={index}>
-              {renderMove(item.move1, `${index}_move1`)}
-              {renderMove(item.move2, `${index}_move2`)}
-            </View>
-          );
-        } else if (item.comboRoute) {
-          return renderCombo(item, index);
-        }
-        return renderMove(item, index);
-      })}
-
+      <ScrollView>
+        {moves.map((item, index) => {
+          if (item.move1 && item.move2) {
+            return (
+              <View key={index}>
+                {renderMove(item.move1, `${index}_move1`)}
+                {renderMove(item.move2, `${index}_move2`)}
+              </View>
+            );
+          } else if (item.comboRoute) {
+            return renderCombo(item, index);
+          }
+          return renderMove(item, index);
+        })}
+      </ScrollView>
       <Modal visible={selectedItem !== null} animationType="slide" transparent>
         <ModalComponent selectedItem={selectedItem} closeDrawer={closeDrawer} />
       </Modal>
-    </ScrollView>
+    </View>
   );
 };
 

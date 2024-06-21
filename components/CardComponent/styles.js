@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 8,
+    padding: 16,
     paddingBottom: 48,
   },
   flatList: {
@@ -29,9 +29,10 @@ export const styles = StyleSheet.create({
   },
   columnLeft: {
     width: '30%',
-    padding: 8,
-    alignItems: 'center',
+    alignItems: 'start',
     justifyContent: 'center',
+    flex: 1,
+    padding: 8,
   },
   column: {
     width: '70%',
@@ -232,7 +233,9 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
     paddingBottom: 8,
+    paddingTop: 8,
     marginBottom: 8,
+    backgroundColor: 'lightblue'
   },
   tableRow: {
     flexDirection: 'row',
@@ -240,12 +243,6 @@ export const styles = StyleSheet.create({
     paddingVertical: 8,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
-  },
-  columnLeft: {
-    flex: 1,
-  },
-  column: {
-    flex: 1,
   },
   headerText: {
     fontWeight: 'bold',

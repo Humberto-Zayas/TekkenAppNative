@@ -4,12 +4,11 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    paddingVertical: 40,
+    padding: 16,
     flex: 1
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 10,
   },
@@ -26,7 +25,6 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
   },
   input: {
-    height: 40,
     borderColor: 'gray',
     borderWidth: 1,
     marginBottom: 10,
@@ -71,14 +69,16 @@ export const styles = StyleSheet.create({
     justifyContent: 'center', // Added to center text vertically
   },
   link: {
-    backgroundColor: 'blue',
-    padding: 10,
-    borderRadius: 10, // Changed from 28 to 10
-    marginBottom: 20,
-    width: 150, // Increased width for better touch area
-    alignSelf: 'center',
-    textAlign: 'center', // Added to center text horizontally
-    color: 'white',
+    backgroundColor: 'gray',
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 8,
+    flexDirection: 'row', // Add this to position text and icon in a row
+    alignItems: 'center', // Center align the items
+  },
+  linkText: {
+    marginLeft: 8, // Space between the icon and text
+    color: 'white', // Text color
     fontWeight: 'bold',
   },
   flatList: {
@@ -114,29 +114,6 @@ export const styles = StyleSheet.create({
     padding: 8,
     alignItems: 'flex-start',
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  link: {
-    backgroundColor: 'blue',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    marginHorizontal: 5,
-    marginBottom: 10,
-    height: 100,
-    width: '47%',
-  },
-  linkText: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    lineHeight: 75
-  },  
   deleteIcon: {
     width: '9%',
     paddingRight: 5,
