@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     padding: 16,
-    flex: 1
+    flex: 1,
   },
   title: {
     fontSize: 16,
@@ -159,5 +159,19 @@ export const styles = StyleSheet.create({
   },
   tagText: {
     marginRight: 5,
+  },
+  saveButton: {
+    marginTop: 16,
+    alignSelf: 'center',
+    backgroundColor: 'blue',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 8,
+  },
+  saveButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

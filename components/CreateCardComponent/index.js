@@ -121,30 +121,22 @@ const CreateCardComponent = ({ route, navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <HeroCreateComponent name={cardName} thumbnail={characterImage} onCardNameChange={handleCardNameChange} />
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Card Description"
-        value={cardDescription}
-        onChangeText={handleCardDescriptionChange}
-        multiline={true}
-        numberOfLines={4}
-      />
-      <View style={styles.buttonContainer}>
+      <HeroCreateComponent name={cardName} thumbnail={characterImage} onCardNameChange={handleCardNameChange} cardDescription={cardDescription} onCardDescriptionChange={handleCardDescriptionChange} youtubeLink={youtubeLink} onYouTubeLinkChange={handleYouTubeLinkChange} twitchLink={twitchLink} onTwitchLinkChange={handleTwitchLinkChange} />
+      <View style={{ marginTop: 16 }}>
         <TouchableOpacity onPress={() => setShowPunishers(true)} style={styles.link}>
-        <FontAwesome name="external-link" size={16} color="white" />
+          <FontAwesome name="external-link" size={16} color="white" />
           <Text style={styles.linkText}>Punishers</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setShowMoveFlowChart(true)} style={styles.link}>
-        <FontAwesome name="external-link" size={16} color="white" />
+          <FontAwesome name="external-link" size={16} color="white" />
           <Text style={styles.linkText}>Move Flow Chart</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setShowFollowUps(true)} style={styles.link}>
-        <FontAwesome name="external-link" size={16} color="white" />
+          <FontAwesome name="external-link" size={16} color="white" />
           <Text style={styles.linkText}>Set Follow Up/Mini Combos</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setShowCombos(true)} style={styles.link}>
-        <FontAwesome name="external-link" size={16} color="white" />
+          <FontAwesome name="external-link" size={16} color="white" />
           <Text style={styles.linkText}>Combos</Text>
         </TouchableOpacity>
       </View>
@@ -200,22 +192,6 @@ const CreateCardComponent = ({ route, navigation }) => {
         />
       </Modal>
 
-      <TextInput
-        style={styles.input}
-        placeholder="YouTube Link"
-        value={youtubeLink}
-        onChangeText={handleYouTubeLinkChange}
-        numberOfLines={1}
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Twitch Link"
-        value={twitchLink}
-        onChangeText={handleTwitchLinkChange}
-        numberOfLines={1}
-      />
-
       <View style={styles.tagsContainer}>
         {tags.map(tag => (
           <TouchableOpacity
@@ -233,7 +209,9 @@ const CreateCardComponent = ({ route, navigation }) => {
         ))}
       </View>
 
-      <Button title="Save Card" onPress={handleSave} />
+      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+        <Text style={styles.saveButtonText}>Save Card</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
