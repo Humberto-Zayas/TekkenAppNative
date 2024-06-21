@@ -10,6 +10,7 @@ const HeroComponent = ({ cardName, thumbnail, onCardNameChange, cardDescription,
 
   const toggleExpanded = () => {
     setIsExpanded(prevState => !prevState);
+    setIsFocused(prevState => !prevState);
     Animated.timing(animation, {
       toValue: isExpanded ? 0 : 1,
       duration: 300,
@@ -56,8 +57,13 @@ const HeroComponent = ({ cardName, thumbnail, onCardNameChange, cardDescription,
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <Animated.View style={[styles.container, { height: containerHeight }]}>
         <View style={styles.heroContainer}>
-          <TouchableOpacity onPress={toggleExpanded}>
+          <TouchableOpacity onPress={toggleExpanded} style={styles.thumbnailContainer}>
             <Image source={thumbnail} style={styles.thumbnail} />
+            {isExpanded && (
+              <TouchableOpacity onPress={toggleExpanded} style={styles.closeIcon}>
+                <FontAwesome name="times-circle" size={32} color="black" />
+              </TouchableOpacity>
+            )}
           </TouchableOpacity>
           <View style={styles.heroInfo}>
             <TextInput
@@ -130,11 +136,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 16,
   },
+  thumbnailContainer: {
+    position: 'relative',
+  },
   thumbnail: {
     width: 50,
     height: 50,
     borderRadius: 25,
     marginRight: 10,
+  },
+  closeIcon: {
+    opacity: 0.5,
+    position: 'absolute',
+    top: -3,
+    right: 2,
+    borderRadius: 12,
   },
   heroInfo: {
     flex: 1,
@@ -153,7 +169,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 16,
-    marginTop: 8
+    marginTop: 8,
   },
   descriptionInput: {
     fontSize: 16,

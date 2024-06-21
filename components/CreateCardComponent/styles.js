@@ -1,5 +1,3 @@
-// styles.js
-
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -38,11 +36,10 @@ export const styles = StyleSheet.create({
     padding: 10,
   },
   modalContainer: {
-    // flex: 1,
     justifyContent: 'start',
     alignItems: 'center',
     marginTop: 100,
-    padding: 20
+    padding: 20,
   },
   modalContent: {
     width: '80%',
@@ -56,29 +53,29 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     alignSelf: 'flex-start',
-    marginLeft: 20
+    marginLeft: 20,
   },
   plusButton: {
     backgroundColor: 'blue',
     padding: 8,
-    borderRadius: 10, // Changed from 28 to 10
+    borderRadius: 10,
     alignItems: 'center',
     marginBottom: 20,
-    width: 150, // Increased width for better touch area
+    width: 150,
     alignSelf: 'center',
-    justifyContent: 'center', // Added to center text vertically
+    justifyContent: 'center',
   },
   link: {
     backgroundColor: 'gray',
     padding: 16,
     borderRadius: 8,
     marginBottom: 8,
-    flexDirection: 'row', // Add this to position text and icon in a row
-    alignItems: 'center', // Center align the items
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   linkText: {
-    marginLeft: 8, // Space between the icon and text
-    color: 'white', // Text color
+    marginLeft: 8,
+    color: 'white',
     fontWeight: 'bold',
   },
   flatList: {
@@ -110,14 +107,14 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   column: {
-    width: '55%',
-    padding: 8,
+    flex: 1,
+    padding: 10,
     alignItems: 'flex-start',
   },
   deleteIcon: {
     width: '9%',
     paddingRight: 5,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   moveDetails: {
     borderRadius: 10,
@@ -129,10 +126,6 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: 'lightgray',
-  },
-  column: {
-    flex: 1,
-    padding: 10,
   },
   propertyName: {
     fontWeight: 'bold',
