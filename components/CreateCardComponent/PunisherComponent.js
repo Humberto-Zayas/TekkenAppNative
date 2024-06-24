@@ -4,6 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 
 const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }) => {
+  console.log(frameData)
   const [modalVisible, setModalVisible] = useState(false);
   const [detailMove, setDetailMove] = useState(null);
 
@@ -54,6 +55,17 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
     </Modal>
   );
 
+  const renderHeader = () => (
+    <View style={styles.tableHeader}>
+      <View style={styles.columnLeft}>
+        <Text style={styles.headerText}>Move</Text>
+      </View>
+      <View style={styles.column}>
+        <Text style={styles.headerText}>Description</Text>
+      </View>
+    </View>
+  );
+
   const MoveListModal = () => {
     const [selectedMove, setSelectedMove] = useState(null);
     const [context, setContext] = useState('');
@@ -78,9 +90,9 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalContainer}>
-          <Text style={styles.header}>Choose Move</Text>
+          <Text style={styles.header}>Choose Moves</Text>
           {selectedMove ? (
-            <View style={styles.selectedMoveContainer}>
+            <View>
               <Text>{selectedMove.move}</Text>
               <Text>{selectedMove.description}</Text>
               <TextInput
@@ -99,11 +111,13 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
               data={frameData}
               renderItem={({ item }) => (
                 <TouchableOpacity
-                  style={styles.moveItem}
                   onPress={() => handleMoveSelect(item)}
                 >
-                  <Text>{item.move}</Text>
-                  <Text>{item.description}</Text>
+                  <View>
+                    <Text style={styles.columnLeft}>{item.move}</Text>
+                    <Text>{item.description}</Text>
+                    <Text>{item.startupFrame}</Text>
+                  </View>
                 </TouchableOpacity>
               )}
               keyExtractor={(item, index) => index.toString()}
@@ -118,16 +132,17 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
   };
 
   return (
-    <View style={styles.modalContainer}>
+    <View style={styles.rowContainer}>
       <TouchableOpacity onPress={() => onClose()} style={styles.closeButton}>
         <FontAwesome name="times" size={20} color="black" />
       </TouchableOpacity>
       <Text style={styles.header}>Punishers</Text>
+      {renderHeader()}
       <FlatList
         style={styles.flatList}
         data={punisherData}
         renderItem={({ item, index }) => (
-          <TouchableOpacity style={styles.punisherItem} onPress={() => handleMovePress(item)}>
+          <TouchableOpacity onPress={() => handleMovePress(item)}>
             <View style={styles.tableRow}>
               <Text style={styles.columnLeft}>{item.move}</Text>
               <Text style={styles.column}>{item.description}</Text>

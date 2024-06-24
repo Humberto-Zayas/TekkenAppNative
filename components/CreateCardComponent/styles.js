@@ -5,6 +5,10 @@ export const styles = StyleSheet.create({
     padding: 16,
     flex: 1,
   },
+  rowContainer: {
+    padding: 16,
+    marginTop: 32
+  },
   title: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -79,9 +83,6 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   flatList: {
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: 'lightgray',
     overflow: 'hidden',
     marginBottom: 16,
     width: '100%',
@@ -93,23 +94,41 @@ export const styles = StyleSheet.create({
     backgroundColor: 'blue',
     padding: 10,
   },
+  tableHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    paddingBottom: 8,
+    paddingTop: 8,
+    marginBottom: 8,
+    backgroundColor: 'lightblue'
+  },
   tableRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 5,
+    paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: 'lightgray',
+    borderBottomColor: '#eee',
+  },
+  headerText: {
+    fontWeight: 'bold',
   },
   columnLeft: {
     width: '23%',
     padding: 8,
-    alignItems: 'center',
+    alignItems: 'start',
     justifyContent: 'center',
   },
   column: {
     flex: 1,
     padding: 10,
     alignItems: 'flex-start',
+  },
+  columnRight: {
+    width: '9%',
+    paddingRight: 5,
+    justifyContent: 'center',
   },
   deleteIcon: {
     width: '9%',

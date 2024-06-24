@@ -6,7 +6,7 @@ const HeroComponent = ({ cardName, thumbnail, onCardNameChange, cardDescription,
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFocused, setIsFocused] = useState(false); // Track focus state
   const animation = useRef(new Animated.Value(0)).current;
-  const inputRefs = useRef([]);
+  const inputRefs = useRef([null, null, null, null]); // Initialize with 4 null values
 
   const toggleExpanded = () => {
     setIsExpanded(prevState => !prevState);
@@ -30,7 +30,7 @@ const HeroComponent = ({ cardName, thumbnail, onCardNameChange, cardDescription,
 
   const handleBlur = () => {
     setTimeout(() => {
-      if (!inputRefs.current.some(ref => ref.isFocused())) {
+      if (inputRefs.current.every(ref => ref && !ref.isFocused())) { // Ensure ref exists and check focus
         if (!cardName) {
           setIsExpanded(false);
           setIsFocused(false); // Update focus state
