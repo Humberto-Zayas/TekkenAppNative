@@ -4,7 +4,6 @@ import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 
 const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }) => {
-  console.log(frameData)
   const [modalVisible, setModalVisible] = useState(false);
   const [detailMove, setDetailMove] = useState(null);
 
@@ -20,13 +19,20 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
   };
 
   const handleMovePress = (move) => {
-    setDetailMove(move)
+    setDetailMove(move);
   };
 
   const filterFrameData = () => {
     const punisherMoveInputs = punisherData.map((punisher) => punisher.move);
     return frameData.filter((move) => !punisherMoveInputs.includes(move.move));
   };
+
+  const renderDetailRow = (label, value) => (
+    <View style={styles.tableRow}>
+      <Text style={{width: '30%', padding: 8, alignItems: 'start', justifyContent: 'center', }}>{label}</Text>
+      <Text style={styles.column}>{value}</Text>
+    </View>
+  );
 
   const MoveDetailsModal = () => (
     <Modal
@@ -38,14 +44,14 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
         <Text style={styles.header}>Move Details</Text>
         {detailMove && (
           <ScrollView style={styles.moveDetails}>
-            <Text>Move: {detailMove.move}</Text>
-            <Text>Description: {detailMove.description}</Text>
-            <Text>Hit Level: {detailMove.hitLevel}</Text>
-            <Text>Damage: {Array.isArray(detailMove.damage) ? detailMove.damage.join(', ') : detailMove.damage}</Text>
-            <Text>Startup Frame: {detailMove.startupFrame}</Text>
-            <Text>Block Frame: {detailMove.blockFrame}</Text>
-            <Text>Hit Frame: {detailMove.hitFrame}</Text>
-            <Text>User notes: {detailMove.notes}</Text>
+            {renderDetailRow('Move', detailMove.move)}
+            {renderDetailRow('Description', detailMove.description)}
+            {renderDetailRow('Hit Level', detailMove.hitLevel)}
+            {renderDetailRow('Damage', Array.isArray(detailMove.damage) ? detailMove.damage.join(', ') : detailMove.damage)}
+            {renderDetailRow('Startup Frame', detailMove.startupFrame)}
+            {renderDetailRow('Block Frame', detailMove.blockFrame)}
+            {renderDetailRow('Hit Frame', detailMove.hitFrame)}
+            {renderDetailRow('User notes', detailMove.notes)}
           </ScrollView>
         )}
         <TouchableOpacity onPress={() => setDetailMove(null)} style={styles.closeButton}>
@@ -62,6 +68,29 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
       </View>
       <View style={styles.column}>
         <Text style={styles.headerText}>Description</Text>
+      </View>
+    </View>
+  );
+
+  const renderMoveListHeader = () => (
+    <View style={styles.tableHeader}>
+      <View style={styles.column}>
+        <Text style={styles.headerText}>Move</Text>
+      </View>
+      <View style={styles.column}>
+        <Text style={styles.headerText}>Hit</Text>
+      </View>
+      <View style={styles.column}>
+        <Text style={styles.headerText}>Dmg</Text>
+      </View>
+      <View style={styles.column}>
+        <Text style={styles.headerText}>Start</Text>
+      </View>
+      <View style={styles.column}>
+        <Text style={styles.headerText}>Block</Text>
+      </View>
+      <View style={styles.column}>
+        <Text style={styles.headerText}>Hit</Text>
       </View>
     </View>
   );
@@ -107,21 +136,26 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
               </TouchableOpacity>
             </View>
           ) : (
-            <FlatList
-              data={frameData}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  onPress={() => handleMoveSelect(item)}
-                >
-                  <View>
-                    <Text style={styles.columnLeft}>{item.move}</Text>
-                    <Text>{item.description}</Text>
-                    <Text>{item.startupFrame}</Text>
-                  </View>
-                </TouchableOpacity>
-              )}
-              keyExtractor={(item, index) => index.toString()}
-            />
+            <>
+              {renderMoveListHeader()}
+              <FlatList
+                style={styles.flatList}
+                data={filterFrameData()}
+                renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => handleMoveSelect(item)}>
+                    <View style={styles.tableRow}>
+                      <Text style={styles.column}>{item.move}</Text>
+                      <Text style={styles.column}>{item.hitLevel}</Text>
+                      <Text style={styles.column}>{item.damage}</Text>
+                      <Text style={styles.column}>{item.startupFrame}</Text>
+                      <Text style={styles.column}>{item.blockFrame}</Text>
+                      <Text style={styles.column}>{item.hitFrame}</Text>
+                    </View>
+                  </TouchableOpacity>
+                )}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </>
           )}
           <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
             <FontAwesome name="times" size={20} color="black" />

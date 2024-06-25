@@ -136,9 +136,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   moveDetails: {
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: 'lightgray',
     width: '100%',
   },
   row: {
