@@ -1,22 +1,35 @@
 import { StyleSheet } from 'react-native';
 
+const commonContainer = {
+  padding: 16,
+};
+
+const commonText = {
+  fontSize: 16,
+  fontWeight: 'bold',
+};
+
+const commonBorder = {
+  borderColor: 'gray',
+  borderWidth: 1,
+  marginBottom: 10,
+};
+
 export const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    ...commonContainer,
     flex: 1,
   },
   rowContainer: {
-    padding: 16,
-    marginTop: 32
+    ...commonContainer,
+    marginTop: 32,
   },
   title: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    ...commonText,
     marginBottom: 10,
   },
   subtitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    ...commonText,
     marginTop: 20,
     marginBottom: 10,
   },
@@ -27,16 +40,18 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
   },
   input: {
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    padding: 10,
+    padding: 16,
+    fontSize: 16
+  },
+  inputArea: {
+    padding: 16,
+    fontSize: 16,
+    height: 96,
+    maxHeight: 96,
   },
   textArea: {
     height: 80,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
+    ...commonBorder,
     padding: 10,
   },
   modalContainer: {
@@ -102,7 +117,7 @@ export const styles = StyleSheet.create({
     paddingBottom: 8,
     paddingTop: 8,
     marginBottom: 8,
-    backgroundColor: 'lightblue'
+    backgroundColor: 'lightblue',
   },
   tableRow: {
     flexDirection: 'row',
@@ -121,6 +136,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   column: {
+    fontSize: 16,
     flex: 1,
     padding: 10,
     alignItems: 'flex-start',

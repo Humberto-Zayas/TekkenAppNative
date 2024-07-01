@@ -29,7 +29,7 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
 
   const renderDetailRow = (label, value) => (
     <View style={styles.tableRow}>
-      <Text style={{width: '30%', padding: 8, alignItems: 'start', justifyContent: 'center', }}>{label}</Text>
+      <Text style={{ width: '30%', padding: 8, alignItems: 'start', justifyContent: 'center', }}>{label}</Text>
       <Text style={styles.column}>{value}</Text>
     </View>
   );
@@ -119,22 +119,38 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalContainer}>
-          <Text style={styles.header}>Choose Moves</Text>
           {selectedMove ? (
-            <View>
-              <Text>{selectedMove.move}</Text>
-              <Text>{selectedMove.description}</Text>
-              <TextInput
-                style={styles.contextInput}
-                placeholder="Add context..."
-                value={context}
-                onChangeText={(text) => setContext(text)}
-                multiline
-              />
-              <TouchableOpacity style={styles.addButton} onPress={handleAddMove}>
-                <Text>Add Move</Text>
-              </TouchableOpacity>
-            </View>
+            <Text style={styles.header}>Add Context for {selectedMove.move}</Text>
+          ) : (
+            <Text style={styles.header}>Choose Move</Text>
+          )}
+          {selectedMove ? (
+            <>
+              {renderMoveListHeader()}
+              <View style={styles.flatList}>
+                <View style={styles.tableRow}>
+                  <Text style={styles.column}>{selectedMove.move}</Text>
+                  <Text style={styles.column}>{selectedMove.hitLevel}</Text>
+                  <Text style={styles.column}>{selectedMove.damage}</Text>
+                  <Text style={styles.column}>{selectedMove.startupFrame}</Text>
+                  <Text style={styles.column}>{selectedMove.blockFrame}</Text>
+                  <Text style={styles.column}>{selectedMove.hitFrame}</Text>
+                </View>
+                <View style={styles.flatList}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder={`Add Context for ${selectedMove.move}`}
+                    value={context}
+                    numberOfLines={4}
+                    onChangeText={(text) => setContext(text)}
+                    multiline
+                  />
+                </View>
+                <TouchableOpacity style={styles.addButton} onPress={handleAddMove}>
+                  <Text>Add Move</Text>
+                </TouchableOpacity>
+              </View>
+            </>
           ) : (
             <>
               {renderMoveListHeader()}
