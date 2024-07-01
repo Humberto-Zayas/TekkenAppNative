@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Modal } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
+import { MoveTableHeader, FlowChartRow } from './MoveTable'
 
 const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -52,6 +53,29 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
     return listData;
   };
 
+  const renderMoveListHeader = () => (
+    <View style={styles.tableHeader}>
+      <View style={styles.column}>
+        <Text style={styles.headerText}>Move</Text>
+      </View>
+      <View style={styles.column}>
+        <Text style={styles.headerText}>Hit</Text>
+      </View>
+      <View style={styles.column}>
+        <Text style={styles.headerText}>Dmg</Text>
+      </View>
+      <View style={styles.column}>
+        <Text style={styles.headerText}>Start</Text>
+      </View>
+      <View style={styles.column}>
+        <Text style={styles.headerText}>Block</Text>
+      </View>
+      <View style={styles.column}>
+        <Text style={styles.headerText}>Hit</Text>
+      </View>
+    </View>
+  );
+
   const MoveListModal = () => (
     <Modal
       visible={modalVisible}
@@ -59,7 +83,6 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
       onRequestClose={() => {
         setModalVisible(false);
         if (selectedMove) {
-          // If a move was selected but not paired, reset it
           setSelectedMove(null);
         }
       }}
@@ -68,32 +91,40 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
         <Text style={styles.header}>
           Select {selectedMove ? 'the second move' : 'a move'}
         </Text>
+        {renderMoveListHeader()}
         <FlatList
           data={frameData}
+          style={styles.flatList}
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.moveItem}
               onPress={() => handleMoveSelect(item)}
             >
-              <Text>{item.move}</Text>
-              <Text>{item.description}</Text>
+              <View style={styles.flatList}>
+                <View style={styles.tableRow}>
+                  <Text style={styles.column}>{item.move}</Text>
+                  <Text style={styles.column}>{item.hitLevel}</Text>
+                  <Text style={styles.column}>{item.damage}</Text>
+                  <Text style={styles.column}>{item.startupFrame}</Text>
+                  <Text style={styles.column}>{item.blockFrame}</Text>
+                  <Text style={styles.column}>{item.hitFrame}</Text>
+                </View>
+              </View>
             </TouchableOpacity>
           )}
           keyExtractor={(item) => item.move}
         />
-        {/* <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
-          <FontAwesome name="times" size={20} color="black" />
-        </TouchableOpacity> */}
       </View>
     </Modal>
   );
 
   return (
-    <View style={styles.modalContainer}>
+    <View style={styles.rowContainer}>
       <TouchableOpacity onPress={onClose} style={styles.closeButton}>
         <FontAwesome name="times" size={20} color="black" />
       </TouchableOpacity>
       <Text style={styles.header}>Follow Ups</Text>
+      <MoveTableHeader firstHeader='Move' secondHeader='Follow Up' />
       <FlatList
         style={styles.flatList}
         data={renderListData()}

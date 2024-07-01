@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
   },
   rowContainer: {
     ...commonContainer,
-    marginTop: 32,
+    marginTop: 64,
   },
   title: {
     ...commonText,
@@ -57,8 +57,8 @@ export const styles = StyleSheet.create({
   modalContainer: {
     justifyContent: 'start',
     alignItems: 'center',
-    marginTop: 100,
-    padding: 20,
+    marginTop: 64,
+    padding: 16,
   },
   modalContent: {
     width: '80%',
@@ -68,11 +68,10 @@ export const styles = StyleSheet.create({
     marginBottom: 20,
   },
   closeButton: {
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    marginLeft: 20,
+    position: 'absolute',
+    right: 8,
+    padding: 8,
+    zIndex: 999
   },
   plusButton: {
     backgroundColor: 'blue',

@@ -3,7 +3,7 @@ import { Modal, View, Text, TextInput, TouchableOpacity, FlatList } from 'react-
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 
-const MoveListModal = ({ modalVisible, setModalVisible, addPunisher, filterFrameData }) => {
+const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData }) => {
   const [selectedMove, setSelectedMove] = useState(null);
   const [context, setContext] = useState('');
 
@@ -21,7 +21,7 @@ const MoveListModal = ({ modalVisible, setModalVisible, addPunisher, filterFrame
   const handleAddMove = () => {
     if (selectedMove) {
       const moveWithDetail = { ...selectedMove, notes: context, damage: Array.isArray(selectedMove.damage) ? selectedMove.damage : [selectedMove.damage] };
-      addPunisher(moveWithDetail);
+      onMoveSelect(moveWithDetail);
       setContext('');
       setModalVisible(false);
     }
@@ -94,7 +94,7 @@ const MoveListModal = ({ modalVisible, setModalVisible, addPunisher, filterFrame
             {renderMoveListHeader()}
             <FlatList
               style={styles.flatList}
-              data={filterFrameData()}
+              data={frameData}
               renderItem={({ item }) => (
                 <TouchableOpacity onPress={() => handleMoveSelect(item)}>
                   <View style={styles.tableRow}>

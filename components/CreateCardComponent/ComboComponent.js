@@ -55,7 +55,7 @@ const ComboComponent = ({ onClose, comboData, setComboData, frameData }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.rowContainer}>
       <TouchableOpacity onPress={onClose} style={styles.closeButton}>
         <FontAwesome name="times" size={20} color="black" />
       </TouchableOpacity>

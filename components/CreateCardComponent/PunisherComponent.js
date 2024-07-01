@@ -25,10 +25,10 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
     setDetailMove(move);
   };
 
-  const filterFrameData = () => {
-    const punisherMoveInputs = punisherData.map((punisher) => punisher.move);
-    return frameData.filter((move) => !punisherMoveInputs.includes(move.move));
-  };
+  // const filterFrameData = () => {
+  //   const punisherMoveInputs = punisherData.map((punisher) => punisher.move);
+  //   return frameData.filter((move) => !punisherMoveInputs.includes(move.move));
+  // };
 
   return (
     <View style={styles.rowContainer}>
@@ -52,8 +52,8 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
       <MoveListModal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
-        addPunisher={addPunisher}
-        filterFrameData={filterFrameData}
+        onMoveSelect={addPunisher}
+        frameData={frameData}
       />
       <MoveDetailsModal detailMove={detailMove} setDetailMove={setDetailMove} />
     </View>

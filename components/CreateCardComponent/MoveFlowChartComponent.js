@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Modal } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
-import { MoveTableHeader, MoveTableRow, FlowChartRow } from './MoveTable'
+import { MoveTableHeader, FlowChartRow } from './MoveTable'
 
 const MoveFlowChartComponent = ({ onClose, setMoveFlowChartData, moveFlowChartData, frameData }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -124,7 +124,7 @@ const MoveFlowChartComponent = ({ onClose, setMoveFlowChartData, moveFlowChartDa
         <FontAwesome name="times" size={20} color="black" />
       </TouchableOpacity>
       <Text style={styles.header}>Flowcharts</Text>
-      <MoveTableHeader firstHeader='Move' secondHeader='Follow Up' />
+      <MoveTableHeader firstHeader='Move' secondHeader='Next Move' />
       <FlatList
         style={styles.flatList}
         data={renderListData()}
