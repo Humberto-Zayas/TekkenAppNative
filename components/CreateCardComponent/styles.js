@@ -125,6 +125,10 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
+  buttonContainer: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
   headerText: {
     fontWeight: 'bold',
   },
@@ -139,6 +143,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     alignItems: 'flex-start',
+    alignSelf: 'center'
   },
   columnRight: {
     width: '9%',

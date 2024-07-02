@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, FlatList, TextInput, Modal } from 'react-
 import { Picker } from '@react-native-picker/picker';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
+import { MoveTableHeader, FlowChartRow } from './MoveTable'
 
 const ComboComponent = ({ onClose, comboData, setComboData, frameData }) => {
   const [selectedComboStarters, setSelectedComboStarters] = useState([]); // Combo starters
@@ -60,21 +61,24 @@ const ComboComponent = ({ onClose, comboData, setComboData, frameData }) => {
         <FontAwesome name="times" size={20} color="black" />
       </TouchableOpacity>
       <Text style={styles.header}>Combos</Text>
-      {/* User Created Combos */}
+      <MoveTableHeader firstHeader='Starter' secondHeader='Combo Route' />
       <FlatList
-        style={styles.comboList}
+        style={styles.flatList}
         data={comboData}
         renderItem={({ item, index }) => (
-          <View style={styles.comboItem}>
-            <Text>{item.comboStarters.join(', ')}</Text>
-            <Text>{item.comboRoute}</Text>
-            <Text>{item.difficulty}</Text>
+          <View style={styles.tableRow}>
+            <View style={styles.columnLeft}>
+              {item.comboStarters.map((starter, idx) => (
+                <Text key={idx}>{starter}</Text>
+              ))}
+            </View>
+            <Text style={styles.column}>{item.comboRoute}</Text>
             <View style={styles.buttonContainer}>
               <TouchableOpacity onPress={() => deleteCombo(index)} style={styles.deleteButton}>
-                <FontAwesome name="trash" size={20} color="red" />
+                <FontAwesome name="trash" size={24} color="red" />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => editCombo(index)} style={styles.editButton}>
-                <Text>Edit</Text>
+              <TouchableOpacity onPress={() => editCombo(index)} style={{marginTop: 8}}>
+              <FontAwesome name="pencil" size={24} color="blue" />
               </TouchableOpacity>
             </View>
           </View>
