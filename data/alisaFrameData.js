@@ -45,14 +45,32 @@ const rawAlisaFrameData = [
     "notes": "Chip on block. Link to f+4. Can interrupt with up to i15 if previous hit is blocked",
   },
   {
-    "input": "1+2+3+4",
-    "hitLevel": "",
-    "damage": "",
-    "startupFrame": 20,
-    "blockFrame": "",
-    "hitFrame": "",
-    "notes": "Cannot block for 5 seconds. CH state for 5 seconds",
-  }
+    "input": "1,2,4",
+    "hitLevel": "h,m,m",
+    "damage": [6, 9, 24],
+    "startupFrame": 10,
+    "blockFrame": -2,
+    "hitFrame": "KND",
+    "notes": "Chip on block. Link to f+4. Can interrupt with up to i15 if previous hit is blocked",
+  },
+  {
+    "input": "2,1,3",
+    "hitLevel": "h,m,m",
+    "damage": [6, 9, 24],
+    "startupFrame": 10,
+    "blockFrame": -2,
+    "hitFrame": "KND",
+    "notes": "Chip on block. Link to f+4. Can interrupt with up to i15 if previous hit is blocked",
+  },
+  {
+    "input": "2+3",
+    "hitLevel": "h,m,m",
+    "damage": [6, 9, 24],
+    "startupFrame": 10,
+    "blockFrame": -2,
+    "hitFrame": "KND",
+    "notes": "Chip on block. Link to f+4. Can interrupt with up to i15 if previous hit is blocked",
+  },
 ];
 
 const alisaFrameData = rawAlisaFrameData.map(item => ({

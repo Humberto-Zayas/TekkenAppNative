@@ -100,6 +100,7 @@ export const styles = StyleSheet.create({
     overflow: 'hidden',
     marginBottom: 16,
     width: '100%',
+    // height: 200
   },
   tableTitle: {
     fontSize: 18,
@@ -202,5 +203,27 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  selectedMoveItem: {
+    backgroundColor: '#d3d3d3', // Example selected color
+  },
+  nextButton: {
+    padding: 10,
+    backgroundColor: 'blue',
+    alignItems: 'center',
+  },
+  backButton: {
+    padding: 10,
+    backgroundColor: 'gray',
+    alignItems: 'center',
+  },
+  addButton: {
+    padding: 10,
+    backgroundColor: 'green',
+    alignItems: 'center',
+  },
+  disabledButton: {
+    backgroundColor: 'gray',
+    opacity: 0.5,
   },
 });

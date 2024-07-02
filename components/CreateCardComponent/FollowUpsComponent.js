@@ -100,7 +100,7 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
               style={styles.moveItem}
               onPress={() => handleMoveSelect(item)}
             >
-              <View style={styles.flatList}>
+              <View style={{width: '100%'}}>
                 <View style={styles.tableRow}>
                   <Text style={styles.column}>{item.move}</Text>
                   <Text style={styles.column}>{item.hitLevel}</Text>
