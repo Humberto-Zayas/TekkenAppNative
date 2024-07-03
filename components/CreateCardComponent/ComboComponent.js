@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, TextInput, Modal } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { FontAwesome } from '@expo/vector-icons';
@@ -9,15 +9,28 @@ const ComboComponent = ({ onClose, comboData, setComboData, frameData }) => {
   const [selectedComboStarters, setSelectedComboStarters] = useState([]); // Combo starters
   const [comboString, setComboString] = useState(''); // Combo string
   const [difficulty, setDifficulty] = useState('Easy'); // Combo difficulty
+  const [comboType, setComboType] = useState(''); // Combo type
   const [editingIndex, setEditingIndex] = useState(null); // Track index of combo being edited
   const [modalVisible, setModalVisible] = useState(false);
   const [step, setStep] = useState(1); // Stepper state
+
+  useEffect(() => {
+    if (editingIndex !== null) {
+      const comboToEdit = comboData[editingIndex];
+      setSelectedComboStarters(comboToEdit.comboStarters);
+      setComboString(comboToEdit.comboRoute);
+      setDifficulty(comboToEdit.difficulty);
+      setComboType(comboToEdit.type);
+      setStep(3); // Set to last step when editing
+    }
+  }, [editingIndex]);
 
   const addCombo = () => {
     const newCombo = {
       comboStarters: selectedComboStarters,
       comboRoute: comboString,
       difficulty: difficulty,
+      type: comboType,
     };
     if (editingIndex !== null) {
       const updatedCombos = [...comboData];
@@ -30,6 +43,7 @@ const ComboComponent = ({ onClose, comboData, setComboData, frameData }) => {
     setSelectedComboStarters([]); // Reset selected combo starters
     setComboString(''); // Reset combo string
     setDifficulty('Easy'); // Reset difficulty
+    setComboType(''); // Reset combo type
     setModalVisible(false);
     setStep(1); // Reset to first step
   };
@@ -50,10 +64,6 @@ const ComboComponent = ({ onClose, comboData, setComboData, frameData }) => {
 
   const editCombo = (index) => {
     setModalVisible(true);
-    const comboToEdit = comboData[index];
-    setSelectedComboStarters(comboToEdit.comboStarters);
-    setComboString(comboToEdit.comboRoute);
-    setDifficulty(comboToEdit.difficulty);
     setEditingIndex(index);
   };
 
@@ -84,9 +94,46 @@ const ComboComponent = ({ onClose, comboData, setComboData, frameData }) => {
     </View>
   );
 
+  const handleComboTypeChange = (itemValue) => {
+    setComboType(itemValue);
+    if (itemValue === 'Wall Ender' || itemValue === 'Wall Tornado') {
+      setSelectedComboStarters([itemValue === 'Wall Ender' ? 'WE' : 'WT']);
+      setStep(3);
+    } else {
+      // Remove 'WE' or 'WT' from selectedComboStarters if they are present
+      setSelectedComboStarters(selectedComboStarters.filter(starter => starter !== 'WE' && starter !== 'WT'));
+      setStep(2);
+    }
+  };
+
   const renderStepContent = () => {
     switch (step) {
       case 1:
+        return (
+          <View style={styles.flatList}>
+            <Text style={styles.header}>Select Combo Type</Text>
+            <Picker
+              selectedValue={comboType}
+              style={styles.picker}
+              onValueChange={handleComboTypeChange}
+            >
+              <Picker.Item label="Select Combo Type" value="" />
+              <Picker.Item label="Normal" value="Normal" />
+              <Picker.Item label="Counter Hit" value="Counter Hit" />
+              <Picker.Item label="Heat Dash" value="Heat Dash" />
+              <Picker.Item label="Wall Ender" value="Wall Ender" />
+              <Picker.Item label="Wall Tornado" value="Wall Tornado" />
+            </Picker>
+            <TouchableOpacity
+              onPress={() => (comboType === 'Wall Ender' || comboType === 'Wall Tornado' ? setStep(3) : setStep(2))}
+              style={[styles.nextButton, (!comboType) && styles.disabledButton]}
+              disabled={!comboType}
+            >
+              <Text style={{ color: 'white' }}>Next</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      case 2:
         return (
           <>
             {renderMoveListHeader()}
@@ -115,16 +162,21 @@ const ComboComponent = ({ onClose, comboData, setComboData, frameData }) => {
               )}
               keyExtractor={(item) => item.move}
             />
-            <TouchableOpacity
-              onPress={() => setStep(2)}
-              style={[styles.nextButton, (selectedComboStarters.length === 0) && styles.disabledButton]}
-              disabled={selectedComboStarters.length === 0}
-            >
-              <Text style={{ color: 'white' }}>Next</Text>
-            </TouchableOpacity>
+            <View style={styles.stepperNavigation}>
+              <TouchableOpacity onPress={() => setStep(1)} style={styles.backButton}>
+                <Text style={{ color: 'white' }}>Back</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setStep(3)}
+                style={[styles.nextButton, (selectedComboStarters.length === 0) && styles.disabledButton]}
+                disabled={selectedComboStarters.length === 0}
+              >
+                <Text style={{ color: 'white' }}>Next</Text>
+              </TouchableOpacity>
+            </View>
           </>
         );
-      case 2:
+      case 3:
         return (
           <>
             <View style={styles.flatList}>
@@ -143,16 +195,18 @@ const ComboComponent = ({ onClose, comboData, setComboData, frameData }) => {
                 <Picker.Item label="Intermediate" value="Intermediate" />
                 <Picker.Item label="Difficult" value="Difficult" />
               </Picker>
-              <TouchableOpacity onPress={() => setStep(1)} style={styles.backButton}>
-                <Text style={{ color: 'white' }}>Back</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={addCombo}
-                style={[styles.addButton, (!comboString) && styles.disabledButton]}
-                disabled={!comboString}
-              >
-                <Text>{editingIndex !== null ? 'Update Combo' : 'Add Combo'}</Text>
-              </TouchableOpacity>
+              <View style={styles.stepperNavigation}>
+                <TouchableOpacity onPress={() => setStep(1)} style={styles.backButton}>
+                  <Text style={{ color: 'white' }}>Back</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={addCombo}
+                  style={[styles.addButton, (!comboString) && styles.disabledButton]}
+                  disabled={!comboString}
+                >
+                  <Text>{editingIndex !== null ? 'Update Combo' : 'Add Combo'}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </>
         );
