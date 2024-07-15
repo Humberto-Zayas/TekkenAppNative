@@ -6,6 +6,7 @@ import PunisherComponent from './PunisherComponent';
 import MoveFlowChartComponent from './MoveFlowChartComponent';
 import FollowUpsComponent from './FollowUpsComponent';
 import ComboComponent from './ComboComponent';
+import ImportantMovesComponent from './ImportantMovesComponent';
 import alisaFrameData from '../../data/alisaFrameData';
 import { styles } from './styles';
 import { useAuth } from '../../utils/AuthContext';
@@ -18,6 +19,7 @@ const CreateCardComponent = ({ route, navigation }) => {
   const [showMoveFlowChart, setShowMoveFlowChart] = useState(false);
   const [showFollowUps, setShowFollowUps] = useState(false);
   const [showCombos, setShowCombos] = useState(false);
+  const [showImportantMoves, setShowImportantMoves] = useState(false);
   const [cardName, setCardName] = useState('');
   const [cardDescription, setCardDescription] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
@@ -27,6 +29,7 @@ const CreateCardComponent = ({ route, navigation }) => {
   const [moveFlowChartData, setMoveFlowChartData] = useState([]);
   const [followUpData, setFollowUpData] = useState([]);
   const [comboData, setComboData] = useState([]);
+  const [importantMoveData, setImportantMoveData] = useState([]);
   const { user } = useAuth();
 
   const handleCardNameChange = (name) => {
@@ -123,6 +126,10 @@ const CreateCardComponent = ({ route, navigation }) => {
           <FontAwesome name="external-link" size={16} color="white" />
           <Text style={styles.linkText}>Move Flow Chart</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => setShowImportantMoves(true)} style={styles.link}>
+          <FontAwesome name="external-link" size={16} color="white" />
+          <Text style={styles.linkText}>Important Moves</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => setShowFollowUps(true)} style={styles.link}>
           <FontAwesome name="external-link" size={16} color="white" />
           <Text style={styles.linkText}>Set Follow Up/Mini Combos</Text>
@@ -180,6 +187,19 @@ const CreateCardComponent = ({ route, navigation }) => {
           onClose={() => setShowCombos(false)}
           setComboData={setComboData}
           comboData={comboData}
+          frameData={alisaFrameData}
+        />
+      </Modal>
+
+      <Modal
+        visible={showImportantMoves}
+        animationType="slide"
+        onRequestClose={() => setShowImportantMoves(false)}
+      >
+        <ImportantMovesComponent
+          onClose={() => setShowImportantMoves(false)}
+          setImportantMoveData={setImportantMoveData}
+          importantMoveData={importantMoveData}
           frameData={alisaFrameData}
         />
       </Modal>
