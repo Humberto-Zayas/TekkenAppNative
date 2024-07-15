@@ -10,6 +10,7 @@ import alisaFrameData from '../../data/alisaFrameData';
 import { styles } from './styles';
 import { useAuth } from '../../utils/AuthContext';
 import tags from '../../data/tags';
+import { createCard } from '../../utils/api';  // Import the createCard function
 
 const CreateCardComponent = ({ route, navigation }) => {
   const { characterName, characterImage } = route.params;
@@ -65,31 +66,22 @@ const CreateCardComponent = ({ route, navigation }) => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${user?.token}`,
-        },
-        body: JSON.stringify({
-          cardName,
-          characterName,
-          cardDescription,
-          youtubeLink,
-          twitchLink,
-          punisherData,
-          moveFlowChartData,
-          followUpData,
-          comboData,
-          userId: user?.userId,
-          username: user?.username,
-          tags: selectedTags
-        }),
-      });
+      const cardData = {
+        cardName,
+        characterName,
+        cardDescription,
+        youtubeLink,
+        twitchLink,
+        punisherData,
+        moveFlowChartData,
+        followUpData,
+        comboData,
+        userId: user?.userId,
+        username: user?.username,
+        tags: selectedTags
+      };
 
-      if (!response.ok) {
-        throw new Error('Failed to save the card.');
-      }
+      await createCard(cardData, user?.token);
 
       setCardName('');
       setCardDescription('');
