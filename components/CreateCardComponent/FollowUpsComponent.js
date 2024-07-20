@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Modal } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
@@ -10,15 +10,27 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
   const [isAddingFollowUp, setIsAddingFollowUp] = useState(false);
   const [step, setStep] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingIndex, setEditingIndex] = useState(null);
 
-  const addFollowUp = useCallback(() => {
+  const addOrUpdateFollowUp = useCallback(() => {
     const newFollowUp = {
       moves: selectedMoves,
       notes: notes,
     };
-    setFollowUpData([...followUpData, newFollowUp]);
+
+    if (isEditing) {
+      const updatedFollowUps = [...followUpData];
+      updatedFollowUps[editingIndex] = newFollowUp;
+      setFollowUpData(updatedFollowUps);
+      setIsEditing(false);
+      setEditingIndex(null);
+    } else {
+      setFollowUpData([...followUpData, newFollowUp]);
+    }
+
     resetForm();
-  }, [selectedMoves, notes, followUpData, setFollowUpData]);
+  }, [selectedMoves, notes, followUpData, setFollowUpData, isEditing, editingIndex]);
 
   const resetForm = useCallback(() => {
     setSelectedMoves([]);
@@ -34,13 +46,16 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
     setFollowUpData(updatedFollowUps);
   }, [followUpData, setFollowUpData]);
 
-  const filteredFrameData = useMemo(() => {
-    return frameData.filter((frameMove) =>
-      !followUpData.some((followUp) =>
-        followUp.moves.some((move) => move.move === frameMove.move)
-      )
-    );
-  }, [frameData, followUpData]);
+  const editFollowUp = useCallback((index) => {
+    const followUp = followUpData[index];
+    setSelectedMoves(followUp.moves);
+    setNotes(followUp.notes);
+    setIsEditing(true);
+    setEditingIndex(index);
+    setStep(1);
+    setIsAddingFollowUp(true);
+    setModalVisible(true);
+  }, [followUpData]);
 
   const handleAddFollowUpPress = () => {
     setIsAddingFollowUp(true);
@@ -65,6 +80,9 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
                     {moveObj.move}
                   </Text>
                 ))}
+                <TouchableOpacity style={styles.editIcon} onPress={() => editFollowUp(index)}>
+                  <FontAwesome name="edit" size={20} color="blue" />
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.deleteIcon} onPress={() => deleteFollowUp(index)}>
                   <FontAwesome name="trash" size={20} color="red" />
                 </TouchableOpacity>
@@ -87,8 +105,8 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
             setSelectedMoves={setSelectedMoves}
             setNotes={setNotes}
             setStep={setStep}
-            frameData={filteredFrameData}
-            addFollowUp={addFollowUp}
+            frameData={frameData}  // Pass the original frameData directly
+            addFollowUp={addOrUpdateFollowUp}
           />
         </View>
       </Modal>
