@@ -120,6 +120,10 @@ const CardComponent = ({ route, navigation }) => {
               <FontAwesome name="external-link" size={16} color="white" />
               <Text style={styles.linkText}>Punishers</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('Important Moves', card?.punisherData || [])}>
+              <FontAwesome name="external-link" size={16} color="white" />
+              <Text style={styles.linkText}>Important Moves</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('Move Flow Chart', card?.moveFlowChartData || [])}>
               <FontAwesome name="external-link" size={16} color="white" />
               <Text style={styles.linkText}>Move Flow Chart</Text>

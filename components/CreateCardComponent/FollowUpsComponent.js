@@ -99,6 +99,7 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
       <Modal visible={modalVisible} animationType="slide">
         <View style={styles.modalContainer}>
           <FollowUpStepContent
+            contentType={'followups'}
             step={step}
             selectedMoves={selectedMoves}
             notes={notes}

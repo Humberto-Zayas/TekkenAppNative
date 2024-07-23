@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, FlatList, TextInput } from 'react-native'
 import { styles } from './styles';
 
 const FollowUpStepContent = ({
+  contentType,
   step,
   selectedMoves,
   notes,
@@ -110,7 +111,9 @@ const FollowUpStepContent = ({
               <Text style={styles.previousButtonText}>Back</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={addFollowUp} style={styles.addButton}>
-              <Text style={styles.addButtonText}>Add Follow Up</Text>
+              <Text style={styles.addButtonText}>
+                {contentType === 'followups' ? 'Add Follow Up' : 'Add Flow Chart'}
+              </Text>
             </TouchableOpacity>
           </View>
         </>

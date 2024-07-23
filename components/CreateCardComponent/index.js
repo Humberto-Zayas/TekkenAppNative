@@ -30,6 +30,7 @@ const CreateCardComponent = ({ route, navigation }) => {
   const [followUpData, setFollowUpData] = useState([]);
   const [comboData, setComboData] = useState([]);
   const [importantMoveData, setImportantMoveData] = useState([]);
+  console.log(importantMoveData)
   const { user } = useAuth();
 
   const handleCardNameChange = (name) => {
@@ -63,10 +64,10 @@ const CreateCardComponent = ({ route, navigation }) => {
       return;
     }
 
-    if (punisherData.length < 3 || moveFlowChartData.length < 3 || comboData.length < 3) {
-      alert('Please add at least 3 moves in both Punishers and Move/Flowchart data sets.');
-      return;
-    }
+    // if (punisherData.length < 3 || moveFlowChartData.length < 3 || comboData.length < 3) {
+    //   alert('Please add at least 3 moves in both Punishers and Move/Flowchart data sets.');
+    //   return;
+    // }
 
     try {
       const cardData = {
@@ -79,6 +80,7 @@ const CreateCardComponent = ({ route, navigation }) => {
         moveFlowChartData,
         followUpData,
         comboData,
+        moveData: importantMoveData,
         userId: user?.userId,
         username: user?.username,
         tags: selectedTags
@@ -93,8 +95,7 @@ const CreateCardComponent = ({ route, navigation }) => {
       setPunisherData([]);
       setMoveFlowChartData([]);
       setComboData([]);
-      setShowPunishers([]);
-      setShowMoveFlowChart(false);
+      setImportantMoveData([]);
 
       // Show a success message
       Alert.alert(
