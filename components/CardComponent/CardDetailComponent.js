@@ -43,10 +43,24 @@ const CardDetailComponent = ({ route, navigation }) => {
     </TouchableOpacity>
   );
 
+  const renderFollowUpOrMoveFlowChart = (followUpOrMoveFlow, index) => (
+    <View key={`${index}_${moveSetName}`} style={styles.tableRow}>
+      {followUpOrMoveFlow.moves.map((move, moveIndex) => (
+        <View key={moveIndex} style={styles.column}>
+          <TouchableOpacity onPress={() => openDrawer(move)}>
+            <Text>{move.move}</Text>
+          </TouchableOpacity>
+         
+        </View>
+      ))}
+    </View>
+  );
+
   const renderHeader = () => {
     switch (moveSetName) {
       case 'Heat Engagers':
       case 'Punishers':
+      case 'Important Moves':
         return (
           <View style={styles.tableHeader}>
             <View style={styles.columnLeft}>
@@ -54,18 +68,6 @@ const CardDetailComponent = ({ route, navigation }) => {
             </View>
             <View style={styles.column}>
               <Text style={styles.headerText}>Description</Text>
-            </View>
-          </View>
-        );
-      case 'Move Flow Chart':
-      case 'Guaranteed Follow Ups':
-        return (
-          <View style={styles.tableHeader}>
-            <View style={styles.columnLeft}>
-              <Text style={styles.headerText}>Move 1</Text>
-            </View>
-            <View style={styles.column}>
-              <Text style={styles.headerText}>Move 2</Text>
             </View>
           </View>
         );
@@ -91,14 +93,9 @@ const CardDetailComponent = ({ route, navigation }) => {
       {renderHeader()}
       <ScrollView>
         {moves.map((item, index) => {
-          if (item.move1 && item.move2) {
-            return (
-              <View key={index}>
-                {renderMove(item.move1, `${index}_move1`)}
-                {renderMove(item.move2, `${index}_move2`)}
-              </View>
-            );
-          } else if (item.comboRoute) {
+          if (moveSetName === 'Move Flow Chart' || moveSetName === 'Follow Ups') {
+            return renderFollowUpOrMoveFlowChart(item, index);
+          } else if (moveSetName === 'Combos') {
             return renderCombo(item, index);
           }
           return renderMove(item, index);
