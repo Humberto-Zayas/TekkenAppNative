@@ -17,6 +17,8 @@ const ModalComponent = ({ selectedItem, closeDrawer }) => {
     }
   };
 
+  const isCombo = selectedItem?.comboStarters && selectedItem?.comboRoute;
+
   return (
     <ScrollView
       ref={scrollViewRef}
@@ -27,20 +29,27 @@ const ModalComponent = ({ selectedItem, closeDrawer }) => {
     >
       <View ref={modalContainerRef} style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>{selectedItem?.move}</Text>
-          <Text style={styles.modalDescription}>{selectedItem?.description}</Text>
-          <View style={styles.additionalDataContainer}>
-            <Text style={styles.additionalData}>Hit Level: {selectedItem?.hitLevel}</Text>
-            <Text style={styles.additionalData}>
-              Damage: {selectedItem?.damage ? selectedItem.damage.join(', ') : ''}
-            </Text>
-            <Text style={styles.additionalData}>Start up frame: {selectedItem?.startUpFrame}</Text>
-            <Text style={styles.additionalData}>Block frame: {selectedItem?.blockFrame}</Text>
-            <Text style={styles.additionalData}>Hit frame: {selectedItem?.hitFrame}</Text>
-            <Text style={styles.additionalData}>Counter hit frame: {selectedItem?.counterHitFrame}</Text>
-            <Text style={styles.additionalData}>Notes: {selectedItem?.notes}</Text>
-          </View>
-
+          
+          {isCombo ? (
+            <>
+             <Text style={styles.additionalData}>Difficulty: {selectedItem?.difficulty}</Text>
+             <Text style={styles.additionalData}>{selectedItem?.notes}</Text>
+            </>
+          ) : (
+            <View style={styles.additionalDataContainer}>
+              <Text style={styles.modalTitle}>{selectedItem?.move}</Text>
+              <Text style={styles.modalDescription}>{selectedItem?.description}</Text>
+              <Text style={styles.additionalData}>Hit Level: {selectedItem?.hitLevel}</Text>
+              <Text style={styles.additionalData}>
+                Damage: {selectedItem?.damage ? selectedItem.damage.join(', ') : ''}
+              </Text>
+              <Text style={styles.additionalData}>Start up frame: {selectedItem?.startUpFrame}</Text>
+              <Text style={styles.additionalData}>Block frame: {selectedItem?.blockFrame}</Text>
+              <Text style={styles.additionalData}>Hit frame: {selectedItem?.hitFrame}</Text>
+              <Text style={styles.additionalData}>Counter hit frame: {selectedItem?.counterHitFrame}</Text>
+              <Text style={styles.additionalData}>Notes: {selectedItem?.notes}</Text>
+            </View>
+          )}
           <TouchableOpacity onPress={closeDrawer} style={styles.closeButton}>
             <Text style={styles.closeButtonText}>Close</Text>
           </TouchableOpacity>

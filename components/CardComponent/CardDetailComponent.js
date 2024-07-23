@@ -29,7 +29,7 @@ const CardDetailComponent = ({ route, navigation }) => {
   );
 
   const renderCombo = (combo, index) => (
-    <TouchableOpacity key={`${index}_${moveSetName}`}>
+    <TouchableOpacity key={`${index}_${moveSetName}`} onPress={() => openDrawer(combo)}>
       <View style={styles.tableRow}>
         <View style={styles.columnLeft}>
           {combo.comboStarters.map((starter, starterIndex) => (

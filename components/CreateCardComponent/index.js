@@ -30,7 +30,6 @@ const CreateCardComponent = ({ route, navigation }) => {
   const [followUpData, setFollowUpData] = useState([]);
   const [comboData, setComboData] = useState([]);
   const [importantMoveData, setImportantMoveData] = useState([]);
-  console.log(importantMoveData)
   const { user } = useAuth();
 
   const handleCardNameChange = (name) => {
