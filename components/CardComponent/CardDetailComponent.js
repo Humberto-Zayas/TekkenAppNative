@@ -1,11 +1,40 @@
-import React, { useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Modal, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome icons
 import { styles } from './styles';
 import ModalComponent from './ModalComponent';
+
+const difficultyColors = {
+  easy: 'lightgreen',
+  intermediate: 'lightyellow',
+  hard: 'lightcoral',
+};
+
+const difficultyOrder = {
+  easy: 1,
+  intermediate: 2,
+  hard: 3,
+};
+
+const difficultyIcons = {
+  easy: 'smile-o',
+  intermediate: 'meh-o',
+  hard: 'frown-o',
+};
 
 const CardDetailComponent = ({ route, navigation }) => {
   const { moveSetName, moves } = route.params;
   const [selectedItem, setSelectedItem] = useState(null);
+  const [sortedMoves, setSortedMoves] = useState([]);
+
+  useEffect(() => {
+    if (moveSetName === 'Combos') {
+      // Sort from easy to hard
+      setSortedMoves([...moves].sort((a, b) => difficultyOrder[a.difficulty.toLowerCase()] - difficultyOrder[b.difficulty.toLowerCase()]));
+    } else {
+      setSortedMoves(moves);
+    }
+  }, [moves, moveSetName]);
 
   const openDrawer = (item) => {
     setSelectedItem(item);
@@ -30,7 +59,7 @@ const CardDetailComponent = ({ route, navigation }) => {
 
   const renderCombo = (combo, index) => (
     <TouchableOpacity key={`${index}_${moveSetName}`} onPress={() => openDrawer(combo)}>
-      <View style={styles.tableRow}>
+      <View style={[styles.tableRow, { backgroundColor: difficultyColors[combo.difficulty.toLowerCase()] }]}>
         <View style={styles.columnLeft}>
           {combo.comboStarters.map((starter, starterIndex) => (
             <Text key={starterIndex}>{starter}</Text>
@@ -38,6 +67,13 @@ const CardDetailComponent = ({ route, navigation }) => {
         </View>
         <View style={styles.column}>
           <Text>{combo.comboRoute}</Text>
+        </View>
+        <View style={styles.iconContainer}>
+          <FontAwesome
+            name={difficultyIcons[combo.difficulty.toLowerCase()]}
+            size={24}
+            color={difficultyColors[combo.difficulty.toLowerCase()]}
+          />
         </View>
       </View>
     </TouchableOpacity>
@@ -50,7 +86,6 @@ const CardDetailComponent = ({ route, navigation }) => {
           <TouchableOpacity onPress={() => openDrawer(move)}>
             <Text>{move.move}</Text>
           </TouchableOpacity>
-         
         </View>
       ))}
     </View>
@@ -80,6 +115,7 @@ const CardDetailComponent = ({ route, navigation }) => {
             <View style={styles.column}>
               <Text style={styles.headerText}>Combo Route</Text>
             </View>
+            
           </View>
         );
       default:
@@ -92,7 +128,7 @@ const CardDetailComponent = ({ route, navigation }) => {
       <Text>{moveSetName}</Text>
       {renderHeader()}
       <ScrollView>
-        {moves.map((item, index) => {
+        {sortedMoves.map((item, index) => {
           if (moveSetName === 'Move Flow Chart' || moveSetName === 'Follow Ups') {
             return renderFollowUpOrMoveFlowChart(item, index);
           } else if (moveSetName === 'Combos') {
@@ -107,5 +143,6 @@ const CardDetailComponent = ({ route, navigation }) => {
     </View>
   );
 };
+
 
 export default CardDetailComponent;
