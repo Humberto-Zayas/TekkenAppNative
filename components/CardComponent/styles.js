@@ -247,4 +247,10 @@ export const styles = StyleSheet.create({
   headerText: {
     fontWeight: 'bold',
   },
+  counter: {
+    alignSelf: 'flex-end',
+    marginLeft: 'auto',
+    fontSize: 16,
+    color: 'white',
+  },
 });

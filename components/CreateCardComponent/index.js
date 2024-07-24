@@ -63,11 +63,6 @@ const CreateCardComponent = ({ route, navigation }) => {
       return;
     }
 
-    // if (punisherData.length < 3 || moveFlowChartData.length < 3 || comboData.length < 3) {
-    //   alert('Please add at least 3 moves in both Punishers and Move/Flowchart data sets.');
-    //   return;
-    // }
-
     try {
       const cardData = {
         cardName,
@@ -121,22 +116,37 @@ const CreateCardComponent = ({ route, navigation }) => {
         <TouchableOpacity onPress={() => setShowPunishers(true)} style={styles.link}>
           <FontAwesome name="external-link" size={16} color="white" />
           <Text style={styles.linkText}>Punishers</Text>
+          {punisherData.length > 0 ? (
+            <Text style={styles.counter}>{punisherData.length}</Text>
+          ) : null}
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setShowMoveFlowChart(true)} style={styles.link}>
           <FontAwesome name="external-link" size={16} color="white" />
           <Text style={styles.linkText}>Move Flow Chart</Text>
+          {moveFlowChartData.length > 0 ? (
+            <Text style={styles.counter}>{moveFlowChartData.length}</Text>
+          ) : null}
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setShowImportantMoves(true)} style={styles.link}>
           <FontAwesome name="external-link" size={16} color="white" />
           <Text style={styles.linkText}>Important Moves</Text>
+          {importantMoveData.length > 0 ? (
+            <Text style={styles.counter}>{importantMoveData.length}</Text>
+          ) : null}
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setShowFollowUps(true)} style={styles.link}>
           <FontAwesome name="external-link" size={16} color="white" />
           <Text style={styles.linkText}>Set Follow Up/Mini Combos</Text>
+          {followUpData.length > 0 ? (
+            <Text style={styles.counter}>{followUpData.length}</Text>
+          ) : null}
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setShowCombos(true)} style={styles.link}>
           <FontAwesome name="external-link" size={16} color="white" />
           <Text style={styles.linkText}>Combos</Text>
+          {comboData.length > 0 ? (
+            <Text style={styles.counter}>{comboData.length}</Text>
+          ) : null}
         </TouchableOpacity>
       </View>
       <Modal
@@ -168,7 +178,7 @@ const CreateCardComponent = ({ route, navigation }) => {
       <Modal
         visible={showFollowUps}
         animationType="slide"
-        onRequestClose={() => setShowPunishers(false)}
+        onRequestClose={() => setShowFollowUps(false)}
       >
         <FollowUpsComponent
           onClose={() => setShowFollowUps(false)}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome from @expo/vector-icons
+import { FontAwesome } from '@expo/vector-icons';
 import HeroComponent from './HeroComponent';
 import { characters } from '../../data/characters';
 import { styles } from './styles';
@@ -112,30 +112,48 @@ const CardComponent = ({ route, navigation }) => {
           />
           <View style={{ paddingBottom: 64 }}>
             <Text style={{ margin: 8, marginBottom: 16, fontSize: 16 }}>{card?.cardDescription}</Text>
-            <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('HeatEngagers', card?.heatEngagersData || [])}>
-              <FontAwesome name="external-link" size={16} color="white" />
-              <Text style={styles.linkText}>Heat Engagers</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('Punishers', card?.punisherData || [])}>
-              <FontAwesome name="external-link" size={16} color="white" />
-              <Text style={styles.linkText}>Punishers</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('Important Moves', card?.moveData || [])}>
-              <FontAwesome name="external-link" size={16} color="white" />
-              <Text style={styles.linkText}>Important Moves</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('Move Flow Chart', card?.moveFlowChartData || [])}>
-              <FontAwesome name="external-link" size={16} color="white" />
-              <Text style={styles.linkText}>Move Flow Chart</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('Follow Ups', card?.followUpData || [])}>
-              <FontAwesome name="external-link" size={16} color="white" />
-              <Text style={styles.linkText}>Guaranteed Follow Ups</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('Combos', card?.comboData || [])}>
-              <FontAwesome name="external-link" size={16} color="white" />
-              <Text style={styles.linkText}>Combos</Text>
-            </TouchableOpacity>
+            {character?.heatEngagersData.length > 0 && (
+              <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('HeatEngagers', card?.heatEngagersData || [])}>
+                <FontAwesome name="external-link" size={16} color="white" />
+                <Text style={styles.linkText}>Heat Engagers</Text>
+                <Text style={styles.counter}>{character?.heatEngagersData.length}</Text>
+              </TouchableOpacity>
+            )}
+            {card?.punisherData.length > 0 && (
+              <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('Punishers', card?.punisherData || [])}>
+                <FontAwesome name="external-link" size={16} color="white" />
+                <Text style={styles.linkText}>Punishers</Text>
+                <Text style={styles.counter}>{card?.punisherData.length}</Text>
+              </TouchableOpacity>
+            )}
+            {card?.moveData.length > 0 && (
+              <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('Important Moves', card?.moveData || [])}>
+                <FontAwesome name="external-link" size={16} color="white" />
+                <Text style={styles.linkText}>Important Moves</Text>
+                <Text style={styles.counter}>{card?.moveData.length}</Text>
+              </TouchableOpacity>
+            )}
+            {card?.moveFlowChartData.length > 0 && (
+              <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('Move Flow Chart', card?.moveFlowChartData || [])}>
+                <FontAwesome name="external-link" size={16} color="white" />
+                <Text style={styles.linkText}>Move Flow Chart</Text>
+                <Text style={styles.counter}>{card?.moveFlowChartData.length}</Text>
+              </TouchableOpacity>
+            )}
+            {card?.followUpData.length > 0 && (
+              <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('Follow Ups', card?.followUpData || [])}>
+                <FontAwesome name="external-link" size={16} color="white" />
+                <Text style={styles.linkText}>Guaranteed Follow Ups</Text>
+                <Text style={styles.counter}>{card?.followUpData.length}</Text>
+              </TouchableOpacity>
+            )}
+            {card?.comboData.length > 0 && (
+              <TouchableOpacity style={styles.link} onPress={() => handleMoveSetLinkPress('Combos', card?.comboData || [])}>
+                <FontAwesome name="external-link" size={16} color="white" />
+                <Text style={styles.linkText}>Combos</Text>
+                <Text style={styles.counter}>{card?.comboData.length}</Text>
+              </TouchableOpacity>
+            )}
             <View style={{ marginTop: 8 }}>
               {card?.youtubeLink && (
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>

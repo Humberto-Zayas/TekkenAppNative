@@ -226,4 +226,10 @@ export const styles = StyleSheet.create({
     backgroundColor: 'gray',
     opacity: 0.5,
   },
+  counter: {
+    alignSelf: 'flex-end',
+    marginLeft: 'auto',
+    fontSize: 16,
+    color: 'white',
+  },
 });
