@@ -97,24 +97,43 @@ const FollowUpStepContent = ({
     case 2:
       return (
         <>
-          <TextInput
-            style={styles.notesInput}
-            placeholder="Enter notes"
-            value={notes}
-            onChangeText={setNotes}
+          <Text style={styles.header}>Add Notes About Flowchart</Text>
+          {renderMoveListHeader}
+          <FlatList
+            style={styles.flatList}
+            data={selectedMoves}
+            renderItem={({ item }) => (
+              <View style={styles.tableRow}>
+                <Text style={styles.column}>{item.move}</Text>
+                <Text style={styles.column}>{item.hitLevel}</Text>
+                <Text style={styles.column}>{item.damage}</Text>
+                <Text style={styles.column}>{item.startupFrame}</Text>
+                <Text style={styles.column}>{item.blockFrame}</Text>
+                <Text style={styles.column}>{item.hitFrame}</Text>
+              </View>
+            )}
+            keyExtractor={(item, index) => index.toString()}
           />
-          <View style={styles.stepperButtons}>
-            <TouchableOpacity
-              onPress={() => setStep(1)}
-              style={styles.previousButton}
-            >
-              <Text style={styles.previousButtonText}>Back</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={addFollowUp} style={styles.addButton}>
-              <Text style={styles.addButtonText}>
-                {contentType === 'followups' ? 'Add Follow Up' : 'Add Flow Chart'}
-              </Text>
-            </TouchableOpacity>
+          <View style={styles.flatList}>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter notes"
+              value={notes}
+              onChangeText={setNotes}
+            />
+            <View style={styles.stepperButtons}>
+              <TouchableOpacity
+                onPress={() => setStep(1)}
+                style={styles.previousButton}
+              >
+                <Text style={styles.previousButtonText}>Back</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={addFollowUp} style={styles.addButton}>
+                <Text style={styles.addButtonText}>
+                  {contentType === 'followups' ? 'Add Follow Up' : 'Add Flow Chart'}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </>
       );
