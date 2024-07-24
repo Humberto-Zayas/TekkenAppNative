@@ -1,4 +1,3 @@
-// CardListComponent.js
 import React, { useState, useEffect, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, FlatList, TouchableOpacity, Image, ScrollView } from 'react-native';
@@ -38,6 +37,14 @@ const CardListComponent = ({ route, navigation }) => {
       const updatedTags = selectedTags.filter(t => t.name !== tag.name);
       setSelectedTags(updatedTags);
     }
+  };
+
+  const handleYouTubeTagClick = () => {
+    setYouTubeQuery(!youtubeQuery);
+  };
+
+  const handleTwitchTagClick = () => {
+    setTwitchQuery(!twitchQuery);
   };
 
   const fetchCards = async (page = 1) => {
@@ -163,14 +170,20 @@ const CardListComponent = ({ route, navigation }) => {
                 </TouchableOpacity>
               ))}
               <TouchableOpacity
-                onPress={() => setYouTubeQuery(!youtubeQuery)}
-                style={styles.tag}
+                onPress={handleYouTubeTagClick}
+                style={[
+                  styles.tag,
+                  youtubeQuery && styles.selectedTag
+                ]}
               >
                 <Text style={styles.tagText}>YouTube</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => setTwitchQuery(!twitchQuery)}
-                style={styles.tag}
+                onPress={handleTwitchTagClick}
+                style={[
+                  styles.tag,
+                  twitchQuery && styles.selectedTag
+                ]}
               >
                 <Text style={styles.tagText}>Twitch</Text>
               </TouchableOpacity>
