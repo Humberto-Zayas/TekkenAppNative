@@ -149,3 +149,27 @@ export const createCard = async (cardData, token) => {
     throw error;
   }
 };
+
+export const updateCard = async (cardData, token) => {
+  const cardId = cardData._id
+  console.log('cardData: ', cardData)
+  try {
+    const response = await fetch(`${REACT_APP_API_BASE_URL}/cards/edit/${cardId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(cardData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update the card.');
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('Error updating the card:', error);
+    throw error;
+  }
+};

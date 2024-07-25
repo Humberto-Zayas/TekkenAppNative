@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, TextInput, ScrollView, Modal, TouchableOpacity, Text, Button, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, ScrollView, Modal, TouchableOpacity, Text, Alert } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import HeroCreateComponent from './HeroCreateComponent';
 import PunisherComponent from './PunisherComponent';
@@ -11,10 +11,12 @@ import alisaFrameData from '../../data/alisaFrameData';
 import { styles } from './styles';
 import { useAuth } from '../../utils/AuthContext';
 import tags from '../../data/tags';
-import { createCard } from '../../utils/api';  // Import the createCard function
+import { createCard, updateCard } from '../../utils/api';
 
 const CreateCardComponent = ({ route, navigation }) => {
-  const { characterName, characterImage } = route.params;
+  const { user } = useAuth();
+  const { cardData: initialCardData, isEdit, characterName, characterImage } = route.params;
+  console.log('card id: ', initialCardData._id)
   const [showPunishers, setShowPunishers] = useState(false);
   const [showMoveFlowChart, setShowMoveFlowChart] = useState(false);
   const [showFollowUps, setShowFollowUps] = useState(false);
@@ -30,7 +32,21 @@ const CreateCardComponent = ({ route, navigation }) => {
   const [followUpData, setFollowUpData] = useState([]);
   const [comboData, setComboData] = useState([]);
   const [importantMoveData, setImportantMoveData] = useState([]);
-  const { user } = useAuth();
+
+  useEffect(() => {
+    if (isEdit) {
+      setCardName(initialCardData.cardName);
+      setCardDescription(initialCardData.cardDescription);
+      setYoutubeLink(initialCardData.youtubeLink);
+      setTwitchLink(initialCardData.twitchLink);
+      setPunisherData(initialCardData.punisherData);
+      setMoveFlowChartData(initialCardData.moveFlowChartData);
+      setFollowUpData(initialCardData.followUpData);
+      setComboData(initialCardData.comboData);
+      setImportantMoveData(initialCardData.moveData);
+      setSelectedTags(initialCardData.tags || []);
+    }
+  }, [isEdit, initialCardData]);
 
   const handleCardNameChange = (name) => {
     setCardName(name);
@@ -42,11 +58,11 @@ const CreateCardComponent = ({ route, navigation }) => {
 
   const handleYouTubeLinkChange = (youtubeLink) => {
     setYoutubeLink(youtubeLink);
-  }
+  };
 
   const handleTwitchLinkChange = (twitchLink) => {
     setTwitchLink(twitchLink);
-  }
+  };
 
   const handleTagPress = (tag) => {
     const tagIndex = selectedTags.findIndex(t => t.name === tag.name);
@@ -63,46 +79,30 @@ const CreateCardComponent = ({ route, navigation }) => {
       return;
     }
 
+    const formData = {
+      cardName,
+      characterName,
+      cardDescription,
+      youtubeLink,
+      twitchLink,
+      punisherData,
+      moveFlowChartData,
+      followUpData,
+      comboData,
+      moveData: importantMoveData,
+      userId: user?.userId,
+      username: user?.username,
+      tags: selectedTags
+    };
+
     try {
-      const cardData = {
-        cardName,
-        characterName,
-        cardDescription,
-        youtubeLink,
-        twitchLink,
-        punisherData,
-        moveFlowChartData,
-        followUpData,
-        comboData,
-        moveData: importantMoveData,
-        userId: user?.userId,
-        username: user?.username,
-        tags: selectedTags
-      };
-
-      await createCard(cardData, user?.token);
-
-      setCardName('');
-      setCardDescription('');
-      setYoutubeLink('');
-      setTwitchLink('');
-      setPunisherData([]);
-      setMoveFlowChartData([]);
-      setComboData([]);
-      setImportantMoveData([]);
-
-      // Show a success message
-      Alert.alert(
-        'Success',
-        'Card created successfully!',
-        [
-          {
-            text: 'OK',
-            onPress: () => navigation.goBack(),
-          },
-        ],
-        { cancelable: false }
-      );
+      if (isEdit) {
+        await updateCard({ ...formData, _id: initialCardData._id }, user.token); // Include _id
+        Alert.alert('Success', 'Card updated successfully!', [{ text: 'OK', onPress: () => navigation.goBack() }], { cancelable: false });
+      } else {
+        await createCard(formData, user.token);
+        Alert.alert('Success', 'Card created successfully!', [{ text: 'OK', onPress: () => navigation.goBack() }], { cancelable: false });
+      }
     } catch (error) {
       console.error('Error saving the card:', error);
       alert('Failed to save the card. Please try again.');
@@ -111,49 +111,47 @@ const CreateCardComponent = ({ route, navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <HeroCreateComponent name={cardName} thumbnail={characterImage} onCardNameChange={handleCardNameChange} cardDescription={cardDescription} onCardDescriptionChange={handleCardDescriptionChange} youtubeLink={youtubeLink} onYouTubeLinkChange={handleYouTubeLinkChange} twitchLink={twitchLink} onTwitchLinkChange={handleTwitchLinkChange} />
+      <HeroCreateComponent 
+        cardName={cardName} 
+        thumbnail={characterImage} 
+        onCardNameChange={handleCardNameChange} 
+        cardDescription={cardDescription} 
+        onCardDescriptionChange={handleCardDescriptionChange} 
+        youtubeLink={youtubeLink} 
+        onYouTubeLinkChange={handleYouTubeLinkChange} 
+        twitchLink={twitchLink} 
+        onTwitchLinkChange={handleTwitchLinkChange} 
+      />
       <View style={{ marginTop: 16 }}>
         <TouchableOpacity onPress={() => setShowPunishers(true)} style={styles.link}>
           <FontAwesome name="external-link" size={16} color="white" />
           <Text style={styles.linkText}>Punishers</Text>
-          {punisherData.length > 0 ? (
-            <Text style={styles.counter}>{punisherData.length}</Text>
-          ) : null}
+          {punisherData.length > 0 && <Text style={styles.counter}>{punisherData.length}</Text>}
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setShowMoveFlowChart(true)} style={styles.link}>
           <FontAwesome name="external-link" size={16} color="white" />
           <Text style={styles.linkText}>Move Flow Chart</Text>
-          {moveFlowChartData.length > 0 ? (
-            <Text style={styles.counter}>{moveFlowChartData.length}</Text>
-          ) : null}
+          {moveFlowChartData.length > 0 && <Text style={styles.counter}>{moveFlowChartData.length}</Text>}
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setShowImportantMoves(true)} style={styles.link}>
-          <FontAwesome name="external-link" size={16} color="white" />
-          <Text style={styles.linkText}>Important Moves</Text>
-          {importantMoveData.length > 0 ? (
-            <Text style={styles.counter}>{importantMoveData.length}</Text>
-          ) : null}
-        </TouchableOpacity>
+        {!isEdit && (
+          <TouchableOpacity onPress={() => setShowImportantMoves(true)} style={styles.link}>
+            <FontAwesome name="external-link" size={16} color="white" />
+            <Text style={styles.linkText}>Important Moves</Text>
+            {importantMoveData.length > 0 && <Text style={styles.counter}>{importantMoveData.length}</Text>}
+          </TouchableOpacity>
+        )}
         <TouchableOpacity onPress={() => setShowFollowUps(true)} style={styles.link}>
           <FontAwesome name="external-link" size={16} color="white" />
           <Text style={styles.linkText}>Set Follow Up/Mini Combos</Text>
-          {followUpData.length > 0 ? (
-            <Text style={styles.counter}>{followUpData.length}</Text>
-          ) : null}
+          {followUpData.length > 0 && <Text style={styles.counter}>{followUpData.length}</Text>}
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setShowCombos(true)} style={styles.link}>
           <FontAwesome name="external-link" size={16} color="white" />
           <Text style={styles.linkText}>Combos</Text>
-          {comboData.length > 0 ? (
-            <Text style={styles.counter}>{comboData.length}</Text>
-          ) : null}
+          {comboData.length > 0 && <Text style={styles.counter}>{comboData.length}</Text>}
         </TouchableOpacity>
       </View>
-      <Modal
-        visible={showPunishers}
-        animationType="slide"
-        onRequestClose={() => setShowPunishers(false)}
-      >
+      <Modal visible={showPunishers} animationType="slide" onRequestClose={() => setShowPunishers(false)}>
         <PunisherComponent
           onClose={() => setShowPunishers(false)}
           setPunisherData={setPunisherData}
@@ -162,11 +160,7 @@ const CreateCardComponent = ({ route, navigation }) => {
         />
       </Modal>
 
-      <Modal
-        visible={showMoveFlowChart}
-        animationType="slide"
-        onRequestClose={() => setShowMoveFlowChart(false)}
-      >
+      <Modal visible={showMoveFlowChart} animationType="slide" onRequestClose={() => setShowMoveFlowChart(false)}>
         <MoveFlowChartComponent
           onClose={() => setShowMoveFlowChart(false)}
           setMoveFlowChartData={setMoveFlowChartData}
@@ -175,11 +169,7 @@ const CreateCardComponent = ({ route, navigation }) => {
         />
       </Modal>
 
-      <Modal
-        visible={showFollowUps}
-        animationType="slide"
-        onRequestClose={() => setShowFollowUps(false)}
-      >
+      <Modal visible={showFollowUps} animationType="slide" onRequestClose={() => setShowFollowUps(false)}>
         <FollowUpsComponent
           onClose={() => setShowFollowUps(false)}
           setFollowUpData={setFollowUpData}
@@ -188,11 +178,7 @@ const CreateCardComponent = ({ route, navigation }) => {
         />
       </Modal>
 
-      <Modal
-        visible={showCombos}
-        animationType="slide"
-        onRequestClose={() => setShowCombos(false)}
-      >
+      <Modal visible={showCombos} animationType="slide" onRequestClose={() => setShowCombos(false)}>
         <ComboComponent
           onClose={() => setShowCombos(false)}
           setComboData={setComboData}
@@ -201,18 +187,16 @@ const CreateCardComponent = ({ route, navigation }) => {
         />
       </Modal>
 
-      <Modal
-        visible={showImportantMoves}
-        animationType="slide"
-        onRequestClose={() => setShowImportantMoves(false)}
-      >
-        <ImportantMovesComponent
-          onClose={() => setShowImportantMoves(false)}
-          setImportantMoveData={setImportantMoveData}
-          importantMoveData={importantMoveData}
-          frameData={alisaFrameData}
-        />
-      </Modal>
+      {!isEdit && (
+        <Modal visible={showImportantMoves} animationType="slide" onRequestClose={() => setShowImportantMoves(false)}>
+          <ImportantMovesComponent
+            onClose={() => setShowImportantMoves(false)}
+            setImportantMoveData={setImportantMoveData}
+            importantMoveData={importantMoveData}
+            frameData={alisaFrameData}
+          />
+        </Modal>
+      )}
 
       <View style={styles.tagsContainer}>
         {tags.map(tag => (
@@ -232,7 +216,7 @@ const CreateCardComponent = ({ route, navigation }) => {
       </View>
 
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveButtonText}>Save Card</Text>
+        <Text style={styles.saveButtonText}>{isEdit ? 'Update Card' : 'Save Card'}</Text>
       </TouchableOpacity>
     </ScrollView>
   );
