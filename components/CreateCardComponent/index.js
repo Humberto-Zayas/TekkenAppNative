@@ -16,7 +16,6 @@ import { createCard, updateCard } from '../../utils/api';
 const CreateCardComponent = ({ route, navigation }) => {
   const { user } = useAuth();
   const { cardData: initialCardData, isEdit, characterName, characterImage } = route.params;
-  console.log('card id: ', initialCardData._id)
   const [showPunishers, setShowPunishers] = useState(false);
   const [showMoveFlowChart, setShowMoveFlowChart] = useState(false);
   const [showFollowUps, setShowFollowUps] = useState(false);
@@ -111,16 +110,16 @@ const CreateCardComponent = ({ route, navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <HeroCreateComponent 
-        cardName={cardName} 
-        thumbnail={characterImage} 
-        onCardNameChange={handleCardNameChange} 
-        cardDescription={cardDescription} 
-        onCardDescriptionChange={handleCardDescriptionChange} 
-        youtubeLink={youtubeLink} 
-        onYouTubeLinkChange={handleYouTubeLinkChange} 
-        twitchLink={twitchLink} 
-        onTwitchLinkChange={handleTwitchLinkChange} 
+      <HeroCreateComponent
+        cardName={cardName}
+        thumbnail={characterImage}
+        onCardNameChange={handleCardNameChange}
+        cardDescription={cardDescription}
+        onCardDescriptionChange={handleCardDescriptionChange}
+        youtubeLink={youtubeLink}
+        onYouTubeLinkChange={handleYouTubeLinkChange}
+        twitchLink={twitchLink}
+        onTwitchLinkChange={handleTwitchLinkChange}
       />
       <View style={{ marginTop: 16 }}>
         <TouchableOpacity onPress={() => setShowPunishers(true)} style={styles.link}>
@@ -133,13 +132,13 @@ const CreateCardComponent = ({ route, navigation }) => {
           <Text style={styles.linkText}>Move Flow Chart</Text>
           {moveFlowChartData.length > 0 && <Text style={styles.counter}>{moveFlowChartData.length}</Text>}
         </TouchableOpacity>
-        {!isEdit && (
-          <TouchableOpacity onPress={() => setShowImportantMoves(true)} style={styles.link}>
-            <FontAwesome name="external-link" size={16} color="white" />
-            <Text style={styles.linkText}>Important Moves</Text>
-            {importantMoveData.length > 0 && <Text style={styles.counter}>{importantMoveData.length}</Text>}
-          </TouchableOpacity>
-        )}
+
+        <TouchableOpacity onPress={() => setShowImportantMoves(true)} style={styles.link}>
+          <FontAwesome name="external-link" size={16} color="white" />
+          <Text style={styles.linkText}>Important Moves</Text>
+          {importantMoveData.length > 0 && <Text style={styles.counter}>{importantMoveData.length}</Text>}
+        </TouchableOpacity>
+
         <TouchableOpacity onPress={() => setShowFollowUps(true)} style={styles.link}>
           <FontAwesome name="external-link" size={16} color="white" />
           <Text style={styles.linkText}>Set Follow Up/Mini Combos</Text>
@@ -187,16 +186,14 @@ const CreateCardComponent = ({ route, navigation }) => {
         />
       </Modal>
 
-      {!isEdit && (
-        <Modal visible={showImportantMoves} animationType="slide" onRequestClose={() => setShowImportantMoves(false)}>
-          <ImportantMovesComponent
-            onClose={() => setShowImportantMoves(false)}
-            setImportantMoveData={setImportantMoveData}
-            importantMoveData={importantMoveData}
-            frameData={alisaFrameData}
-          />
-        </Modal>
-      )}
+      <Modal visible={showImportantMoves} animationType="slide" onRequestClose={() => setShowImportantMoves(false)}>
+        <ImportantMovesComponent
+          onClose={() => setShowImportantMoves(false)}
+          setImportantMoveData={setImportantMoveData}
+          importantMoveData={importantMoveData}
+          frameData={alisaFrameData}
+        />
+      </Modal>
 
       <View style={styles.tagsContainer}>
         {tags.map(tag => (
