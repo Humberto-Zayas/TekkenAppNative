@@ -37,11 +37,7 @@ const CardComponent = ({ route, navigation }) => {
 
   const fetchCard = async () => {
     try {
-      if (!userId) {
-        console.error('User ID is undefined');
-        return;
-      }
-      const data = await fetchCardById(id, userId);
+      const data = await fetchCardById(id, userId || '');
       setCard(data);
     } catch (error) {
       console.error('Error fetching card:', error);
@@ -58,6 +54,10 @@ const CardComponent = ({ route, navigation }) => {
 
   const toggleBookmark = async () => {
     try {
+      if (!userId) {
+        Alert.alert('Please log in to bookmark this card');
+        return;
+      }
       if (isBookmarked) {
         await unbookmarkCardById(userId, id, user.token);
         setIsBookmarked(false);
@@ -74,6 +74,10 @@ const CardComponent = ({ route, navigation }) => {
 
   const rateCard = async () => {
     try {
+      if (!userId) {
+        Alert.alert('Please log in to rate this card');
+        return;
+      }
       await rateCardById(id, userId, userRating, user?.username, user?.token);
     } catch (error) {
       console.error('Error submitting rating:', error);
@@ -96,7 +100,7 @@ const CardComponent = ({ route, navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      {user && card && (
+      {card && (
         <>
           <HeroComponent
             handleCreatorPress={handleCreatorPress}
