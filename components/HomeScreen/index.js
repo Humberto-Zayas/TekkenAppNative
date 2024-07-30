@@ -6,6 +6,8 @@ import { useAuth } from '../../utils/AuthContext';
 const HomeScreen = ({ navigation }) => {
   const { user } = useAuth();
 
+  console.log('homescreen component user: ', user)
+
   return (
     <View style={styles.container}>
       {/* Display user status */}

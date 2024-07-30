@@ -24,18 +24,23 @@ const Login = ({ route }) => {
       });
   
       if (response.ok) {
-        // Login successful, navigate to the home screen
         const userData = await response.json();
-        login(userData); // Update the authentication context
-        navigation.navigate('Home');
+        const { token, refreshToken, username, userId } = userData;
+  
+        if (token && refreshToken && username && userId) {
+          login({ username, userId }, token, refreshToken);
+          navigation.navigate('Home');
+        } else {
+          console.error('Token or refresh token missing in the response');
+        }
       } else {
-        // Handle login failure, show an error message
         console.error('Login failed');
       }
     } catch (error) {
       console.error('Error during login:', error);
     }
   };
+  
   
   const handleSignup = async () => {
     try {

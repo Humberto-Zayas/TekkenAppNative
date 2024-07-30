@@ -1,4 +1,3 @@
-// AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -7,16 +6,31 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [state, setState] = useState({
     user: null,
-    userId: null, // Added userId state
+    userId: null,
+    token: null,
+    refreshToken: null,
   });
 
   useEffect(() => {
     const checkUser = async () => {
       try {
         const storedUser = await AsyncStorage.getItem('user');
-        if (storedUser) {
+        const storedToken = await AsyncStorage.getItem('token');
+        const storedRefreshToken = await AsyncStorage.getItem('refreshToken');
+
+        console.log('Retrieved user:', storedUser);
+        console.log('Retrieved token:', storedToken);
+        console.log('Retrieved refresh token:', storedRefreshToken);
+
+        if (storedUser && storedToken && storedRefreshToken) {
           const parsedUser = JSON.parse(storedUser);
-          setState((prevState) => ({ ...prevState, user: parsedUser, userId: parsedUser._id }));
+          setState((prevState) => ({
+            ...prevState,
+            user: parsedUser,
+            userId: parsedUser._id,
+            token: storedToken,
+            refreshToken: storedRefreshToken,
+          }));
         }
       } catch (error) {
         console.error('Error retrieving user from storage:', error);
@@ -26,17 +40,86 @@ const AuthProvider = ({ children }) => {
     checkUser();
   }, []);
 
-  const login = (userData) => {
-    setState((prevState) => ({ ...prevState, user: userData, userId: userData._id }));
-    AsyncStorage.setItem('user', JSON.stringify(userData));
-  };  
+  const login = async (userData, token, refreshToken) => {
+    console.log('Login called with:', { userData, token, refreshToken });
 
-  const logout = () => {
-    setState((prevState) => ({ ...prevState, user: null, userId: null }));
-    AsyncStorage.removeItem('user');
+    if (!token || !refreshToken) {
+      console.error('Token or refresh token is undefined');
+      return;
+    }
+
+    setState((prevState) => ({
+      ...prevState,
+      user: userData,
+      userId: userData._id,
+      token,
+      refreshToken,
+    }));
+
+    try {
+      await AsyncStorage.setItem('user', JSON.stringify(userData));
+      await AsyncStorage.setItem('token', token);
+      await AsyncStorage.setItem('refreshToken', refreshToken);
+      console.log('User, token, and refresh token saved');
+    } catch (error) {
+      console.error('Error saving user data to storage:', error);
+    }
   };
 
-  const value = { user: state.user, userId: state.userId, login, logout };
+  const logout = async () => {
+    setState((prevState) => ({
+      ...prevState,
+      user: null,
+      userId: null,
+      token: null,
+      refreshToken: null,
+    }));
+    try {
+      await AsyncStorage.removeItem('user');
+      await AsyncStorage.removeItem('token');
+      await AsyncStorage.removeItem('refreshToken');
+      console.log('User data removed from storage');
+    } catch (error) {
+      console.error('Error removing user data from storage:', error);
+    }
+  };
+
+  const refreshAccessToken = async () => {
+    try {
+      console.log('Refreshing access token...');
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/refresh-token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ refreshToken: state.refreshToken }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to refresh token');
+      }
+
+      const data = await response.json();
+      const { token: newToken } = data;
+
+      setState((prevState) => ({ ...prevState, token: newToken }));
+      await AsyncStorage.setItem('token', newToken);
+      console.log('Access token refreshed');
+    } catch (error) {
+      console.error('Error refreshing access token:', error);
+      logout();
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refreshAccessToken();
+    }, 15 * 60 * 1000); // Refresh token every 15 minutes
+
+    return () => clearInterval(interval);
+  }, [state.refreshToken]);
+
+  const value = { user: state.user, userId: state.userId, token: state.token, login, logout, refreshAccessToken };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
