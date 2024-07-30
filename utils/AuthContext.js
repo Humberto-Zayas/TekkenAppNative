@@ -114,7 +114,7 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       refreshAccessToken();
-    }, 15 * 60 * 1000); // Refresh token every 15 minutes
+    }, 55 * 60 * 1000); // Refresh token every 55 minutes (5 minutes before it expires)
 
     return () => clearInterval(interval);
   }, [state.refreshToken]);
