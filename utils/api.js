@@ -151,8 +151,9 @@ export const createCard = async (cardData, token) => {
 };
 
 export const updateCard = async (cardData, token) => {
-  const cardId = cardData._id
-  console.log('cardData: ', cardData)
+  const cardId = cardData._id;
+  console.log('Token being sent:', token);
+
   try {
     const response = await fetch(`${REACT_APP_API_BASE_URL}/cards/edit/${cardId}`, {
       method: 'PUT',
@@ -173,3 +174,4 @@ export const updateCard = async (cardData, token) => {
     throw error;
   }
 };
+

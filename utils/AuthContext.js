@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {jwtDecode} from 'jwt-decode';
 
 const AuthContext = createContext();
 
@@ -10,6 +11,7 @@ const AuthProvider = ({ children }) => {
     token: null,
     refreshToken: null,
   });
+  console.log('user state from authcontext: ', state);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -31,6 +33,12 @@ const AuthProvider = ({ children }) => {
             token: storedToken,
             refreshToken: storedRefreshToken,
           }));
+
+          // Check if the access token is expired
+          const isTokenExpired = checkTokenExpiration(storedToken);
+          if (isTokenExpired) {
+            await refreshAccessToken(storedRefreshToken);
+          }
         }
       } catch (error) {
         console.error('Error retrieving user from storage:', error);
@@ -39,6 +47,12 @@ const AuthProvider = ({ children }) => {
 
     checkUser();
   }, []);
+
+  const checkTokenExpiration = (token) => {
+    const decodedToken = jwtDecode(token);
+    const currentTime = Date.now() / 1000;
+    return decodedToken.exp < currentTime;
+  };
 
   const login = async (userData, token, refreshToken) => {
     console.log('Login called with:', { userData, token, refreshToken });
@@ -84,7 +98,7 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const refreshAccessToken = async () => {
+  const refreshAccessToken = async (refreshToken) => {
     try {
       console.log('Refreshing access token...');
       const response = await fetch(`${REACT_APP_API_BASE_URL}/refresh-token`, {
@@ -92,7 +106,7 @@ const AuthProvider = ({ children }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ refreshToken: state.refreshToken }),
+        body: JSON.stringify({ refreshToken }),
       });
 
       if (!response.ok) {
@@ -113,7 +127,7 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      refreshAccessToken();
+      refreshAccessToken(state.refreshToken);
     }, 55 * 60 * 1000); // Refresh token every 55 minutes (5 minutes before it expires)
 
     return () => clearInterval(interval);

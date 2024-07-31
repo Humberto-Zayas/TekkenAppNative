@@ -14,7 +14,10 @@ import tags from '../../data/tags';
 import { createCard, updateCard } from '../../utils/api';
 
 const CreateCardComponent = ({ route, navigation }) => {
-  const { user } = useAuth();
+  const { user, token } = useAuth(); // Get user and token from useAuth
+  console.log('User:', user);
+  console.log('Token:', token); // Check if the token is available
+
   const { cardData: initialCardData, isEdit, characterName, characterImage } = route.params;
   const [showPunishers, setShowPunishers] = useState(false);
   const [showMoveFlowChart, setShowMoveFlowChart] = useState(false);
@@ -96,10 +99,10 @@ const CreateCardComponent = ({ route, navigation }) => {
 
     try {
       if (isEdit) {
-        await updateCard({ ...formData, _id: initialCardData._id }, user.token); // Include _id
+        await updateCard({ ...formData, _id: initialCardData._id }, token); // Pass token here
         Alert.alert('Success', 'Card updated successfully!', [{ text: 'OK', onPress: () => navigation.goBack() }], { cancelable: false });
       } else {
-        await createCard(formData, user.token);
+        await createCard(formData, token); // Pass token here
         Alert.alert('Success', 'Card created successfully!', [{ text: 'OK', onPress: () => navigation.goBack() }], { cancelable: false });
       }
     } catch (error) {
