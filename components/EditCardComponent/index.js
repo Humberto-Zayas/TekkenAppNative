@@ -6,7 +6,7 @@ import PunisherComponent from '../CreateCardComponent/PunisherComponent';
 import MoveFlowChartComponent from '../CreateCardComponent/MoveFlowChartComponent';
 import FollowUpsComponent from '../CreateCardComponent/FollowUpsComponent';
 import ComboComponent from '../CreateCardComponent/ComboComponent';
-import alisaFrameData from '../../data/alisaFrameData';
+import alisaFrameData from '../../data/AlisaFrameData';
 import { styles } from './styles';
 import { useAuth } from '../../utils/AuthContext';
 import { REACT_APP_API_BASE_URL } from '@env';

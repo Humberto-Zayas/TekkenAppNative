@@ -91,17 +91,30 @@ const CardListComponent = ({ route, navigation }) => {
     setCardMenuVisible(!isCardMenuVisible);
   };
 
+  const frameDataFiles = {
+    Alisa: require('../../data/AlisaFrameData.js').default,
+    Asuka: require('../../data/AsukaFrameData.js').default,
+    // Add more characters as needed
+  };
+
+  const loadFrameData = (characterName) => {
+    const sanitizedCharacterName = characterName.replace(/\s+/g, '');
+    return frameDataFiles[sanitizedCharacterName] || null;
+  };
+  
   const handleCreateCard = () => {
     setCardMenuVisible(false);
     if (!user) {
       setShowModal(true);
     } else {
+      const frameData = loadFrameData(name); // Load frame data based on the character name
       navigation.navigate('CreateCardComponent', {
         characterName: name,
         characterImage: image,
+        frameData, // Pass the frame data to the next component
       });
     }
-  };
+  };   
 
   const closeModal = () => {
     setShowModal(false);

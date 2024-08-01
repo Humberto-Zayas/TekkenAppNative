@@ -7,7 +7,6 @@ import MoveFlowChartComponent from './MoveFlowChartComponent';
 import FollowUpsComponent from './FollowUpsComponent';
 import ComboComponent from './ComboComponent';
 import ImportantMovesComponent from './ImportantMovesComponent';
-import alisaFrameData from '../../data/alisaFrameData';
 import { styles } from './styles';
 import { useAuth } from '../../utils/AuthContext';
 import tags from '../../data/tags';
@@ -15,10 +14,8 @@ import { createCard, updateCard } from '../../utils/api';
 
 const CreateCardComponent = ({ route, navigation }) => {
   const { user, token } = useAuth(); // Get user and token from useAuth
-  console.log('User:', user);
-  console.log('Token:', token); // Check if the token is available
-
-  const { cardData: initialCardData, isEdit, characterName, characterImage } = route.params;
+  const { cardData: initialCardData, isEdit, characterName, characterImage, frameData } = route.params;
+  console.log('frame data: ', frameData)
   const [showPunishers, setShowPunishers] = useState(false);
   const [showMoveFlowChart, setShowMoveFlowChart] = useState(false);
   const [showFollowUps, setShowFollowUps] = useState(false);
@@ -158,7 +155,7 @@ const CreateCardComponent = ({ route, navigation }) => {
           onClose={() => setShowPunishers(false)}
           setPunisherData={setPunisherData}
           punisherData={punisherData}
-          frameData={alisaFrameData}
+          frameData={frameData}
         />
       </Modal>
 
@@ -167,7 +164,7 @@ const CreateCardComponent = ({ route, navigation }) => {
           onClose={() => setShowMoveFlowChart(false)}
           setMoveFlowChartData={setMoveFlowChartData}
           moveFlowChartData={moveFlowChartData}
-          frameData={alisaFrameData}
+          frameData={frameData}
         />
       </Modal>
 
@@ -176,7 +173,7 @@ const CreateCardComponent = ({ route, navigation }) => {
           onClose={() => setShowFollowUps(false)}
           setFollowUpData={setFollowUpData}
           followUpData={followUpData}
-          frameData={alisaFrameData}
+          frameData={frameData}
         />
       </Modal>
 
@@ -185,7 +182,7 @@ const CreateCardComponent = ({ route, navigation }) => {
           onClose={() => setShowCombos(false)}
           setComboData={setComboData}
           comboData={comboData}
-          frameData={alisaFrameData}
+          frameData={frameData}
         />
       </Modal>
 
@@ -194,7 +191,7 @@ const CreateCardComponent = ({ route, navigation }) => {
           onClose={() => setShowImportantMoves(false)}
           setImportantMoveData={setImportantMoveData}
           importantMoveData={importantMoveData}
-          frameData={alisaFrameData}
+          frameData={frameData}
         />
       </Modal>
 
