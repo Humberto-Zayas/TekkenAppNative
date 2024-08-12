@@ -22,7 +22,6 @@ const MoveDetailsModal = ({ detailMove, setDetailMove }) => {
         {detailMove && (
           <ScrollView style={styles.moveDetails}>
             {renderDetailRow('Move', detailMove.move)}
-            {renderDetailRow('Description', detailMove.description)}
             {renderDetailRow('Hit Level', detailMove.hitLevel)}
             {renderDetailRow('Damage', Array.isArray(detailMove.damage) ? detailMove.damage.join(', ') : detailMove.damage)}
             {renderDetailRow('Startup Frame', detailMove.startupFrame)}

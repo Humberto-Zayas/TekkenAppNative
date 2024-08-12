@@ -11,7 +11,6 @@ const AuthProvider = ({ children }) => {
     token: null,
     refreshToken: null,
   });
-  console.log('user state from authcontext: ', state);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -19,10 +18,6 @@ const AuthProvider = ({ children }) => {
         const storedUser = await AsyncStorage.getItem('user');
         const storedToken = await AsyncStorage.getItem('token');
         const storedRefreshToken = await AsyncStorage.getItem('refreshToken');
-
-        console.log('Retrieved user:', storedUser);
-        console.log('Retrieved token:', storedToken);
-        console.log('Retrieved refresh token:', storedRefreshToken);
 
         if (storedUser && storedToken && storedRefreshToken) {
           const parsedUser = JSON.parse(storedUser);
@@ -55,7 +50,6 @@ const AuthProvider = ({ children }) => {
   };
 
   const login = async (userData, token, refreshToken) => {
-    console.log('Login called with:', { userData, token, refreshToken });
 
     if (!token || !refreshToken) {
       console.error('Token or refresh token is undefined');

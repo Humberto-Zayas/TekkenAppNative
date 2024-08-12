@@ -36,7 +36,7 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
         <FontAwesome name="times" size={20} color="black" />
       </TouchableOpacity>
       <Text style={styles.header}>Punishers</Text>
-      <MoveTableHeader firstHeader='Move' secondHeader='Description' />
+      <MoveTableHeader firstHeader='Move' secondHeader='Start Up' />
       <FlatList
         style={styles.flatList}
         data={punisherData}

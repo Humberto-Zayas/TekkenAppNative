@@ -18,7 +18,7 @@ const MoveTableRow = ({ item, index, onMovePress, onDelete }) => (
   <TouchableOpacity onPress={() => onMovePress(item)}>
     <View style={styles.tableRow}>
       <Text style={styles.columnLeft}>{item.move}</Text>
-      <Text style={styles.column}>{item.description}</Text>
+      <Text style={styles.column}>{item.startupFrame}</Text>
       <TouchableOpacity style={styles.deleteIcon} onPress={() => onDelete(index)}>
         <FontAwesome name="trash" size={20} color="red" />
       </TouchableOpacity>

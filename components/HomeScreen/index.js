@@ -1,12 +1,10 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import { characters } from '../../data/characters';
 import { useAuth } from '../../utils/AuthContext';
 
 const HomeScreen = ({ navigation }) => {
   const { user } = useAuth();
-
-  console.log('homescreen component user: ', user)
 
   return (
     <View style={styles.container}>
@@ -14,18 +12,18 @@ const HomeScreen = ({ navigation }) => {
       <Text style={styles.userStatus}>
         {user ? `Logged In as ${user.username}` : 'Not Logged In'}
       </Text>
-      <View style={styles.gridContainer}>
+      <ScrollView contentContainerStyle={styles.gridContainer}>
         {characters.map((character) => (
           <TouchableOpacity
             key={character.id}
             style={styles.box}
             onPress={() => navigation.navigate('CardList', { character })}
           >
-            <Image source={character.image} style={{ width: 60, height: 60, borderRadius: 10 }} />
+            <Image source={character.image} style={{ width: 72, height: 72, borderRadius: 8 }} />
             <Text>{character.name}</Text>
           </TouchableOpacity>
         ))}
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -52,27 +50,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    padding: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    marginBottom: 20,
+    paddingBottom: 40
   },
   userStatus: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginTop: 16,
+    marginBottom: 16,
   },
   box: {
     alignItems: 'center',
-    margin: 10,
+    margin: 8,
   },
 });
 

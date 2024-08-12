@@ -25,7 +25,7 @@ const CreateCardDetailComponent = ({ route, navigation }) => {
               <Text>{item.move}</Text>
             </View>
             <View style={styles.column}>
-              <Text>{item.description}</Text>
+              <Text>{item.startupFrame}</Text>
             </View>
           </View>
         </TouchableOpacity>

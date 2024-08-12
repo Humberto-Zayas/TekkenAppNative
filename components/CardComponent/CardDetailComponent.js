@@ -51,7 +51,7 @@ const CardDetailComponent = ({ route, navigation }) => {
           <Text>{move.move}</Text>
         </View>
         <View style={styles.column}>
-          <Text>{move.description}</Text>
+          <Text>{move.startupFrame}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -102,7 +102,7 @@ const CardDetailComponent = ({ route, navigation }) => {
               <Text style={styles.headerText}>Move</Text>
             </View>
             <View style={styles.column}>
-              <Text style={styles.headerText}>Description</Text>
+              <Text style={styles.headerText}>Start Frames</Text>
             </View>
           </View>
         );

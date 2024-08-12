@@ -59,6 +59,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 64,
     padding: 16,
+    paddingBottom: 200
   },
   modalContent: {
     width: '80%',

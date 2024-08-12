@@ -38,12 +38,11 @@ const ModalComponent = ({ selectedItem, closeDrawer }) => {
           ) : (
             <View style={styles.additionalDataContainer}>
               <Text style={styles.modalTitle}>{selectedItem?.move}</Text>
-              <Text style={styles.modalDescription}>{selectedItem?.description}</Text>
               <Text style={styles.additionalData}>Hit Level: {selectedItem?.hitLevel}</Text>
               <Text style={styles.additionalData}>
                 Damage: {selectedItem?.damage ? selectedItem.damage.join(', ') : ''}
               </Text>
-              <Text style={styles.additionalData}>Start up frame: {selectedItem?.startUpFrame}</Text>
+              <Text style={styles.additionalData}>Start up frame: {selectedItem?.startupFrame}</Text>
               <Text style={styles.additionalData}>Block frame: {selectedItem?.blockFrame}</Text>
               <Text style={styles.additionalData}>Hit frame: {selectedItem?.hitFrame}</Text>
               <Text style={styles.additionalData}>Counter hit frame: {selectedItem?.counterHitFrame}</Text>

@@ -94,7 +94,35 @@ const CardListComponent = ({ route, navigation }) => {
   const frameDataFiles = {
     Alisa: require('../../data/AlisaFrameData.js').default,
     Asuka: require('../../data/AsukaFrameData.js').default,
-    // Add more characters as needed
+    Azucena: require('../../data/AzucenaFrameData.js').default,
+    Bryan: require('../../data/BryanFrameData.js').default,
+    Claudio: require('../../data/ClaudioFrameData.js').default,
+    Devil_Jin: require('../../data/Devil_JinFrameData.js').default,
+    Dragunov: require('../../data/DragunovFrameData.js').default,
+    Eddy: require('../../data/EddyFrameData.js').default,
+    Feng: require('../../data/FengFrameData.js').default,
+    Hwoarang: require('../../data/HwoarangFrameData.js').default,
+    Jin: require('../../data/JinFrameData.js').default,
+    Jun: require('../../data/JunFrameData.js').default,
+    Kazuya: require('../../data/KazuyaFrameData.js').default,
+    King: require('../../data/KingFrameData.js').default,
+    Kuma: require('../../data/KumaFrameData.js').default,
+    Lars: require('../../data/LarsFrameData.js').default,
+    Law: require('../../data/LawFrameData.js').default,
+    Lee: require('../../data/LeeFrameData.js').default,
+    Lili: require('../../data/LiliFrameData.js').default,
+    Nina: require('../../data/NinaFrameData.js').default,
+    Panda: require('../../data/PandaFrameData.js').default,
+    Paul: require('../../data/PaulFrameData.js').default,
+    Raven: require('../../data/RavenFrameData.js').default,
+    Reina: require('../../data/ReinaFrameData.js').default,
+    Shaheen: require('../../data/ShaheenFrameData.js').default,
+    Steve: require('../../data/SteveFrameData.js').default,
+    Victor: require('../../data/VictorFrameData.js').default,
+    Xiaoyu: require('../../data/XiaoyuFrameData.js').default,
+    Yoshimitsu: require('../../data/YoshimitsuFrameData.js').default,
+    Zafina: require('../../data/ZafinaFrameData.js').default,
+
   };
 
   const loadFrameData = (characterName) => {
