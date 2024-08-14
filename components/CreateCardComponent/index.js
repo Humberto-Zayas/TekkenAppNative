@@ -15,7 +15,6 @@ import { createCard, updateCard } from '../../utils/api';
 const CreateCardComponent = ({ route, navigation }) => {
   const { user, token } = useAuth(); // Get user and token from useAuth
   const { cardData: initialCardData, isEdit, characterName, characterImage, frameData } = route.params;
-  console.log('frame data: ', frameData)
   const [showPunishers, setShowPunishers] = useState(false);
   const [showMoveFlowChart, setShowMoveFlowChart] = useState(false);
   const [showFollowUps, setShowFollowUps] = useState(false);

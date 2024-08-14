@@ -3,43 +3,51 @@ const rawZafinaFrameData = [
     "input": "2+3",
     "hitLevel": "m",
     "damage": "",
-    "startupFrame": "",
+    "startupFrame": "16",
     "blockFrame": 1,
     "hitFrame": "+2c",
-    "counterHitFrame": ""
+    "counterHitFrame": "",
+    "type: ": "heat",
+    "specialProperties": ["heat burst", "armor"]
   },
   {
-    "input": "H.SCR.2+3",
+    "input": "SCR 2+3",
     "hitLevel": "l,m",
     "damage": "10,20",
-    "startupFrame": "i19",
+    "startupFrame": "19",
     "blockFrame": -14,
     "hitFrame": "+44d (+25)",
-    "counterHitFrame": ""
+    "counterHitFrame": "",
+    "type: ": "heat",
+    "specialProperties": ["heat smash"]
   },
   {
-    "input": "H.2+3",
+    "input": "HS 2+3",
     "hitLevel": "h,sm",
     "damage": "15,4,5,5,4,18",
-    "startupFrame": "i12~13 i47~53 i1~7 i1~7 i1~6 i1~2",
+    "startupFrame": "12~13",
     "blockFrame": 3,
     "hitFrame": "+0d",
-    "counterHitFrame": ""
+    "counterHitFrame": "",
+    "type: ": "heat",
+    "specialProperties": ["heat smash"]
   },
   {
-    "input": "R.df+1+2",
+    "input": "RA",
     "hitLevel": "m,t",
     "damage": 55,
-    "startupFrame": "i20",
+    "startupFrame": "20",
     "blockFrame": -15,
     "hitFrame": "+0d",
-    "counterHitFrame": ""
+    "type: ": "rage art",
+    "counterHitFrame": "",
+    "specialProperties": ["armor"]
   },
   {
     "input": 1,
     "hitLevel": "h",
     "damage": 5,
-    "startupFrame": "i10",
+    "startupFrame": "10",
     "blockFrame": 1,
     "hitFrame": 8,
     "counterHitFrame": ""
@@ -48,43 +56,64 @@ const rawZafinaFrameData = [
     "input": "1,2",
     "hitLevel": "h,h",
     "damage": "5,9",
-    "startupFrame": "i12",
+    "startupFrame": "12",
     "blockFrame": -3,
     "hitFrame": 8,
     "counterHitFrame": ""
   },
   {
-    "input": "1,2,3",
+    "input": "1,2,3 (SCR)",
     "hitLevel": "h,h,h",
     "damage": "5,9,12",
-    "startupFrame": "i20",
+    "startupFrame": "20",
     "blockFrame": 0,
     "hitFrame": 9,
-    "counterHitFrame": ""
+    "counterHitFrame": "",
+    "specialProperties": ["stance entry"]
   },
   {
-    "input": "1,3",
+    "input": "1,2,3b",
+    "hitLevel": "h,h,h",
+    "damage": "5,9,12",
+    "startupFrame": "20",
+    "blockFrame": 0,
+    "hitFrame": 9,
+    "counterHitFrame": "",
+  },
+  {
+    "input": "1,3 (SCR)",
     "hitLevel": "h,h",
     "damage": "5,14",
-    "startupFrame": "i17~18",
+    "startupFrame": "17~18",
     "blockFrame": -2,
     "hitFrame": 7,
-    "counterHitFrame": ""
+    "counterHitFrame": "",
+    "specialProperties": ["stance entry"]
   },
   {
-    "input": "1,4",
-    "hitLevel": "h,m",
+    "input": "1,3b",
+    "hitLevel": "h,h",
+    "damage": "5,14",
+    "startupFrame": "17~18",
+    "blockFrame": -2,
+    "hitFrame": 7,
+    "counterHitFrame": "",
+  },
+  {
+    "input": "1,4 (TRT)",
+    "hitLevel": "h, m (TRT)",
     "damage": "5,17",
-    "startupFrame": "i19",
+    "startupFrame": "10",
     "blockFrame": -5,
     "hitFrame": 22,
-    "counterHitFrame": "+53a"
+    "counterHitFrame": 22,
+    "specialProperties": ["tornado", "ch launch", "stance entry"]
   },
   {
     "input": 2,
     "hitLevel": "h",
     "damage": 8,
-    "startupFrame": "i10",
+    "startupFrame": "10",
     "blockFrame": -7,
     "hitFrame": -1,
     "counterHitFrame": ""
@@ -93,17 +122,27 @@ const rawZafinaFrameData = [
     "input": "2,1",
     "hitLevel": "h,m",
     "damage": "8,9",
-    "startupFrame": "i23~25",
+    "startupFrame": "10",
     "blockFrame": "-6c",
     "hitFrame": 2,
     "counterHitFrame": ""
   },
   {
-    "input": "2,1,3",
-    "hitLevel": "h,m,l",
+    "input": "2,1,3(MNT)",
+    "hitLevel": "h,m,l (MNT)",
     "damage": "8,9,11",
-    "startupFrame": "i32",
+    "startupFrame": "10",
     "blockFrame": -17,
+    "hitFrame": "+4d",
+    "counterHitFrame": "",
+    "specialProperties": ["stance entry"]
+  },
+  {
+    "input": "2,1,3d",
+    "hitLevel": "h,m (MNT)",
+    "damage": "8,9",
+    "startupFrame": "10",
+    "blockFrame": "",
     "hitFrame": "+4d",
     "counterHitFrame": ""
   },
@@ -111,7 +150,7 @@ const rawZafinaFrameData = [
     "input": "2,2",
     "hitLevel": "h,m",
     "damage": "8,12",
-    "startupFrame": "i19-20",
+    "startupFrame": "10",
     "blockFrame": -9,
     "hitFrame": 2,
     "counterHitFrame": 7
@@ -120,16 +159,25 @@ const rawZafinaFrameData = [
     "input": "2,2,1+2",
     "hitLevel": "h,m,m,m,m",
     "damage": "8,12,7,11,14",
-    "startupFrame": "i25~26 i10~11 i4~5",
+    "startupFrame": "10",
     "blockFrame": -9,
     "hitFrame": "+19d(-16)",
     "counterHitFrame": ""
   },
   {
-    "input": 3,
+    "input": "3 (SCR)",
+    "hitLevel": "h (SCR)",
+    "damage": 17,
+    "startupFrame": "13",
+    "blockFrame": 0,
+    "hitFrame": 9,
+    "counterHitFrame": ""
+  },
+  {
+    "input": "3b",
     "hitLevel": "h",
     "damage": 17,
-    "startupFrame": "i13",
+    "startupFrame": "13",
     "blockFrame": 0,
     "hitFrame": 9,
     "counterHitFrame": ""
@@ -138,7 +186,7 @@ const rawZafinaFrameData = [
     "input": 4,
     "hitLevel": "h",
     "damage": 19,
-    "startupFrame": "i14~15",
+    "startupFrame": "14~15",
     "blockFrame": -6,
     "hitFrame": -1,
     "counterHitFrame": "+19a(+10)"
@@ -147,79 +195,106 @@ const rawZafinaFrameData = [
     "input": "1+2",
     "hitLevel": "m",
     "damage": 17,
-    "startupFrame": "i16~17",
+    "startupFrame": "16~17",
     "blockFrame": -12,
     "hitFrame": 4,
-    "counterHitFrame": "+24a"
+    "counterHitFrame": "+24a",
+    "specialProperties": ["ch launch"]
   },
   {
     "input": "1+2,4",
     "hitLevel": "m,m",
     "damage": "17,10",
-    "startupFrame": "i24~25",
+    "startupFrame": "16~17",
     "blockFrame": -10,
     "hitFrame": 1,
-    "counterHitFrame": 6
+    "counterHitFrame": 6,
+    "specialProperties": ["ch launch"]
   },
   {
     "input": "1+2,4,4",
     "hitLevel": "m,m,m",
     "damage": "17,10,12",
-    "startupFrame": "i30~31",
+    "startupFrame": "16~17",
     "blockFrame": -11,
     "hitFrame": "+19d",
-    "counterHitFrame": ""
+    "counterHitFrame": "",
+    "specialProperties": ["ch launch"]
   },
   {
-    "input": "3+4",
+    "input": "3+4 (SCR)",
     "hitLevel": "",
     "damage": "",
     "startupFrame": "",
     "blockFrame": "",
     "hitFrame": "",
-    "counterHitFrame": ""
+    "counterHitFrame": "",
+    "specialProperties": ["stance entry"]
   },
   {
     "input": "f+2",
     "hitLevel": "m",
     "damage": 17,
-    "startupFrame": "i19",
+    "startupFrame": "19",
     "blockFrame": -18,
     "hitFrame": -9,
-    "counterHitFrame": "+52a"
+    "counterHitFrame": "+52a",
+    "specialProperties": ["ch launch"]
   },
   {
-    "input": "f+2,3",
-    "hitLevel": "m,h",
+    "input": "f+2,3 (SCR)",
+    "hitLevel": "m,h (SCR)",
     "damage": "17,12",
-    "startupFrame": "i19",
+    "startupFrame": "19",
     "blockFrame": 0,
     "hitFrame": 9,
-    "counterHitFrame": ""
+    "counterHitFrame": "",
+    "specialProperties": ["ch launch", "stance entry"]
+  },
+  {
+    "input": "f+2,3b",
+    "hitLevel": "m,h",
+    "damage": "17,12",
+    "startupFrame": "19",
+    "blockFrame": 0,
+    "hitFrame": 9,
+    "counterHitFrame": "",
+    "specialProperties": ["ch launch"]
   },
   {
     "input": "f+2,3,4",
     "hitLevel": "m,h,m",
     "damage": "17,12,25",
-    "startupFrame": "i28~29",
+    "startupFrame": "28~29",
     "blockFrame": -18,
     "hitFrame": "+18d(8)",
     "counterHitFrame": ""
   },
   {
-    "input": "f+3",
-    "hitLevel": "h",
+    "input": "f+3 (SCR)",
+    "hitLevel": "h (SCR)",
     "damage": 28,
-    "startupFrame": "i21",
+    "startupFrame": "21",
     "blockFrame": 3,
     "hitFrame": "+68a(48)",
-    "counterHitFrame": ""
+    "counterHitFrame": "",
+    "specialProperties": ["launch"]
+  },
+  {
+    "input": "f+3b",
+    "hitLevel": "h",
+    "damage": 28,
+    "startupFrame": "21",
+    "blockFrame": 3,
+    "hitFrame": "+68a(48)",
+    "counterHitFrame": "",
+    "specialProperties": ["launch"]
   },
   {
     "input": "f+4",
     "hitLevel": "h",
     "damage": 13,
-    "startupFrame": "i14~15",
+    "startupFrame": "14~15",
     "blockFrame": -6,
     "hitFrame": "+22a",
     "counterHitFrame": ""
@@ -228,16 +303,17 @@ const rawZafinaFrameData = [
     "input": "f+1+2",
     "hitLevel": "m,m",
     "damage": "16,22",
-    "startupFrame": "i19~20 i13~14",
+    "startupFrame": "19~20",
     "blockFrame": -9,
     "hitFrame": "+5d(-5)",
-    "counterHitFrame": ""
+    "counterHitFrame": "",
+    "specialProperties": ["heat engager"]
   },
   {
     "input": "df+1",
     "hitLevel": "m",
     "damage": 10,
-    "startupFrame": "i13~14",
+    "startupFrame": "13~14",
     "blockFrame": -5,
     "hitFrame": 7,
     "counterHitFrame": ""
@@ -246,7 +322,7 @@ const rawZafinaFrameData = [
     "input": "df+1,2",
     "hitLevel": "m,m",
     "damage": "10,16",
-    "startupFrame": "i15~16",
+    "startupFrame": "13~14",
     "blockFrame": -13,
     "hitFrame": 3,
     "counterHitFrame": ""
@@ -255,7 +331,16 @@ const rawZafinaFrameData = [
     "input": "df+1,2,1",
     "hitLevel": "m,m,m",
     "damage": "10,16,20",
-    "startupFrame": "i25",
+    "startupFrame": "13~14",
+    "blockFrame": -13,
+    "hitFrame": "+23d(13)",
+    "counterHitFrame": ""
+  },
+  {
+    "input": "df+1,2, delay 1",
+    "hitLevel": "m,m,m",
+    "damage": "10,16,20",
+    "startupFrame": "13~14",
     "blockFrame": -13,
     "hitFrame": "+23d(13)",
     "counterHitFrame": ""
@@ -264,7 +349,7 @@ const rawZafinaFrameData = [
     "input": "df+1,4",
     "hitLevel": "m,h",
     "damage": "10,18",
-    "startupFrame": "i19~20",
+    "startupFrame": "19~20",
     "blockFrame": -6,
     "hitFrame": "+12g",
     "counterHitFrame": ""
@@ -273,7 +358,7 @@ const rawZafinaFrameData = [
     "input": "df+2",
     "hitLevel": "m",
     "damage": 13,
-    "startupFrame": "i16~17",
+    "startupFrame": "16~17",
     "blockFrame": -12,
     "hitFrame": "+32a (+22)",
     "counterHitFrame": ""
@@ -282,7 +367,7 @@ const rawZafinaFrameData = [
     "input": "df+3",
     "hitLevel": "m",
     "damage": 15,
-    "startupFrame": "i15~16",
+    "startupFrame": "15~16",
     "blockFrame": -5,
     "hitFrame": 4,
     "counterHitFrame": ""
@@ -291,7 +376,7 @@ const rawZafinaFrameData = [
     "input": "df+3,4",
     "hitLevel": "m,h",
     "damage": "15,17",
-    "startupFrame": "i23~24",
+    "startupFrame": "23~24",
     "blockFrame": -6,
     "hitFrame": "+22a",
     "counterHitFrame": "+55a"
@@ -300,7 +385,7 @@ const rawZafinaFrameData = [
     "input": "df+3,d+4",
     "hitLevel": "m,l",
     "damage": "15,15",
-    "startupFrame": "i25~26",
+    "startupFrame": "25~26",
     "blockFrame": -14,
     "hitFrame": "+1c",
     "counterHitFrame": ""
@@ -309,7 +394,7 @@ const rawZafinaFrameData = [
     "input": "df+4",
     "hitLevel": "m",
     "damage": 14,
-    "startupFrame": "i14",
+    "startupFrame": "14",
     "blockFrame": -13,
     "hitFrame": 3,
     "counterHitFrame": ""
@@ -318,7 +403,7 @@ const rawZafinaFrameData = [
     "input": "df+4,1",
     "hitLevel": "m,m",
     "damage": "14,22",
-    "startupFrame": "i31",
+    "startupFrame": "31",
     "blockFrame": -12,
     "hitFrame": "+3d",
     "counterHitFrame": ""
@@ -327,7 +412,7 @@ const rawZafinaFrameData = [
     "input": "df+4,2",
     "hitLevel": "m,m",
     "damage": "14,20",
-    "startupFrame": "i27~29",
+    "startupFrame": "27~29",
     "blockFrame": -13,
     "hitFrame": "+24a(+9)",
     "counterHitFrame": ""
@@ -336,7 +421,7 @@ const rawZafinaFrameData = [
     "input": "df+2+3",
     "hitLevel": "m",
     "damage": 20,
-    "startupFrame": "i36~37",
+    "startupFrame": "36~37",
     "blockFrame": -9,
     "hitFrame": "+60a",
     "counterHitFrame": ""
@@ -345,7 +430,7 @@ const rawZafinaFrameData = [
     "input": "d+1",
     "hitLevel": "m",
     "damage": "",
-    "startupFrame": "i12",
+    "startupFrame": "12",
     "blockFrame": -16,
     "hitFrame": -8,
     "counterHitFrame": "-3c"
@@ -354,7 +439,7 @@ const rawZafinaFrameData = [
     "input": "d+1,1",
     "hitLevel": "m,m",
     "damage": "",
-    "startupFrame": "i17~18",
+    "startupFrame": "17~18",
     "blockFrame": -12,
     "hitFrame": "+19a(+12)",
     "counterHitFrame": "+28a(+22)"
@@ -363,7 +448,7 @@ const rawZafinaFrameData = [
     "input": "d+2",
     "hitLevel": "m",
     "damage": 17,
-    "startupFrame": "i19~20",
+    "startupFrame": "19~20",
     "blockFrame": "-16c",
     "hitFrame": "-3c",
     "counterHitFrame": "+17d"
@@ -372,7 +457,7 @@ const rawZafinaFrameData = [
     "input": "d+2,4",
     "hitLevel": "m,m",
     "damage": "17,10",
-    "startupFrame": "i26",
+    "startupFrame": "26",
     "blockFrame": -22,
     "hitFrame": -4,
     "counterHitFrame": "-4c"
@@ -381,7 +466,7 @@ const rawZafinaFrameData = [
     "input": "d+2,4,3",
     "hitLevel": "m,m,m",
     "damage": "17,10,10",
-    "startupFrame": "i28~31",
+    "startupFrame": "28~31",
     "blockFrame": -12,
     "hitFrame": "+18a",
     "counterHitFrame": ""
@@ -390,7 +475,7 @@ const rawZafinaFrameData = [
     "input": "d+3",
     "hitLevel": "l",
     "damage": 14,
-    "startupFrame": "i22",
+    "startupFrame": "22",
     "blockFrame": -15,
     "hitFrame": "+5c",
     "counterHitFrame": "+20a"
@@ -399,7 +484,7 @@ const rawZafinaFrameData = [
     "input": "d+4",
     "hitLevel": "l",
     "damage": 8,
-    "startupFrame": "i17~18",
+    "startupFrame": "17~18",
     "blockFrame": -19,
     "hitFrame": -3,
     "counterHitFrame": 7
@@ -408,7 +493,7 @@ const rawZafinaFrameData = [
     "input": "d+4,3",
     "hitLevel": "l,h",
     "damage": "8,10",
-    "startupFrame": "i19",
+    "startupFrame": "19",
     "blockFrame": -6,
     "hitFrame": "+36a(+26)",
     "counterHitFrame": ""
@@ -435,7 +520,7 @@ const rawZafinaFrameData = [
     "input": "db+2",
     "hitLevel": "m",
     "damage": 17,
-    "startupFrame": "i13~14",
+    "startupFrame": "13~14",
     "blockFrame": -9,
     "hitFrame": 3,
     "counterHitFrame": "+16a"
@@ -444,7 +529,7 @@ const rawZafinaFrameData = [
     "input": "db+3",
     "hitLevel": "l",
     "damage": 13,
-    "startupFrame": "i18",
+    "startupFrame": "18",
     "blockFrame": -8,
     "hitFrame": 3,
     "counterHitFrame": ""
@@ -453,7 +538,7 @@ const rawZafinaFrameData = [
     "input": "db+4",
     "hitLevel": "l",
     "damage": 14,
-    "startupFrame": "i21~22",
+    "startupFrame": "21~22",
     "blockFrame": -12,
     "hitFrame": -3,
     "counterHitFrame": 3
@@ -462,7 +547,7 @@ const rawZafinaFrameData = [
     "input": "db+4,2",
     "hitLevel": "l,m",
     "damage": "14,17",
-    "startupFrame": "i29~32",
+    "startupFrame": "29~32",
     "blockFrame": -13,
     "hitFrame": "+68a(+52)",
     "counterHitFrame": ""
@@ -471,7 +556,7 @@ const rawZafinaFrameData = [
     "input": "db+1+2",
     "hitLevel": "l",
     "damage": 10,
-    "startupFrame": "i28~29",
+    "startupFrame": "28~29",
     "blockFrame": -16,
     "hitFrame": "+15a",
     "counterHitFrame": ""
@@ -480,7 +565,7 @@ const rawZafinaFrameData = [
     "input": "db+1+2,1+2",
     "hitLevel": "l,m",
     "damage": "10,20",
-    "startupFrame": "i33",
+    "startupFrame": "33",
     "blockFrame": -16,
     "hitFrame": "+5a(-4)",
     "counterHitFrame": "+37a(-10)"
@@ -489,7 +574,7 @@ const rawZafinaFrameData = [
     "input": "b+1",
     "hitLevel": "m",
     "damage": 14,
-    "startupFrame": "i18",
+    "startupFrame": "18",
     "blockFrame": -14,
     "hitFrame": 2,
     "counterHitFrame": ""
@@ -507,7 +592,7 @@ const rawZafinaFrameData = [
     "input": "b+1+3",
     "hitLevel": "m,m",
     "damage": "5,35",
-    "startupFrame": "i6",
+    "startupFrame": "6",
     "blockFrame": "",
     "hitFrame": "+12d",
     "counterHitFrame": ""
@@ -516,7 +601,7 @@ const rawZafinaFrameData = [
     "input": "b+2",
     "hitLevel": "h",
     "damage": 22,
-    "startupFrame": "i22~23",
+    "startupFrame": "22~23",
     "blockFrame": -5,
     "hitFrame": 12,
     "counterHitFrame": ""
@@ -525,7 +610,7 @@ const rawZafinaFrameData = [
     "input": "b+3",
     "hitLevel": "m",
     "damage": 23,
-    "startupFrame": "i24~26",
+    "startupFrame": "24~26",
     "blockFrame": -14,
     "hitFrame": "+12d",
     "counterHitFrame": ""
@@ -534,7 +619,7 @@ const rawZafinaFrameData = [
     "input": "b+4",
     "hitLevel": "m",
     "damage": 14,
-    "startupFrame": "i22~23",
+    "startupFrame": "22~23",
     "blockFrame": -9,
     "hitFrame": 4,
     "counterHitFrame": ""
@@ -543,7 +628,7 @@ const rawZafinaFrameData = [
     "input": "b+4,4",
     "hitLevel": "m,m",
     "damage": "14,20",
-    "startupFrame": "i20~22",
+    "startupFrame": "20~22",
     "blockFrame": -14,
     "hitFrame": "+9a(0)",
     "counterHitFrame": ""
@@ -552,7 +637,7 @@ const rawZafinaFrameData = [
     "input": "b+2+3",
     "hitLevel": "m!",
     "damage": 40,
-    "startupFrame": "i64",
+    "startupFrame": "64",
     "blockFrame": "!",
     "hitFrame": "+41a(+10)",
     "counterHitFrame": ""
@@ -561,7 +646,7 @@ const rawZafinaFrameData = [
     "input": "uf+1",
     "hitLevel": "h",
     "damage": 19,
-    "startupFrame": "i19",
+    "startupFrame": "19",
     "blockFrame": 4,
     "hitFrame": 9,
     "counterHitFrame": ""
@@ -570,7 +655,7 @@ const rawZafinaFrameData = [
     "input": "uf+3",
     "hitLevel": "m",
     "damage": 25,
-    "startupFrame": "i22~23",
+    "startupFrame": "22~23",
     "blockFrame": -8,
     "hitFrame": "+17d",
     "counterHitFrame": ""
@@ -579,7 +664,7 @@ const rawZafinaFrameData = [
     "input": "uf+4",
     "hitLevel": "m",
     "damage": 18,
-    "startupFrame": "i17~18",
+    "startupFrame": "17~18",
     "blockFrame": -13,
     "hitFrame": "+29a(19)",
     "counterHitFrame": ""
@@ -597,7 +682,7 @@ const rawZafinaFrameData = [
     "input": "f,F+2",
     "hitLevel": "h",
     "damage": 20,
-    "startupFrame": "i15~16",
+    "startupFrame": "15~16",
     "blockFrame": 1,
     "hitFrame": "+21a(12)",
     "counterHitFrame": "+38a"
@@ -606,7 +691,7 @@ const rawZafinaFrameData = [
     "input": "f,F+3",
     "hitLevel": "m",
     "damage": 20,
-    "startupFrame": "i20~22",
+    "startupFrame": "20~22",
     "blockFrame": 4,
     "hitFrame": "+9c",
     "counterHitFrame": "+14c"
@@ -615,7 +700,7 @@ const rawZafinaFrameData = [
     "input": "f,F+3,1",
     "hitLevel": "m,m",
     "damage": 20,
-    "startupFrame": "i18",
+    "startupFrame": "18",
     "blockFrame": -16,
     "hitFrame": "+5d",
     "counterHitFrame": ""
@@ -624,7 +709,7 @@ const rawZafinaFrameData = [
     "input": "f,F+4",
     "hitLevel": "m",
     "damage": 20,
-    "startupFrame": "i17~19",
+    "startupFrame": "17~19",
     "blockFrame": -8,
     "hitFrame": "+18a(+9)",
     "counterHitFrame": ""
@@ -633,7 +718,7 @@ const rawZafinaFrameData = [
     "input": "f,F+3+4",
     "hitLevel": "m,m",
     "damage": "10,21",
-    "startupFrame": "i21 i8~12",
+    "startupFrame": "21 i8~12",
     "blockFrame": -11,
     "hitFrame": "+15a(+6)",
     "counterHitFrame": ""
@@ -642,7 +727,7 @@ const rawZafinaFrameData = [
     "input": "wr4",
     "hitLevel": "l",
     "damage": 21,
-    "startupFrame": "i14~30",
+    "startupFrame": "14~30",
     "blockFrame": -52,
     "hitFrame": "-7d",
     "counterHitFrame": ""
@@ -651,7 +736,7 @@ const rawZafinaFrameData = [
     "input": "f,f,F+3",
     "hitLevel": "m",
     "damage": 30,
-    "startupFrame": "i23~26",
+    "startupFrame": "23~26",
     "blockFrame": 7,
     "hitFrame": "+19a(9)",
     "counterHitFrame": ""
@@ -660,7 +745,7 @@ const rawZafinaFrameData = [
     "input": "f,f,F+1+2",
     "hitLevel": "h",
     "damage": 20,
-    "startupFrame": "i20~24",
+    "startupFrame": "20~24",
     "blockFrame": 8,
     "hitFrame": "+32a",
     "counterHitFrame": ""
@@ -669,7 +754,7 @@ const rawZafinaFrameData = [
     "input": "ws1",
     "hitLevel": "m",
     "damage": 9,
-    "startupFrame": "i15",
+    "startupFrame": "15",
     "blockFrame": -10,
     "hitFrame": 1,
     "counterHitFrame": ""
@@ -678,7 +763,7 @@ const rawZafinaFrameData = [
     "input": "ws1,2",
     "hitLevel": "m,m",
     "damage": "9,18",
-    "startupFrame": "i20~21",
+    "startupFrame": "20~21",
     "blockFrame": -13,
     "hitFrame": "+36a (+26)",
     "counterHitFrame": ""
@@ -687,7 +772,7 @@ const rawZafinaFrameData = [
     "input": "ws2",
     "hitLevel": "m",
     "damage": 20,
-    "startupFrame": "i18~19",
+    "startupFrame": "18~19",
     "blockFrame": -14,
     "hitFrame": "+28a (+18)",
     "counterHitFrame": ""
@@ -696,7 +781,7 @@ const rawZafinaFrameData = [
     "input": "ws3",
     "hitLevel": "m",
     "damage": 20,
-    "startupFrame": "i12",
+    "startupFrame": "12",
     "blockFrame": 0,
     "hitFrame": 9,
     "counterHitFrame": ""
@@ -705,7 +790,7 @@ const rawZafinaFrameData = [
     "input": "ws4",
     "hitLevel": "m",
     "damage": 14,
-    "startupFrame": "i11",
+    "startupFrame": "11",
     "blockFrame": -7,
     "hitFrame": 4,
     "counterHitFrame": ""
@@ -714,7 +799,7 @@ const rawZafinaFrameData = [
     "input": "SS.1+2",
     "hitLevel": "m",
     "damage": 22,
-    "startupFrame": "i17~18",
+    "startupFrame": "17~18",
     "blockFrame": -2,
     "hitFrame": "+8c",
     "counterHitFrame": "+28a"
@@ -723,7 +808,7 @@ const rawZafinaFrameData = [
     "input": "FC.df+3",
     "hitLevel": "l",
     "damage": 15,
-    "startupFrame": "i23~24",
+    "startupFrame": "23~24",
     "blockFrame": -26,
     "hitFrame": "+14d",
     "counterHitFrame": ""
@@ -732,7 +817,7 @@ const rawZafinaFrameData = [
     "input": "FC.d+1",
     "hitLevel": "sl",
     "damage": 5,
-    "startupFrame": "i10",
+    "startupFrame": "10",
     "blockFrame": -5,
     "hitFrame": 6,
     "counterHitFrame": ""
@@ -741,7 +826,7 @@ const rawZafinaFrameData = [
     "input": "FC.d+2",
     "hitLevel": "sl",
     "damage": 8,
-    "startupFrame": "i11",
+    "startupFrame": "11",
     "blockFrame": -4,
     "hitFrame": 5,
     "counterHitFrame": ""
@@ -750,7 +835,7 @@ const rawZafinaFrameData = [
     "input": "FC.d+3",
     "hitLevel": "l",
     "damage": 10,
-    "startupFrame": "i16",
+    "startupFrame": "16",
     "blockFrame": -17,
     "hitFrame": -6,
     "counterHitFrame": ""
@@ -759,16 +844,16 @@ const rawZafinaFrameData = [
     "input": "FC.d+4",
     "hitLevel": "l",
     "damage": 6,
-    "startupFrame": "i12",
+    "startupFrame": "12",
     "blockFrame": -15,
     "hitFrame": -4,
     "counterHitFrame": ""
   },
   {
-    "input": "MNT 0.1",
+    "input": "MNT 0.1",
     "hitLevel": "m",
     "damage": 12,
-    "startupFrame": "i13",
+    "startupFrame": "13",
     "blockFrame": -6,
     "hitFrame": 5,
     "counterHitFrame": ""
@@ -777,7 +862,7 @@ const rawZafinaFrameData = [
     "input": "MNT.1,3",
     "hitLevel": "m,h",
     "damage": "12,12",
-    "startupFrame": "i19",
+    "startupFrame": "19",
     "blockFrame": 0,
     "hitFrame": 9,
     "counterHitFrame": ""
@@ -786,7 +871,7 @@ const rawZafinaFrameData = [
     "input": "MNT 0.2",
     "hitLevel": "m",
     "damage": 19,
-    "startupFrame": "i13~14",
+    "startupFrame": "13~14",
     "blockFrame": -14,
     "hitFrame": -3,
     "counterHitFrame": "+57a"
@@ -795,7 +880,7 @@ const rawZafinaFrameData = [
     "input": "MNT.2,1",
     "hitLevel": "m,m",
     "damage": "19,10",
-    "startupFrame": "i18~19",
+    "startupFrame": "18~19",
     "blockFrame": -14,
     "hitFrame": -3,
     "counterHitFrame": ""
@@ -804,7 +889,7 @@ const rawZafinaFrameData = [
     "input": "MNT.2,1,4",
     "hitLevel": "m,m,m",
     "damage": "19,10,25",
-    "startupFrame": "i27~28",
+    "startupFrame": "27~28",
     "blockFrame": -13,
     "hitFrame": "+13a(+4)",
     "counterHitFrame": ""
@@ -813,7 +898,7 @@ const rawZafinaFrameData = [
     "input": "MNT 0.3",
     "hitLevel": "l",
     "damage": 12,
-    "startupFrame": "i15~16",
+    "startupFrame": "15~16",
     "blockFrame": -12,
     "hitFrame": -1,
     "counterHitFrame": ""
@@ -822,7 +907,7 @@ const rawZafinaFrameData = [
     "input": "MNT.3,1",
     "hitLevel": "l,m",
     "damage": "12,16",
-    "startupFrame": "i24",
+    "startupFrame": "24",
     "blockFrame": -9,
     "hitFrame": "+22a(+15)",
     "counterHitFrame": ""
@@ -831,7 +916,7 @@ const rawZafinaFrameData = [
     "input": "MNT 0.4",
     "hitLevel": "l",
     "damage": 13,
-    "startupFrame": "i17~18",
+    "startupFrame": "17~18",
     "blockFrame": -19,
     "hitFrame": -3,
     "counterHitFrame": 7
@@ -840,7 +925,7 @@ const rawZafinaFrameData = [
     "input": "MNT.4,3",
     "hitLevel": "l,m",
     "damage": "13,23",
-    "startupFrame": "i27",
+    "startupFrame": "27",
     "blockFrame": -30,
     "hitFrame": "+32a(+22)",
     "counterHitFrame": ""
@@ -849,7 +934,7 @@ const rawZafinaFrameData = [
     "input": "MNT.1+2",
     "hitLevel": "m",
     "damage": 21,
-    "startupFrame": "i20",
+    "startupFrame": "20",
     "blockFrame": -12,
     "hitFrame": "+18d",
     "counterHitFrame": ""
@@ -867,7 +952,7 @@ const rawZafinaFrameData = [
     "input": "MNT.df+1",
     "hitLevel": "m",
     "damage": 30,
-    "startupFrame": "i24~25",
+    "startupFrame": "24~25",
     "blockFrame": 6,
     "hitFrame": "+7d",
     "counterHitFrame": ""
@@ -876,7 +961,7 @@ const rawZafinaFrameData = [
     "input": "MNT.df+2",
     "hitLevel": "m",
     "damage": 10,
-    "startupFrame": "i19~20",
+    "startupFrame": "19~20",
     "blockFrame": -9,
     "hitFrame": "+32a(22)",
     "counterHitFrame": ""
@@ -885,7 +970,7 @@ const rawZafinaFrameData = [
     "input": "MNT.df+3",
     "hitLevel": "m",
     "damage": 20,
-    "startupFrame": "i15~16",
+    "startupFrame": "15~16",
     "blockFrame": -17,
     "hitFrame": "+19cg",
     "counterHitFrame": ""
@@ -894,7 +979,7 @@ const rawZafinaFrameData = [
     "input": "MNT.df+4",
     "hitLevel": "m",
     "damage": 18,
-    "startupFrame": "i17~18",
+    "startupFrame": "17~18",
     "blockFrame": -5,
     "hitFrame": "+13g",
     "counterHitFrame": ""
@@ -903,7 +988,7 @@ const rawZafinaFrameData = [
     "input": "MNT.d+1",
     "hitLevel": "l",
     "damage": 14,
-    "startupFrame": "i15~16",
+    "startupFrame": "15~16",
     "blockFrame": -11,
     "hitFrame": 0,
     "counterHitFrame": ""
@@ -912,7 +997,7 @@ const rawZafinaFrameData = [
     "input": "MNT.d+1,4",
     "hitLevel": "l,m",
     "damage": "14,23",
-    "startupFrame": "i27~30",
+    "startupFrame": "27~30",
     "blockFrame": -16,
     "hitFrame": "+15(+6)",
     "counterHitFrame": "+60a(+40)"
@@ -921,7 +1006,7 @@ const rawZafinaFrameData = [
     "input": "MNT.d+4",
     "hitLevel": "l",
     "damage": 19,
-    "startupFrame": "i20~27",
+    "startupFrame": "20~27",
     "blockFrame": "-22~-15",
     "hitFrame": "+4c~+11c",
     "counterHitFrame": "+19a~+26a"
@@ -930,25 +1015,25 @@ const rawZafinaFrameData = [
     "input": "MNT.uf+3",
     "hitLevel": "m",
     "damage": 25,
-    "startupFrame": "i26~28",
+    "startupFrame": "26~28",
     "blockFrame": -9,
     "hitFrame": "+11d",
     "counterHitFrame": ""
   },
   {
-    "input": "SCR 0.1",
+    "input": "SCR 0.1",
     "hitLevel": "h",
     "damage": 12,
-    "startupFrame": "i10~11",
+    "startupFrame": "10~11",
     "blockFrame": -2,
     "hitFrame": 9,
     "counterHitFrame": ""
   },
   {
-    "input": "SCR.1,4",
+    "input": "SCR 1,4",
     "hitLevel": "h,m",
     "damage": "12,18",
-    "startupFrame": "i22",
+    "startupFrame": "22",
     "blockFrame": -6,
     "hitFrame": 7,
     "counterHitFrame": "+32d"
@@ -957,7 +1042,7 @@ const rawZafinaFrameData = [
     "input": "SCR 0.2",
     "hitLevel": "m",
     "damage": 17,
-    "startupFrame": "i14",
+    "startupFrame": "14",
     "blockFrame": -7,
     "hitFrame": 7,
     "counterHitFrame": ""
@@ -966,7 +1051,7 @@ const rawZafinaFrameData = [
     "input": "SCR.2,1",
     "hitLevel": "m,m",
     "damage": "17,25",
-    "startupFrame": "i21",
+    "startupFrame": "21",
     "blockFrame": -6,
     "hitFrame": "+30d(+20)",
     "counterHitFrame": ""
@@ -975,7 +1060,7 @@ const rawZafinaFrameData = [
     "input": "SCR.2,2",
     "hitLevel": "m,m",
     "damage": "17,17",
-    "startupFrame": "i22",
+    "startupFrame": "22",
     "blockFrame": -10,
     "hitFrame": "+8c",
     "counterHitFrame": "+8d"
@@ -984,7 +1069,7 @@ const rawZafinaFrameData = [
     "input": "SCR 0.3",
     "hitLevel": "m",
     "damage": 15,
-    "startupFrame": "i13",
+    "startupFrame": "13",
     "blockFrame": -6,
     "hitFrame": 5,
     "counterHitFrame": ""
@@ -993,7 +1078,7 @@ const rawZafinaFrameData = [
     "input": "SCR.3,3",
     "hitLevel": "m,h",
     "damage": "15,20",
-    "startupFrame": "i16",
+    "startupFrame": "16",
     "blockFrame": 0,
     "hitFrame": "+25a(+15)",
     "counterHitFrame": ""
@@ -1002,7 +1087,7 @@ const rawZafinaFrameData = [
     "input": "SCR 0.4",
     "hitLevel": "m",
     "damage": 20,
-    "startupFrame": "i15~16",
+    "startupFrame": "15~16",
     "blockFrame": -18,
     "hitFrame": "+58a(+42)",
     "counterHitFrame": ""
@@ -1011,7 +1096,7 @@ const rawZafinaFrameData = [
     "input": "SCR.1+2",
     "hitLevel": "m",
     "damage": 20,
-    "startupFrame": "i17~19",
+    "startupFrame": "17~19",
     "blockFrame": 6,
     "hitFrame": "+17d",
     "counterHitFrame": ""
@@ -1020,7 +1105,7 @@ const rawZafinaFrameData = [
     "input": "SCR.3+4",
     "hitLevel": "m,m",
     "damage": "10,20",
-    "startupFrame": "i18~19 i6~8",
+    "startupFrame": "18~19 i6~8",
     "blockFrame": -12,
     "hitFrame": 8,
     "counterHitFrame": ""
@@ -1029,7 +1114,7 @@ const rawZafinaFrameData = [
     "input": "SCR.b+1+2",
     "hitLevel": "l",
     "damage": 16,
-    "startupFrame": "i16",
+    "startupFrame": "16",
     "blockFrame": -17,
     "hitFrame": 3,
     "counterHitFrame": "+12d"
@@ -1047,7 +1132,7 @@ const rawZafinaFrameData = [
     "input": "SCR.df+1",
     "hitLevel": "m,m",
     "damage": "10,20",
-    "startupFrame": "i18 i17~19",
+    "startupFrame": "18 i17~19",
     "blockFrame": -6,
     "hitFrame": "+33a(+18)",
     "counterHitFrame": ""
@@ -1056,7 +1141,7 @@ const rawZafinaFrameData = [
     "input": "SCR.df+3",
     "hitLevel": "l",
     "damage": 10,
-    "startupFrame": "i28~30",
+    "startupFrame": "28~30",
     "blockFrame": -23,
     "hitFrame": "-10c",
     "counterHitFrame": ""
@@ -1065,7 +1150,7 @@ const rawZafinaFrameData = [
     "input": "SCR.df+3,3",
     "hitLevel": "l,l",
     "damage": "10,10",
-    "startupFrame": "i29~31",
+    "startupFrame": "29~31",
     "blockFrame": -23,
     "hitFrame": "+54a(+38)",
     "counterHitFrame": ""
@@ -1074,7 +1159,7 @@ const rawZafinaFrameData = [
     "input": "SCR.df+4",
     "hitLevel": "l",
     "damage": 17,
-    "startupFrame": "i19~20",
+    "startupFrame": "19~20",
     "blockFrame": -14,
     "hitFrame": "+7c",
     "counterHitFrame": "+37a"
@@ -1083,7 +1168,7 @@ const rawZafinaFrameData = [
     "input": "SCR.d+3",
     "hitLevel": "l",
     "damage": 10,
-    "startupFrame": "i18",
+    "startupFrame": "18",
     "blockFrame": -6,
     "hitFrame": -3,
     "counterHitFrame": "+9c"
@@ -1092,7 +1177,7 @@ const rawZafinaFrameData = [
     "input": "SCR.d+3,3",
     "hitLevel": "l,h",
     "damage": "10,28",
-    "startupFrame": "i24",
+    "startupFrame": "24",
     "blockFrame": 3,
     "hitFrame": "+77a(+61)",
     "counterHitFrame": ""
@@ -1101,7 +1186,7 @@ const rawZafinaFrameData = [
     "input": "SCR.d+4",
     "hitLevel": "l",
     "damage": 20,
-    "startupFrame": "i24~30",
+    "startupFrame": "24~30",
     "blockFrame": -25,
     "hitFrame": "-4d",
     "counterHitFrame": ""
@@ -1119,7 +1204,7 @@ const rawZafinaFrameData = [
     "input": "TRT.1",
     "hitLevel": "l",
     "damage": 13,
-    "startupFrame": "i18",
+    "startupFrame": "18",
     "blockFrame": -11,
     "hitFrame": 5,
     "counterHitFrame": "+15d"
@@ -1128,7 +1213,7 @@ const rawZafinaFrameData = [
     "input": "TRT.2",
     "hitLevel": "m",
     "damage": 24,
-    "startupFrame": "i34-36",
+    "startupFrame": "34-36",
     "blockFrame": -9,
     "hitFrame": "",
     "counterHitFrame": ""
@@ -1137,7 +1222,7 @@ const rawZafinaFrameData = [
     "input": "TRT.3",
     "hitLevel": "m",
     "damage": 16,
-    "startupFrame": "i14~i15",
+    "startupFrame": "14~i15",
     "blockFrame": -7,
     "hitFrame": "+15d",
     "counterHitFrame": ""
@@ -1146,7 +1231,7 @@ const rawZafinaFrameData = [
     "input": "TRT.4",
     "hitLevel": "m",
     "damage": 10,
-    "startupFrame": "i26",
+    "startupFrame": "26",
     "blockFrame": -22,
     "hitFrame": "-4b",
     "counterHitFrame": "-4c"
@@ -1155,7 +1240,7 @@ const rawZafinaFrameData = [
     "input": "TRT.4,3",
     "hitLevel": "m,m",
     "damage": "10,10",
-    "startupFrame": "i28~31",
+    "startupFrame": "28~31",
     "blockFrame": -13,
     "hitFrame": "+18a",
     "counterHitFrame": ""
@@ -1164,7 +1249,7 @@ const rawZafinaFrameData = [
     "input": "TRT.1+2",
     "hitLevel": "m,m",
     "damage": "7,20",
-    "startupFrame": "i19~20 i9~10",
+    "startupFrame": "19~20 i9~10",
     "blockFrame": -12,
     "hitFrame": "+14a",
     "counterHitFrame": ""
@@ -1182,7 +1267,7 @@ const rawZafinaFrameData = [
     "input": "TRT.df+1",
     "hitLevel": "m",
     "damage": 30,
-    "startupFrame": "i19~20",
+    "startupFrame": "19~20",
     "blockFrame": 6,
     "hitFrame": "+30a(+15)",
     "counterHitFrame": ""
@@ -1191,7 +1276,7 @@ const rawZafinaFrameData = [
     "input": "TRT.d+1+2",
     "hitLevel": "l",
     "damage": 20,
-    "startupFrame": "i25",
+    "startupFrame": "25",
     "blockFrame": -21,
     "hitFrame": "+10d",
     "counterHitFrame": ""
@@ -1200,7 +1285,7 @@ const rawZafinaFrameData = [
     "input": "1+3",
     "hitLevel": "t",
     "damage": 35,
-    "startupFrame": "i12~14",
+    "startupFrame": "12~14",
     "blockFrame": "",
     "hitFrame": 0,
     "counterHitFrame": ""
@@ -1209,7 +1294,7 @@ const rawZafinaFrameData = [
     "input": "2+4",
     "hitLevel": "t",
     "damage": 35,
-    "startupFrame": "i12~14",
+    "startupFrame": "12~14",
     "blockFrame": "",
     "hitFrame": 0,
     "counterHitFrame": ""
@@ -1245,7 +1330,7 @@ const rawZafinaFrameData = [
     "input": "uf+1+2",
     "hitLevel": "t",
     "damage": 40,
-    "startupFrame": "i12",
+    "startupFrame": "12",
     "blockFrame": "",
     "hitFrame": 0,
     "counterHitFrame": ""
@@ -1260,7 +1345,9 @@ const zafinaFrameData = rawZafinaFrameData.map(item => ({
   blockFrame: item.blockFrame,
   hitFrame: item.hitFrame,
   counterHitFrame: item.counterHitFrame ? item.counterHitFrame : '',
-  additionalNotes: '', // This will be added by the user
+  additionalNotes: '', 
+  type: item.type || null,
+  specialProperties: item.specialProperties || [], 
 }));
 
 export default zafinaFrameData;

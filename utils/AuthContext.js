@@ -68,7 +68,7 @@ const AuthProvider = ({ children }) => {
       await AsyncStorage.setItem('user', JSON.stringify(userData));
       await AsyncStorage.setItem('token', token);
       await AsyncStorage.setItem('refreshToken', refreshToken);
-      console.log('User, token, and refresh token saved');
+      // console.log('User, token, and refresh token saved');
     } catch (error) {
       console.error('Error saving user data to storage:', error);
     }
