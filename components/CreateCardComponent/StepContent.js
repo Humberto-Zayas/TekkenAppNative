@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, TextInput } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { styles } from './styles';
@@ -9,17 +9,43 @@ const StepContent = ({
   selectedComboStarters,
   comboString,
   difficulty,
-  notes, // Receive notes
+  notes,
   setComboType,
   setSelectedComboStarters,
   setComboString,
   setDifficulty,
-  setNotes, // Receive setNotes
+  setNotes,
   setStep,
   frameData,
   addCombo,
-  editingIndex, // Receive editingIndex
+  editingIndex,
 }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleMoveSelect = (move) => {
+    setSelectedComboStarters(selectedComboStarters.includes(move) 
+      ? selectedComboStarters.filter((starter) => starter !== move)
+      : [...selectedComboStarters, move]
+    );
+    setSearchQuery(''); // Reset search query when a move is selected
+  };
+
+  const handleComboTypeChange = (itemValue) => {
+    setComboType(itemValue);
+    if (itemValue === 'Wall Ender' || itemValue === 'Wall Tornado') {
+      setSelectedComboStarters([itemValue === 'Wall Ender' ? 'WE' : 'WT']);
+      setStep(3);
+    } else {
+      setSelectedComboStarters(selectedComboStarters.filter(starter => starter !== 'WE' && starter !== 'WT'));
+      setStep(2);
+    }
+  };
+
+  // Filter the frameData based on the search query
+  const filteredFrameData = frameData.filter(item => {
+    return typeof item.move === 'string' && item.move.toLowerCase().includes(searchQuery.toLowerCase());
+  });
+
   const renderMoveListHeader = () => (
     <View style={styles.tableHeader}>
       <View style={styles.column}>
@@ -42,24 +68,6 @@ const StepContent = ({
       </View>
     </View>
   );
-
-  const handleMoveSelect = (move) => {
-    setSelectedComboStarters(selectedComboStarters.includes(move) 
-      ? selectedComboStarters.filter((starter) => starter !== move)
-      : [...selectedComboStarters, move]
-    );
-  };
-
-  const handleComboTypeChange = (itemValue) => {
-    setComboType(itemValue);
-    if (itemValue === 'Wall Ender' || itemValue === 'Wall Tornado') {
-      setSelectedComboStarters([itemValue === 'Wall Ender' ? 'WE' : 'WT']);
-      setStep(3);
-    } else {
-      setSelectedComboStarters(selectedComboStarters.filter(starter => starter !== 'WE' && starter !== 'WT'));
-      setStep(2);
-    }
-  };
 
   switch (step) {
     case 1:
@@ -87,9 +95,15 @@ const StepContent = ({
       return (
         <>
           {renderMoveListHeader()}
+          <TextInput
+            style={styles.searchInput} // Add some styling for this input
+            placeholder="Search moves..."
+            value={searchQuery}
+            onChangeText={(text) => setSearchQuery(text)}
+          />
           <FlatList
             style={styles.flatList}
-            data={frameData}
+            data={filteredFrameData}
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={[

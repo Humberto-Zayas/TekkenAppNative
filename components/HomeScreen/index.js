@@ -8,10 +8,12 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Display user status */}
-      <Text style={styles.userStatus}>
-        {user ? `Logged In as ${user.username}` : 'Not Logged In'}
-      </Text>
+      {/* Conditionally display user status */}
+      {user && (
+        <Text style={styles.userStatus}>
+          Logged In as {user.username}
+        </Text>
+      )}
       <ScrollView contentContainerStyle={styles.gridContainer}>
         {characters.map((character) => (
           <TouchableOpacity
@@ -20,7 +22,7 @@ const HomeScreen = ({ navigation }) => {
             onPress={() => navigation.navigate('CardList', { character })}
           >
             <Image source={character.image} style={{ width: 72, height: 72, borderRadius: 8 }} />
-            <Text>{character.name}</Text>
+            <Text>{character.name.replace(/_/g, ' ')}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -47,16 +49,16 @@ const styles = StyleSheet.create({
     color: 'blue',
   },
   gridContainer: {
+    marginTop: 16,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    paddingBottom: 40
+    paddingBottom: 40,
   },
   userStatus: {
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: 16,
-    marginBottom: 16,
   },
   box: {
     alignItems: 'center',

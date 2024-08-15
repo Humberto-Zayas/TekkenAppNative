@@ -24,6 +24,7 @@ const difficultyIcons = {
 
 const CardDetailComponent = ({ route, navigation }) => {
   const { moveSetName, moves } = route.params;
+  console.log(moves)
   const [selectedItem, setSelectedItem] = useState(null);
   const [sortedMoves, setSortedMoves] = useState([]);
 

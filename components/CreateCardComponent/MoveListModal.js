@@ -6,11 +6,13 @@ import { styles } from './styles';
 const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData }) => {
   const [selectedMove, setSelectedMove] = useState(null);
   const [context, setContext] = useState('');
+  const [searchQuery, setSearchQuery] = useState(''); // State to keep track of the search query
 
   useEffect(() => {
     if (!modalVisible) {
       setSelectedMove(null);
       setContext('');
+      setSearchQuery(''); // Reset search query when modal is closed
     }
   }, [modalVisible]);
 
@@ -20,11 +22,19 @@ const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData 
 
   const handleAddMove = () => {
     if (selectedMove) {
-      const moveWithDetail = { ...selectedMove, notes: context, damage: Array.isArray(selectedMove.damage) ? selectedMove.damage : [selectedMove.damage] };
+      const moveWithDetail = { 
+        ...selectedMove, 
+        notes: context, 
+        damage: Array.isArray(selectedMove.damage) ? selectedMove.damage : [selectedMove.damage] 
+      };
       onMoveSelect(moveWithDetail);
       setContext('');
       setModalVisible(false);
     }
+  };
+
+  const handleBack = () => {
+    setSelectedMove(null); // Clear the selected move
   };
 
   const renderMoveListHeader = () => (
@@ -33,7 +43,7 @@ const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData 
         <Text style={styles.headerText}>Move</Text>
       </View>
       <View style={styles.column}>
-        <Text style={styles.headerText}>Hit</Text>
+        <Text style={styles.headerText}>Lvl</Text>
       </View>
       <View style={styles.column}>
         <Text style={styles.headerText}>Dmg</Text>
@@ -44,10 +54,12 @@ const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData 
       <View style={styles.column}>
         <Text style={styles.headerText}>Block</Text>
       </View>
-      <View style={styles.column}>
-        <Text style={styles.headerText}>Hit</Text>
-      </View>
     </View>
+  );
+
+  // Filter the frameData based on the search query
+  const filteredFrameData = frameData.filter(item => 
+    typeof item.move === 'string' && item.move.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -58,12 +70,11 @@ const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData 
     >
       <View style={styles.modalContainer}>
         {selectedMove ? (
-          <Text style={styles.header}>Add Context for {selectedMove.move}</Text>
-        ) : (
-          <Text style={styles.header}>Choose Move</Text>
-        )}
-        {selectedMove ? (
           <>
+            <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+              <FontAwesome name="arrow-left" size={20} color="black" />
+            </TouchableOpacity>
+            <Text style={styles.header}>Add Context for {selectedMove.move}</Text>
             {renderMoveListHeader()}
             <View style={styles.flatList}>
               <View style={styles.tableRow}>
@@ -91,10 +102,16 @@ const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData 
           </>
         ) : (
           <>
+            <TextInput
+              style={styles.searchInput} // Add some styling for this input
+              placeholder="Search moves..."
+              value={searchQuery}
+              onChangeText={(text) => setSearchQuery(text)}
+            />
             {renderMoveListHeader()}
             <FlatList
               style={styles.flatList}
-              data={frameData}
+              data={filteredFrameData} // Use the filtered data
               renderItem={({ item }) => (
                 <TouchableOpacity onPress={() => handleMoveSelect(item)}>
                   <View style={styles.tableRow}>
@@ -103,7 +120,6 @@ const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData 
                     <Text style={styles.column}>{item.damage}</Text>
                     <Text style={styles.column}>{item.startupFrame}</Text>
                     <Text style={styles.column}>{item.blockFrame}</Text>
-                    <Text style={styles.column}>{item.hitFrame}</Text>
                   </View>
                 </TouchableOpacity>
               )}

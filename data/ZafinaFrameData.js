@@ -11,7 +11,7 @@ const rawZafinaFrameData = [
     "specialProperties": ["heat burst", "armor"]
   },
   {
-    "input": "SCR 2+3",
+    "input": "HS SCR 2+3",
     "hitLevel": "l,m",
     "damage": "10,20",
     "startupFrame": "19",
@@ -110,7 +110,7 @@ const rawZafinaFrameData = [
     "specialProperties": ["tornado", "ch launch", "stance entry"]
   },
   {
-    "input": 2,
+    "input": "2",
     "hitLevel": "h",
     "damage": 8,
     "startupFrame": "10",
@@ -223,7 +223,7 @@ const rawZafinaFrameData = [
   },
   {
     "input": "3+4 (SCR)",
-    "hitLevel": "",
+    "hitLevel": "Stance Entry",
     "damage": "",
     "startupFrame": "",
     "blockFrame": "",
@@ -307,6 +307,7 @@ const rawZafinaFrameData = [
     "blockFrame": -9,
     "hitFrame": "+5d(-5)",
     "counterHitFrame": "",
+    "type": "heat",
     "specialProperties": ["heat engager"]
   },
   {
@@ -406,6 +407,8 @@ const rawZafinaFrameData = [
     "startupFrame": "31",
     "blockFrame": -12,
     "hitFrame": "+3d",
+    "type" : "heat",
+    "specialProperties": ["heat engager"],
     "counterHitFrame": ""
   },
   {
@@ -499,8 +502,8 @@ const rawZafinaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": "d+1+2",
-    "hitLevel": "",
+    "input": "d+1+2 (TRT)",
+    "hitLevel": "Stance Entry",
     "damage": "",
     "startupFrame": "",
     "blockFrame": "",
@@ -508,8 +511,8 @@ const rawZafinaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": "d+3+4",
-    "hitLevel": "",
+    "input": "d+3+4 (MNT)",
+    "hitLevel": "Stance Entry",
     "damage": "",
     "startupFrame": "",
     "blockFrame": "",

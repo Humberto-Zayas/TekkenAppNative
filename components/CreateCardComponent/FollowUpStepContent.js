@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, TextInput } from 'react-native';
 import { styles } from './styles';
 
@@ -13,6 +13,8 @@ const FollowUpStepContent = ({
   frameData,
   addFollowUp,
 }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+
   const handleMoveSelect = (move) => {
     setSelectedMoves((prevSelectedMoves) => {
       const isSelected = prevSelectedMoves.some(selected => selected.move === move.move);
@@ -22,7 +24,14 @@ const FollowUpStepContent = ({
         return prevSelectedMoves.filter(selected => selected.move !== move.move);
       }
     });
+    setSearchQuery(''); // Reset search query when a move is selected
   };
+
+  // Filter the frameData based on the search query
+  const filteredFrameData = frameData.filter(item => {
+    // Ensure item.move is a string before calling toLowerCase
+    return typeof item.move === 'string' && item.move.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   const renderMoveListHeader = (
     <View style={styles.tableHeader}>
@@ -52,9 +61,15 @@ const FollowUpStepContent = ({
       return (
         <>
           <Text style={styles.header}>Select moves</Text>
+          <TextInput
+            style={styles.searchInput} // Add some styling for this input
+            placeholder="Search moves..."
+            value={searchQuery}
+            onChangeText={(text) => setSearchQuery(text)}
+          />
           {renderMoveListHeader}
           <FlatList
-            data={frameData}
+            data={filteredFrameData}
             style={styles.flatList}
             renderItem={({ item }) => {
               const isSelected = selectedMoves.some(selected => selected.move === item.move);
