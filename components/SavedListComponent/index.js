@@ -57,6 +57,8 @@ const SavedListComponent = ({ navigation, characterName }) => {
     fetchBookmarks();
   }, [user, sortOrder]);
 
+  console.log(bookmarkedCards)
+
   const handleSavedCardPress = (id) => {
     navigation.navigate('CardComponent', { id });
   };

@@ -22,7 +22,7 @@ const HomeScreen = ({ navigation }) => {
             onPress={() => navigation.navigate('CardList', { character })}
           >
             <Image source={character.image} style={{ width: 72, height: 72, borderRadius: 8 }} />
-            <Text>{character.name.replace(/_/g, ' ')}</Text>
+            <Text style={{marginTop: 12}}>{character.name.replace(/_/g, ' ')}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
