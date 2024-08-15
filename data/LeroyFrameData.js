@@ -27,7 +27,7 @@ const rawLeroyFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 1,
+    "input": "1",
     "hitLevel": "h",
     "damage": 5,
     "startupFrame": "i10",
@@ -108,7 +108,7 @@ const rawLeroyFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 2,
+    "input": "2",
     "hitLevel": "h",
     "damage": 10,
     "startupFrame": "i12",
@@ -153,7 +153,7 @@ const rawLeroyFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 3,
+    "input": "3",
     "hitLevel": "m",
     "damage": 14,
     "startupFrame": "i15",
@@ -171,7 +171,7 @@ const rawLeroyFrameData = [
     "counterHitFrame": 15
   },
   {
-    "input": 4,
+    "input": "4",
     "hitLevel": "h",
     "damage": 15,
     "startupFrame": "i12",

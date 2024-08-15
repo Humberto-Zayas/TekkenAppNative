@@ -45,7 +45,7 @@ const rawFengFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 1,
+    "input": "1",
     "hitLevel": "h",
     "damage": 5,
     "startupFrame": "i10",
@@ -108,7 +108,7 @@ const rawFengFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 2,
+    "input": "2",
     "hitLevel": "h",
     "damage": 8,
     "startupFrame": "i10",
@@ -144,7 +144,7 @@ const rawFengFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 3,
+    "input": "3",
     "hitLevel": "m",
     "damage": 15,
     "startupFrame": "i16",
@@ -198,7 +198,7 @@ const rawFengFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 4,
+    "input": "4",
     "hitLevel": "h",
     "damage": 17,
     "startupFrame": "i11",

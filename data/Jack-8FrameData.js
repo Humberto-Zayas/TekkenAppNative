@@ -27,7 +27,7 @@ const rawJack8FrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 1,
+    "input": "1",
     "hitLevel": "h",
     "damage": 10,
     "startupFrame": "i12",
@@ -54,7 +54,7 @@ const rawJack8FrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 2,
+    "input": "2",
     "hitLevel": "h",
     "damage": 10,
     "startupFrame": "i11",
@@ -99,7 +99,7 @@ const rawJack8FrameData = [
     "counterHitFrame": "+30d (+22)"
   },
   {
-    "input": 3,
+    "input": "3",
     "hitLevel": "h",
     "damage": 30,
     "startupFrame": "i18",
@@ -108,7 +108,7 @@ const rawJack8FrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 4,
+    "input": "4",
     "hitLevel": "h",
     "damage": 18,
     "startupFrame": "i16",

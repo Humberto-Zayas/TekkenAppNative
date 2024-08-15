@@ -153,7 +153,7 @@ const rawAzucenaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 1,
+    "input": "1",
     "hitLevel": "h",
     "damage": 5,
     "startupFrame": "i10",
@@ -198,7 +198,7 @@ const rawAzucenaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 2,
+    "input": "2",
     "hitLevel": "h",
     "damage": 9,
     "startupFrame": "i10",
@@ -225,7 +225,7 @@ const rawAzucenaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 3,
+    "input": "3",
     "hitLevel": "m",
     "damage": 11,
     "startupFrame": "i14",
@@ -261,7 +261,7 @@ const rawAzucenaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 4,
+    "input": "4",
     "hitLevel": "h",
     "damage": 15,
     "startupFrame": "i12~13",

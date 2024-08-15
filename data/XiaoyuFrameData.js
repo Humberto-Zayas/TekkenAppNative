@@ -54,7 +54,7 @@ const rawXiaoyuFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 1,
+    "input": "1",
     "hitLevel": "h",
     "damage": 6,
     "startupFrame": "i10",
@@ -99,7 +99,7 @@ const rawXiaoyuFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 2,
+    "input": "2",
     "hitLevel": "h",
     "damage": 8,
     "startupFrame": "i10",
@@ -117,7 +117,7 @@ const rawXiaoyuFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 3,
+    "input": "3",
     "hitLevel": "h",
     "damage": 17,
     "startupFrame": "i14",
@@ -126,7 +126,7 @@ const rawXiaoyuFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 4,
+    "input": "4",
     "hitLevel": "h",
     "damage": 15,
     "startupFrame": "i11",

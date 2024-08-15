@@ -36,7 +36,7 @@ const rawPandaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 1,
+    "input": "1",
     "hitLevel": "h",
     "damage": 5,
     "startupFrame": "i10",
@@ -81,7 +81,7 @@ const rawPandaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 2,
+    "input": "2",
     "hitLevel": "h",
     "damage": 10,
     "startupFrame": "i10",

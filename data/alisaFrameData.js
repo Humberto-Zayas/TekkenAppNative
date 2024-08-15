@@ -46,7 +46,7 @@ const rawAlisaFrameData =
       "counterHitFrame": "",
     },
     {
-      "input": 1,
+      "input": "1",
       "hitLevel": "h",
       "damage": 5,
       "startupFrame": "10",
@@ -100,7 +100,7 @@ const rawAlisaFrameData =
       "counterHitFrame": "",
     },
     {
-      "input": 2,
+      "input": "2",
       "hitLevel": "h",
       "damage": 10,
       "startupFrame": "12",
@@ -145,7 +145,7 @@ const rawAlisaFrameData =
       "counterHitFrame": "",
     },
     {
-      "input": 3,
+      "input": "3",
       "hitLevel": "m",
       "damage": 10,
       "startupFrame": "13~14",
@@ -172,7 +172,7 @@ const rawAlisaFrameData =
       "counterHitFrame": "",
     },
     {
-      "input": 4,
+      "input": "4",
       "hitLevel": "h",
       "damage": 24,
       "startupFrame": "13~14",

@@ -27,7 +27,7 @@ const rawDragunovFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 1,
+    "input": "1",
     "hitLevel": "h",
     "damage": 5,
     "startupFrame": "i10",
@@ -99,7 +99,7 @@ const rawDragunovFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 2,
+    "input": "2",
     "hitLevel": "h",
     "damage": 10,
     "startupFrame": "i10",
@@ -135,7 +135,7 @@ const rawDragunovFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 3,
+    "input": "3",
     "hitLevel": "m",
     "damage": 10,
     "startupFrame": "i15~16",
@@ -171,7 +171,7 @@ const rawDragunovFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 4,
+    "input": "4",
     "hitLevel": "h",
     "damage": 10,
     "startupFrame": "i12",

@@ -180,7 +180,7 @@ const rawRavenFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 1,
+    "input": "1",
     "hitLevel": "h",
     "damage": 5,
     "startupFrame": "i10",
@@ -216,7 +216,7 @@ const rawRavenFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 2,
+    "input": "2",
     "hitLevel": "h",
     "damage": 9,
     "startupFrame": "i10",
@@ -243,7 +243,7 @@ const rawRavenFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 3,
+    "input": "3",
     "hitLevel": "m",
     "damage": 10,
     "startupFrame": ",i14~15",
@@ -297,7 +297,7 @@ const rawRavenFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 4,
+    "input": "4",
     "hitLevel": "h",
     "damage": 16,
     "startupFrame": "i12~13",

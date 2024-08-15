@@ -36,7 +36,7 @@ const rawLawFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 1,
+    "input": "1",
     "hitLevel": "h",
     "damage": 5,
     "startupFrame": "i10",
@@ -126,7 +126,7 @@ const rawLawFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 2,
+    "input": "2",
     "hitLevel": "h",
     "damage": 8,
     "startupFrame": "i10",
@@ -189,7 +189,7 @@ const rawLawFrameData = [
     "counterHitFrame": "+55a"
   },
   {
-    "input": 3,
+    "input": "3",
     "hitLevel": "h",
     "damage": 12,
     "startupFrame": "i12",
@@ -216,7 +216,7 @@ const rawLawFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 4,
+    "input": "4",
     "hitLevel": "h",
     "damage": 15,
     "startupFrame": "i13",

@@ -90,7 +90,7 @@ const rawLidiaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 1,
+    "input": "1",
     "hitLevel": "h",
     "damage": 5,
     "startupFrame": "i10",
@@ -153,7 +153,7 @@ const rawLidiaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 2,
+    "input": "2",
     "hitLevel": "h",
     "damage": 8,
     "startupFrame": "i11",
@@ -261,7 +261,7 @@ const rawLidiaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 3,
+    "input": "3",
     "hitLevel": "h",
     "damage": 9,
     "startupFrame": "i15",
@@ -279,7 +279,7 @@ const rawLidiaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 4,
+    "input": "4",
     "hitLevel": "h",
     "damage": 14,
     "startupFrame": "i13",

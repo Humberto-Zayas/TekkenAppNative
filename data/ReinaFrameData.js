@@ -45,7 +45,7 @@ const rawReinaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 1,
+    "input": "1",
     "hitLevel": "h",
     "damage": 5,
     "startupFrame": "i10",
@@ -108,7 +108,7 @@ const rawReinaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 2,
+    "input": "2",
     "hitLevel": "h",
     "damage": 6,
     "startupFrame": "i12",
@@ -171,7 +171,7 @@ const rawReinaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 3,
+    "input": "3",
     "hitLevel": "h",
     "damage": 12,
     "startupFrame": "i18~19",
@@ -207,7 +207,7 @@ const rawReinaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 4,
+    "input": "4",
     "hitLevel": "h",
     "damage": 20,
     "startupFrame": "i13~14",

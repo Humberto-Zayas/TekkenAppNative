@@ -72,7 +72,7 @@ const rawJunFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 1,
+    "input": "1",
     "hitLevel": "h",
     "damage": 5,
     "startupFrame": "i10",
@@ -135,7 +135,7 @@ const rawJunFrameData = [
     "counterHitFrame": "+6c"
   },
   {
-    "input": 2,
+    "input": "2",
     "hitLevel": "h",
     "damage": 7,
     "startupFrame": "i12",
@@ -189,7 +189,7 @@ const rawJunFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 3,
+    "input": "3",
     "hitLevel": "m",
     "damage": 20,
     "startupFrame": ",i14~15",
@@ -198,7 +198,7 @@ const rawJunFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 4,
+    "input": "4",
     "hitLevel": "h",
     "damage": 17,
     "startupFrame": "i12",

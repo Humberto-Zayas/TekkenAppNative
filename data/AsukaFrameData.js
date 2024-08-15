@@ -27,7 +27,7 @@ const rawAsukaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 1,
+    "input": "1",
     "hitLevel": "h",
     "damage": 6,
     "startupFrame": "i10",
@@ -90,7 +90,7 @@ const rawAsukaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 2,
+    "input": "2",
     "hitLevel": "h",
     "damage": 9,
     "startupFrame": "i12",
@@ -135,7 +135,7 @@ const rawAsukaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 3,
+    "input": "3",
     "hitLevel": "m",
     "damage": 17,
     "startupFrame": "i14",
@@ -153,7 +153,7 @@ const rawAsukaFrameData = [
     "counterHitFrame": "+35a (+27)"
   },
   {
-    "input": 4,
+    "input": "4",
     "hitLevel": "h",
     "damage": 18,
     "startupFrame": "i11",

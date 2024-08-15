@@ -44,7 +44,7 @@ const rawZafinaFrameData = [
     "specialProperties": ["armor"]
   },
   {
-    "input": 1,
+    "input": "1",
     "hitLevel": "h",
     "damage": 5,
     "startupFrame": "10",
@@ -183,7 +183,7 @@ const rawZafinaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 4,
+    "input": "4",
     "hitLevel": "h",
     "damage": 19,
     "startupFrame": "14~15",

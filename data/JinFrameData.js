@@ -108,7 +108,7 @@ const rawJinFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 1,
+    "input": "1",
     "hitLevel": "h",
     "damage": 5,
     "startupFrame": "i10",
@@ -180,7 +180,7 @@ const rawJinFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 2,
+    "input": "2",
     "hitLevel": "h",
     "damage": 9,
     "startupFrame": "i10",
@@ -243,7 +243,7 @@ const rawJinFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 3,
+    "input": "3",
     "hitLevel": "h",
     "damage": 19,
     "startupFrame": "i14",
@@ -279,7 +279,7 @@ const rawJinFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 4,
+    "input": "4",
     "hitLevel": "h",
     "damage": 15,
     "startupFrame": "i13~14",

@@ -27,7 +27,7 @@ const rawKazuyaFrameData = [
     "counterHitFrame": ""
   },
   {
-    "input": 1,
+    "input": "1",
     "hitLevel": "h",
     "damage": 5,
     "startupFrame": "i10",
@@ -99,7 +99,7 @@ const rawKazuyaFrameData = [
     "counterHitFrame": "+69a)"
   },
   {
-    "input": 2,
+    "input": "2",
     "hitLevel": "h",
     "damage": 12,
     "startupFrame": "i12",
@@ -117,7 +117,7 @@ const rawKazuyaFrameData = [
     "counterHitFrame": "+50a"
   },
   {
-    "input": 3,
+    "input": "3",
     "hitLevel": "h",
     "damage": 12,
     "startupFrame": "i14",
@@ -144,7 +144,7 @@ const rawKazuyaFrameData = [
     "counterHitFrame": "+40a(+32)"
   },
   {
-    "input": 4,
+    "input": "4",
     "hitLevel": "h",
     "damage": 18,
     "startupFrame": "i12",
