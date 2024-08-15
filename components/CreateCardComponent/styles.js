@@ -43,6 +43,11 @@ export const styles = StyleSheet.create({
     padding: 16,
     fontSize: 16
   },
+  searchInput: {
+    padding: 16,
+    fontSize: 16,
+    width: '100%'
+  },
   inputArea: {
     padding: 16,
     fontSize: 16,

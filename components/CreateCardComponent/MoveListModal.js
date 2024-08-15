@@ -22,10 +22,10 @@ const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData 
 
   const handleAddMove = () => {
     if (selectedMove) {
-      const moveWithDetail = { 
-        ...selectedMove, 
-        notes: context, 
-        damage: Array.isArray(selectedMove.damage) ? selectedMove.damage : [selectedMove.damage] 
+      const moveWithDetail = {
+        ...selectedMove,
+        notes: context,
+        damage: Array.isArray(selectedMove.damage) ? selectedMove.damage : [selectedMove.damage]
       };
       onMoveSelect(moveWithDetail);
       setContext('');
@@ -58,7 +58,7 @@ const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData 
   );
 
   // Filter the frameData based on the search query
-  const filteredFrameData = frameData.filter(item => 
+  const filteredFrameData = frameData.filter(item =>
     typeof item.move === 'string' && item.move.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -102,12 +102,15 @@ const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData 
           </>
         ) : (
           <>
-            <TextInput
-              style={styles.searchInput} // Add some styling for this input
-              placeholder="Search moves..."
-              value={searchQuery}
-              onChangeText={(text) => setSearchQuery(text)}
-            />
+            <View style={{flexDirection: 'row',  alignItems: 'center', paddingHorizontal: 16}}>
+              <FontAwesome name="search" size={20} color="black" />
+              <TextInput
+                style={styles.searchInput} // Add some styling for this input
+                placeholder="Search moves..."
+                value={searchQuery}
+                onChangeText={(text) => setSearchQuery(text)}
+              />
+            </View>
             {renderMoveListHeader()}
             <FlatList
               style={styles.flatList}
