@@ -48,7 +48,7 @@ const CardComponent = ({ route, navigation }) => {
     if (moveSetName === 'HeatEngagers') {
       navigation.navigate('CardDetailComponent', { moveSetName, moves: character?.heatEngagersData });
     } else {
-      navigation.navigate('CardDetailComponent', { moveSetName, moves });
+      navigation.navigate('CardDetailComponent', { moveSetName, moves, cardName: card.cardName });
     }
   };
 

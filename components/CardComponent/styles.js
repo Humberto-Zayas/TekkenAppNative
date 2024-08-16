@@ -253,4 +253,37 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     color: 'white',
   },
+  flowChartContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap', // Allow items to wrap to the next line
+  },
+  flowChartItemWrapper: {
+    position: 'relative',
+    // marginRight: 10, // Space between items
+    marginBottom: 20, // Space between rows
+  },
+  flowChartItem: {
+    // paddingVertical: 10,
+    paddingHorizontal: 20,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2, // Ensure text is above rotated square
+  },
+  flowChartItemText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  rotatedSquare: {
+    position: 'absolute',
+    right: -8, // Positioning the pointed end outside
+    top: 6, // Start positioning from the vertical center
+    width: 27,
+    height: 27, // Equal width and height for a square shape
+    transform: [{ rotate: '45deg' }], // TranslateY to adjust for rotation
+    zIndex: 1,
+  },
+
 });

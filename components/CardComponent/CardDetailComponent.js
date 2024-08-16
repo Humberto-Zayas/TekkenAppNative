@@ -23,8 +23,7 @@ const difficultyIcons = {
 };
 
 const CardDetailComponent = ({ route, navigation }) => {
-  const { moveSetName, moves } = route.params;
-  console.log(moves)
+  const { moveSetName, moves, cardName } = route.params;
   const [selectedItem, setSelectedItem] = useState(null);
   const [sortedMoves, setSortedMoves] = useState([]);
 
@@ -80,13 +79,36 @@ const CardDetailComponent = ({ route, navigation }) => {
     </TouchableOpacity>
   );
 
+  const getColorForIndex = (index) => {
+    const colors = ['#fa872c', '#ffb347', '#ffcc99', '#ff9999'];
+    return colors[index % colors.length];
+  };
+  
   const renderFollowUpOrMoveFlowChart = (followUpOrMoveFlow, index) => (
-    <View key={`${index}_${moveSetName}`} style={styles.tableRow}>
+    <View key={`${index}_${moveSetName}`} style={styles.flowChartContainer}>
       {followUpOrMoveFlow.moves.map((move, moveIndex) => (
-        <View key={moveIndex} style={styles.column}>
-          <TouchableOpacity onPress={() => openDrawer(move)}>
-            <Text>{move.move}</Text>
+        <View 
+          key={moveIndex} 
+          style={[
+            styles.flowChartItemWrapper,
+            { zIndex: followUpOrMoveFlow.moves.length - moveIndex } // Higher z-index for earlier items
+          ]}
+        >
+          <TouchableOpacity
+            onPress={() => openDrawer(move)}
+            style={[
+              styles.flowChartItem,
+              { backgroundColor: getColorForIndex(moveIndex) },
+            ]}
+          >
+            <Text style={styles.flowChartItemText}>{move.move}</Text>
           </TouchableOpacity>
+          <View 
+            style={[
+              styles.rotatedSquare,
+              { backgroundColor: getColorForIndex(moveIndex) },
+            ]}
+          />
         </View>
       ))}
     </View>
@@ -116,7 +138,7 @@ const CardDetailComponent = ({ route, navigation }) => {
             <View style={styles.column}>
               <Text style={styles.headerText}>Combo Route</Text>
             </View>
-            
+
           </View>
         );
       default:
@@ -126,11 +148,11 @@ const CardDetailComponent = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text>{moveSetName}</Text>
+      <Text>{cardName} {moveSetName}</Text>
       {renderHeader()}
       <ScrollView>
         {sortedMoves.map((item, index) => {
-          if (moveSetName === 'Move Flow Chart' || moveSetName === 'Follow Ups') {
+          if (moveSetName === `Move Flow Chart` || moveSetName === 'Follow Ups') {
             return renderFollowUpOrMoveFlowChart(item, index);
           } else if (moveSetName === 'Combos') {
             return renderCombo(item, index);
