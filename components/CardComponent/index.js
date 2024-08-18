@@ -8,7 +8,7 @@ import { useAuth } from '../../utils/AuthContext';
 import { fetchCardById, bookmarkCardById, unbookmarkCardById, rateCardById } from '../../utils/api';
 
 const CardComponent = ({ route, navigation }) => {
-  const { id } = route.params;
+  const { id, frameData } = route.params;
   const [card, setCard] = useState(null);
   const [character, setCharacter] = useState(null);
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -109,6 +109,7 @@ const CardComponent = ({ route, navigation }) => {
             user={user}
             card={card}
             image={character?.image}
+            frameData={frameData}
             toggleBookmark={toggleBookmark}
             onRatingChange={setUserRating}
             onDelete={onDelete}

@@ -75,7 +75,7 @@ const ConfirmationModal = ({ visible, onClose, onConfirm }) => {
   );
 };
 
-const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRatingChange, handleCreatorPress, onDelete, navigation, image }) => {
+const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRatingChange, handleCreatorPress, onDelete, navigation, image, frameData }) => {
   const [selectedRating, setSelectedRating] = useState(null);
   const [isMenuVisible, setMenuVisible] = useState(false);
   const [isRatingModalVisible, setRatingModalVisible] = useState(false);
@@ -108,7 +108,7 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
 
   const handleEditPress = (card) => {
     setMenuVisible(false);
-    navigation.navigate('CreateCardComponent', { cardData: card, isEdit: true, characterImage: image });
+    navigation.navigate('CreateCardComponent', { cardData: card, isEdit: true, characterImage: image, frameData: frameData });
   };
 
   const handleDeletePress = () => {

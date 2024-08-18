@@ -61,8 +61,13 @@ const CardListComponent = ({ route, navigation }) => {
   };
 
   const handleCardPress = (id) => {
-    navigation.navigate('CardComponent', { id });
+    const frameData = loadFrameData(name); // Load frame data based on the character name
+    navigation.navigate('CardComponent', {
+      id,
+      frameData, // Pass the frame data to the CardComponent
+    });
   };
+  
 
   const renderCardItem = ({ item }) => {
     const formattedCreatedAt = format(new Date(item.createdAt), 'MMMM dd, yyyy HH:mm:ss');
@@ -90,6 +95,7 @@ const CardListComponent = ({ route, navigation }) => {
   const toggleCardMenu = () => {
     setCardMenuVisible(!isCardMenuVisible);
   };
+
 
   const frameDataFiles = {
     Alisa: require('../../data/AlisaFrameData.js').default,
