@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
     flexGrow: 1,
     flexDirection: 'column',
     alignItems: 'stretch',
-    justifyContent: 'center',
+    justifyContent: 'start',
   },
   cardItem: {
     flexDirection: 'row',

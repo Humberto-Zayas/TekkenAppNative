@@ -80,12 +80,17 @@ const CardDetailComponent = ({ route, navigation }) => {
   );
 
   const getColorForIndex = (index) => {
-    const colors = ['#fa872c', '#ffb347', '#ffcc99', '#ff9999'];
+    const colors = ['#3498db', '#9b59b6', '#e67e22', '#e74c3c']; // Blue, Purple, Orange, Red
     return colors[index % colors.length];
   };
-  
+
   const renderFollowUpOrMoveFlowChart = (followUpOrMoveFlow, index) => (
-    <View key={`${index}_${moveSetName}`} style={styles.flowChartContainer}>
+    <ScrollView
+      key={`${index}_${moveSetName}`}
+      horizontal
+      showsHorizontalScrollIndicator={false} // Hide horizontal scrollbar
+      contentContainerStyle={styles.flowChartContainer}
+    >
       {followUpOrMoveFlow.moves.map((move, moveIndex) => (
         <View 
           key={moveIndex} 
@@ -111,7 +116,7 @@ const CardDetailComponent = ({ route, navigation }) => {
           />
         </View>
       ))}
-    </View>
+    </ScrollView>
   );
 
   const renderHeader = () => {
@@ -166,6 +171,5 @@ const CardDetailComponent = ({ route, navigation }) => {
     </View>
   );
 };
-
 
 export default CardDetailComponent;
