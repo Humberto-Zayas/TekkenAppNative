@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Modal, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome icons
 import { styles } from './styles';
 import ModalComponent from './ModalComponent';
@@ -23,7 +23,7 @@ const difficultyIcons = {
 };
 
 const CardDetailComponent = ({ route, navigation }) => {
-  const { moveSetName, moves, cardName } = route.params;
+  const { moveSetName, moves, cardName, image } = route.params;
   const [selectedItem, setSelectedItem] = useState(null);
   const [sortedMoves, setSortedMoves] = useState([]);
 
@@ -47,11 +47,18 @@ const CardDetailComponent = ({ route, navigation }) => {
   const renderMove = (move, index) => (
     <TouchableOpacity key={`${index}_${moveSetName}`} onPress={() => openDrawer(move)}>
       <View style={styles.tableRow}>
-        <View style={styles.columnLeft}>
-          <Text>{move.move}</Text>
+        <View style={styles.columnEqual}>
+          <Text style={{ fontSize: 18 }}>{move.move}</Text>
         </View>
-        <View style={styles.column}>
-          <Text>{move.startupFrame}</Text>
+        <View style={styles.columnEqual}>
+          <Text style={{ fontSize: 18, alignSelf: 'center', marginLeft: -8 }}>{move.startupFrame}</Text>
+        </View>
+        <View style={styles.columnEqual}>
+          <FontAwesome
+            style={{ alignSelf: 'center' }}
+            name={'file-text-o'}
+            size={24}
+          />
         </View>
       </View>
     </TouchableOpacity>
@@ -62,11 +69,11 @@ const CardDetailComponent = ({ route, navigation }) => {
       <View style={[styles.tableRow, { backgroundColor: difficultyColors[combo.difficulty.toLowerCase()] }]}>
         <View style={styles.columnLeft}>
           {combo.comboStarters.map((starter, starterIndex) => (
-            <Text key={starterIndex}>{starter}</Text>
+            <Text style={{ fontSize: 18, marginBottom: 8 }} key={starterIndex}>{starter}</Text>
           ))}
         </View>
         <View style={styles.column}>
-          <Text>{combo.comboRoute}</Text>
+          <Text style={{fontSize: 18}}>{combo.comboRoute}</Text>
         </View>
         <View style={styles.iconContainer}>
           <FontAwesome
@@ -92,8 +99,8 @@ const CardDetailComponent = ({ route, navigation }) => {
       contentContainerStyle={styles.flowChartContainer}
     >
       {followUpOrMoveFlow.moves.map((move, moveIndex) => (
-        <View 
-          key={moveIndex} 
+        <View
+          key={moveIndex}
           style={[
             styles.flowChartItemWrapper,
             { zIndex: followUpOrMoveFlow.moves.length - moveIndex } // Higher z-index for earlier items
@@ -108,7 +115,7 @@ const CardDetailComponent = ({ route, navigation }) => {
           >
             <Text style={styles.flowChartItemText}>{move.move}</Text>
           </TouchableOpacity>
-          <View 
+          <View
             style={[
               styles.rotatedSquare,
               { backgroundColor: getColorForIndex(moveIndex) },
@@ -121,29 +128,32 @@ const CardDetailComponent = ({ route, navigation }) => {
 
   const renderHeader = () => {
     switch (moveSetName) {
-      case 'Heat Engagers':
+      case 'HeatEngagers': // Updated to match your logged movesetname
       case 'Punishers':
       case 'Important Moves':
         return (
           <View style={styles.tableHeader}>
-            <View style={styles.columnLeft}>
+            <View style={styles.columnEqual}>
               <Text style={styles.headerText}>Move</Text>
             </View>
-            <View style={styles.column}>
+            <View style={{...styles.columnEqual, alignSelf: 'center'}}>
               <Text style={styles.headerText}>Start Frames</Text>
             </View>
+            <View style={styles.columnEqual}>
+              <Text style={{ ...styles.headerText, alignSelf: 'center' }}>Notes</Text>
+            </View>
+
           </View>
         );
       case 'Combos':
         return (
           <View style={styles.tableHeader}>
             <View style={styles.columnLeft}>
-              <Text style={styles.headerText}>Combo Starters</Text>
+              <Text style={styles.headerText}>Starters</Text>
             </View>
             <View style={styles.column}>
-              <Text style={styles.headerText}>Combo Route</Text>
+              <Text style={{...styles.headerText, alignSelf: 'flex-start'}}>Combo Route</Text>
             </View>
-
           </View>
         );
       default:
@@ -153,7 +163,13 @@ const CardDetailComponent = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text>{cardName} {moveSetName}</Text>
+      <View style={[styles.heroContainer]}>
+        <Image source={image} style={styles.heroImage} />
+        <View style={styles.heroInfo}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{cardName}</Text>
+          <Text>{moveSetName}</Text>
+        </View>
+      </View>
       {renderHeader()}
       <ScrollView>
         {sortedMoves.map((item, index) => {

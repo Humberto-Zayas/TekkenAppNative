@@ -175,7 +175,7 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
         {/* {user?.userId === card?.userId && ( */}
 
         <TouchableOpacity onPress={openMenu}>
-          <FontAwesome name="ellipsis-h" size={24} color="blue" style={styles.menuIcon} />
+          <FontAwesome name="ellipsis-h" size={24} color="blue" style={{marginBottom: 8}} />
         </TouchableOpacity>
         <TouchableOpacity onPress={openRatingModal}>
           <FontAwesome name="star" size={24} color="gold" style={styles.starIcon} />

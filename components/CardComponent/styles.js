@@ -4,6 +4,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    paddingTop: 0,
     paddingBottom: 48,
   },
   flatList: {
@@ -39,6 +40,11 @@ export const styles = StyleSheet.create({
     padding: 8,
     alignItems: 'start',
   },
+  columnEqual: {
+    width: '33%',
+    padding: 8,
+    alignItems: 'start'
+  },
   value: {
     fontSize: 16,
   },
@@ -73,9 +79,10 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 0, // Add padding for better spacing
   },
   heroImage: {
-    width: 60,
-    height: 60,
+    width: 64,
+    height: 64,
     borderRadius: 100,
+    marginRight: 8
   },
   thumbnail: {
     width: 50,

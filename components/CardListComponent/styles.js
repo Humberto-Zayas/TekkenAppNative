@@ -154,14 +154,14 @@ export const styles = StyleSheet.create({
   tagsContainer: {
     flexDirection: 'row',
     // flexWrap: 'wrap',
-    marginTop: 10,
+    marginBottom: 16,
   },
   tag: {
     backgroundColor: '#e0e0e0',
     borderRadius: 20,
     paddingVertical: 5,
     paddingHorizontal: 10,
-    margin: 5,
+    marginRight: 8,
     flexDirection: 'row',
     alignItems: 'center',
   },

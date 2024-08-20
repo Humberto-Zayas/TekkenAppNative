@@ -46,9 +46,9 @@ const CardComponent = ({ route, navigation }) => {
 
   const handleMoveSetLinkPress = (moveSetName, moves) => {
     if (moveSetName === 'HeatEngagers') {
-      navigation.navigate('CardDetailComponent', { moveSetName, moves: character?.heatEngagersData });
+      navigation.navigate('CardDetailComponent', { moveSetName, moves: character?.heatEngagersData, cardName: card.cardName, image: character?.image });
     } else {
-      navigation.navigate('CardDetailComponent', { moveSetName, moves, cardName: card.cardName });
+      navigation.navigate('CardDetailComponent', { moveSetName, moves, cardName: card.cardName, image: character?.image });
     }
   };
 

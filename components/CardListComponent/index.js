@@ -203,7 +203,7 @@ const CardListComponent = ({ route, navigation }) => {
       ) : (
         <>
           <View style={styles.tagsContainer}>
-            <ScrollView style={styles.scrollViewContainer} horizontal={true} showsHorizontalScrollIndicator={false}>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
               {tags.map((tag) => (
                 <TouchableOpacity
                   onPress={() => handleTagClick(tag)}
