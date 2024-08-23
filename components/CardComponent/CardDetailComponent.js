@@ -65,25 +65,44 @@ const CardDetailComponent = ({ route, navigation }) => {
   );
 
   const renderCombo = (combo, index) => (
-    <TouchableOpacity key={`${index}_${moveSetName}`} onPress={() => openDrawer(combo)}>
-      <View style={[styles.tableRow, { backgroundColor: difficultyColors[combo.difficulty.toLowerCase()] }]}>
-        <View style={styles.columnLeft}>
+    <ScrollView
+      key={`${index}_${moveSetName}`}
+      horizontal
+      showsHorizontalScrollIndicator={false} // Hide horizontal scrollbar
+      contentContainerStyle={styles.flowChartContainer}
+    >
+      {renderHeader()}
+      <TouchableOpacity style={styles.flowChartContainer} key={`${index}_${moveSetName}`} onPress={() => openDrawer(combo)}>
+        <View
+          style={[
+            styles.flowChartItemWrapper,
+            { backgroundColor: difficultyColors[combo.difficulty.toLowerCase()] }, // Apply difficulty color
+          ]}
+        >
           {combo.comboStarters.map((starter, starterIndex) => (
-            <Text style={{ fontSize: 18, marginBottom: 8 }} key={starterIndex}>{starter}</Text>
+            <Text
+              style={{ ...styles.flowChartItem, fontSize: 18, marginBottom: 8 }}
+              key={starterIndex}
+            >
+              {starter}
+            </Text>
           ))}
         </View>
-        <View style={styles.column}>
-          <Text style={{fontSize: 18}}>{combo.comboRoute}</Text>
+        <View style={styles.flowChartItem}>
+          <Text style={{ fontSize: 18 }}>{combo.comboRoute}</Text>
         </View>
-        <View style={styles.iconContainer}>
+        <View style={styles.flowChartItem}>
+          <Text style={{ fontSize: 18 }}>{combo.comboRoute}</Text>
+        </View>
+        <View style={styles.columnEqual}>
           <FontAwesome
-            name={difficultyIcons[combo.difficulty.toLowerCase()]}
+            style={{ alignSelf: 'center' }}
+            name={'file-text-o'}
             size={24}
-            color={difficultyColors[combo.difficulty.toLowerCase()]}
           />
         </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </ScrollView>
   );
 
   const getColorForIndex = (index) => {
@@ -136,7 +155,7 @@ const CardDetailComponent = ({ route, navigation }) => {
             <View style={styles.columnEqual}>
               <Text style={styles.headerText}>Move</Text>
             </View>
-            <View style={{...styles.columnEqual, alignSelf: 'center'}}>
+            <View style={{ ...styles.columnEqual, alignSelf: 'center' }}>
               <Text style={styles.headerText}>Start Frames</Text>
             </View>
             <View style={styles.columnEqual}>
@@ -151,9 +170,13 @@ const CardDetailComponent = ({ route, navigation }) => {
             <View style={styles.columnLeft}>
               <Text style={styles.headerText}>Starters</Text>
             </View>
-            <View style={styles.column}>
-              <Text style={{...styles.headerText, alignSelf: 'flex-start'}}>Combo Route</Text>
+            <View style={styles.columnEqual}>
+              <Text style={{ ...styles.headerText, alignSelf: 'flex-start' }}>Combo Route</Text>
             </View>
+            <View style={styles.columnEqual}>
+              <Text style={{ ...styles.headerText, alignSelf: 'center' }}>Notes</Text>
+            </View>
+
           </View>
         );
       default:
@@ -170,7 +193,8 @@ const CardDetailComponent = ({ route, navigation }) => {
           <Text>{moveSetName}</Text>
         </View>
       </View>
-      {renderHeader()}
+      {/* Conditionally render the header unless moveSetName is 'Combos' */}
+      {moveSetName !== 'Combos' && renderHeader()}
       <ScrollView>
         {sortedMoves.map((item, index) => {
           if (moveSetName === `Move Flow Chart` || moveSetName === 'Follow Ups') {
