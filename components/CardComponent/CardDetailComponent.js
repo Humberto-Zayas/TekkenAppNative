@@ -5,21 +5,15 @@ import { styles } from './styles';
 import ModalComponent from './ModalComponent';
 
 const difficultyColors = {
-  easy: 'lightgreen',
-  intermediate: 'lightyellow',
-  hard: 'lightcoral',
+  easy: '#3498db',
+  intermediate: '#9b59b6',
+  hard: '#e67e22',
 };
 
 const difficultyOrder = {
   easy: 1,
   intermediate: 2,
   hard: 3,
-};
-
-const difficultyIcons = {
-  easy: 'smile-o',
-  intermediate: 'meh-o',
-  hard: 'frown-o',
 };
 
 const CardDetailComponent = ({ route, navigation }) => {

@@ -291,6 +291,5 @@ export const styles = StyleSheet.create({
     height: 27, // Equal width and height for a square shape
     transform: [{ rotate: '45deg' }], // TranslateY to adjust for rotation
     zIndex: 1,
-  },
-
+  }
 });
