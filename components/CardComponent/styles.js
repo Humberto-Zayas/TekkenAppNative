@@ -291,5 +291,22 @@ export const styles = StyleSheet.create({
     height: 27, // Equal width and height for a square shape
     transform: [{ rotate: '45deg' }], // TranslateY to adjust for rotation
     zIndex: 1,
-  }
+  },
+  comboStarterColumn: {
+    flex: 0.15, // 25% of the row width
+    padding: 8,
+  },
+  comboRouteColumn: {
+    flex: 0.70,
+    justifyContent: 'center',
+    paddingHorizontal: 8,
+  },
+  comboRouteText: {
+    fontSize: 18,
+  },
+  notesColumn: {
+    flex: 0.1, // 10% of the row width
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+  },
 });

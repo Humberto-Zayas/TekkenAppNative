@@ -1,30 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Modal, TouchableOpacity, ScrollView, Image } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome icons
+import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 import ModalComponent from './ModalComponent';
 
 const difficultyColors = {
-  easy: '#3498db',
-  intermediate: '#9b59b6',
+  easy: '#34db6e',
+  intermediate: '#b8a93e',
   hard: '#e67e22',
 };
 
-const difficultyOrder = {
-  easy: 1,
-  intermediate: 2,
-  hard: 3,
-};
-
-const CardDetailComponent = ({ route, navigation }) => {
+const CardDetailComponent = ({ route }) => {
   const { moveSetName, moves, cardName, image } = route.params;
   const [selectedItem, setSelectedItem] = useState(null);
   const [sortedMoves, setSortedMoves] = useState([]);
+  const [groupedCombos, setGroupedCombos] = useState({});
 
   useEffect(() => {
     if (moveSetName === 'Combos') {
-      // Sort from easy to hard
-      setSortedMoves([...moves].sort((a, b) => difficultyOrder[a.difficulty.toLowerCase()] - difficultyOrder[b.difficulty.toLowerCase()]));
+      // Group combos by type
+      const grouped = moves.reduce((acc, combo) => {
+        if (!acc[combo.type]) {
+          acc[combo.type] = [];
+        }
+        acc[combo.type].push(combo);
+        return acc;
+      }, {});
+
+      setGroupedCombos(grouped);
     } else {
       setSortedMoves(moves);
     }
@@ -59,36 +62,29 @@ const CardDetailComponent = ({ route, navigation }) => {
   );
 
   const renderCombo = (combo, index) => (
-    <ScrollView
-      key={`${index}_${moveSetName}`}
-      horizontal
-      showsHorizontalScrollIndicator={false} // Hide horizontal scrollbar
-      contentContainerStyle={styles.flowChartContainer}
-    >
-      {renderHeader()}
-      <TouchableOpacity style={styles.flowChartContainer} key={`${index}_${moveSetName}`} onPress={() => openDrawer(combo)}>
+    <View key={`${index}_${moveSetName}`}>
+      <TouchableOpacity style={styles.tableRow} onPress={() => openDrawer(combo)}>
         <View
           style={[
-            styles.flowChartItemWrapper,
-            { backgroundColor: difficultyColors[combo.difficulty.toLowerCase()] }, // Apply difficulty color
+            styles.comboStarterColumn,
+            { backgroundColor: difficultyColors[combo.difficulty.toLowerCase()] },
           ]}
         >
           {combo.comboStarters.map((starter, starterIndex) => (
             <Text
-              style={{ ...styles.flowChartItem, fontSize: 18, marginBottom: 8 }}
+              style={{ fontSize: 18, marginBottom: 8 }}
               key={starterIndex}
             >
               {starter}
             </Text>
           ))}
         </View>
-        <View style={styles.flowChartItem}>
-          <Text style={{ fontSize: 18 }}>{combo.comboRoute}</Text>
+
+        <View style={styles.comboRouteColumn}>
+          <Text style={styles.comboRouteText}>{combo.comboRoute}</Text>
         </View>
-        <View style={styles.flowChartItem}>
-          <Text style={{ fontSize: 18 }}>{combo.comboRoute}</Text>
-        </View>
-        <View style={styles.columnEqual}>
+
+        <View style={styles.notesColumn}>
           <FontAwesome
             style={{ alignSelf: 'center' }}
             name={'file-text-o'}
@@ -96,11 +92,11 @@ const CardDetailComponent = ({ route, navigation }) => {
           />
         </View>
       </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 
   const getColorForIndex = (index) => {
-    const colors = ['#3498db', '#9b59b6', '#e67e22', '#e74c3c']; // Blue, Purple, Orange, Red
+    const colors = ['#3498db', '#9b59b6', '#e67e22', '#e74c3c'];
     return colors[index % colors.length];
   };
 
@@ -108,7 +104,7 @@ const CardDetailComponent = ({ route, navigation }) => {
     <ScrollView
       key={`${index}_${moveSetName}`}
       horizontal
-      showsHorizontalScrollIndicator={false} // Hide horizontal scrollbar
+      showsHorizontalScrollIndicator={false}
       contentContainerStyle={styles.flowChartContainer}
     >
       {followUpOrMoveFlow.moves.map((move, moveIndex) => (
@@ -116,7 +112,7 @@ const CardDetailComponent = ({ route, navigation }) => {
           key={moveIndex}
           style={[
             styles.flowChartItemWrapper,
-            { zIndex: followUpOrMoveFlow.moves.length - moveIndex } // Higher z-index for earlier items
+            { zIndex: followUpOrMoveFlow.moves.length - moveIndex },
           ]}
         >
           <TouchableOpacity
@@ -141,7 +137,7 @@ const CardDetailComponent = ({ route, navigation }) => {
 
   const renderHeader = () => {
     switch (moveSetName) {
-      case 'HeatEngagers': // Updated to match your logged movesetname
+      case 'HeatEngagers':
       case 'Punishers':
       case 'Important Moves':
         return (
@@ -155,22 +151,6 @@ const CardDetailComponent = ({ route, navigation }) => {
             <View style={styles.columnEqual}>
               <Text style={{ ...styles.headerText, alignSelf: 'center' }}>Notes</Text>
             </View>
-
-          </View>
-        );
-      case 'Combos':
-        return (
-          <View style={styles.tableHeader}>
-            <View style={styles.columnLeft}>
-              <Text style={styles.headerText}>Starters</Text>
-            </View>
-            <View style={styles.columnEqual}>
-              <Text style={{ ...styles.headerText, alignSelf: 'flex-start' }}>Combo Route</Text>
-            </View>
-            <View style={styles.columnEqual}>
-              <Text style={{ ...styles.headerText, alignSelf: 'center' }}>Notes</Text>
-            </View>
-
           </View>
         );
       default:
@@ -180,25 +160,31 @@ const CardDetailComponent = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.heroContainer]}>
+      <View style={styles.heroContainer}>
         <Image source={image} style={styles.heroImage} />
         <View style={styles.heroInfo}>
           <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{cardName}</Text>
           <Text>{moveSetName}</Text>
         </View>
       </View>
-      {/* Conditionally render the header unless moveSetName is 'Combos' */}
+
       {moveSetName !== 'Combos' && renderHeader()}
+
       <ScrollView>
-        {sortedMoves.map((item, index) => {
-          if (moveSetName === `Move Flow Chart` || moveSetName === 'Follow Ups') {
+        {moveSetName === 'Combos' && Object.keys(groupedCombos).map((type) => (
+          <View key={type}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginVertical: 10 }}>{type}</Text>
+            {groupedCombos[type].map((combo, comboIndex) => renderCombo(combo, comboIndex))}
+          </View>
+        ))}
+        {moveSetName !== 'Combos' && sortedMoves.map((item, index) => {
+          if (moveSetName === 'Move Flow Chart' || moveSetName === 'Follow Ups') {
             return renderFollowUpOrMoveFlowChart(item, index);
-          } else if (moveSetName === 'Combos') {
-            return renderCombo(item, index);
           }
           return renderMove(item, index);
         })}
       </ScrollView>
+
       <Modal visible={selectedItem !== null} animationType="slide" transparent>
         <ModalComponent selectedItem={selectedItem} closeDrawer={closeDrawer} />
       </Modal>
