@@ -10,6 +10,12 @@ const difficultyColors = {
   hard: '#e67e22',
 };
 
+const difficultyOrder = {
+  easy: 0,
+  intermediate: 1,
+  hard: 2,
+};
+
 const CardDetailComponent = ({ route }) => {
   const { moveSetName, moves, cardName, image } = route.params;
   const [selectedItem, setSelectedItem] = useState(null);
@@ -26,6 +32,11 @@ const CardDetailComponent = ({ route }) => {
         acc[combo.type].push(combo);
         return acc;
       }, {});
+
+      // Sort each group by difficulty
+      Object.keys(grouped).forEach(type => {
+        grouped[type].sort((a, b) => difficultyOrder[a.difficulty.toLowerCase()] - difficultyOrder[b.difficulty.toLowerCase()]);
+      });
 
       setGroupedCombos(grouped);
     } else {
