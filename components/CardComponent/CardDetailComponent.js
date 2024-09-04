@@ -64,12 +64,7 @@ const CardDetailComponent = ({ route }) => {
   const renderCombo = (combo, index) => (
     <View key={`${index}_${moveSetName}`}>
       <TouchableOpacity style={styles.tableRow} onPress={() => openDrawer(combo)}>
-        <View
-          style={[
-            styles.comboStarterColumn,
-            { backgroundColor: difficultyColors[combo.difficulty.toLowerCase()] },
-          ]}
-        >
+        <View style={styles.comboStarterColumn}>
           {combo.comboStarters.map((starter, starterIndex) => (
             <Text
               style={{ fontSize: 18, marginBottom: 8 }}
@@ -89,6 +84,12 @@ const CardDetailComponent = ({ route }) => {
             style={{ alignSelf: 'center' }}
             name={'file-text-o'}
             size={24}
+          />
+          <View
+            style={[
+              styles.difficultyDot,
+              { backgroundColor: difficultyColors[combo.difficulty.toLowerCase()] },
+            ]}
           />
         </View>
       </TouchableOpacity>
@@ -167,6 +168,24 @@ const CardDetailComponent = ({ route }) => {
           <Text>{moveSetName}</Text>
         </View>
       </View>
+
+      {/* Legend */}
+      {moveSetName === 'Combos' && (
+        <View style={styles.legendContainer}>
+          <View style={styles.legendItem}>
+            <View style={[styles.legendDot, { backgroundColor: difficultyColors.easy }]} />
+            <Text style={styles.legendText}>Easy</Text>
+          </View>
+          <View style={styles.legendItem}>
+            <View style={[styles.legendDot, { backgroundColor: difficultyColors.intermediate }]} />
+            <Text style={styles.legendText}>Intermediate</Text>
+          </View>
+          <View style={styles.legendItem}>
+            <View style={[styles.legendDot, { backgroundColor: difficultyColors.hard }]} />
+            <Text style={styles.legendText}>Hard</Text>
+          </View>
+        </View>
+      )}
 
       {moveSetName !== 'Combos' && renderHeader()}
 

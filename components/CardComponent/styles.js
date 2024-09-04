@@ -293,13 +293,13 @@ export const styles = StyleSheet.create({
     zIndex: 1,
   },
   comboStarterColumn: {
-    flex: 0.15, // 25% of the row width
-    padding: 8,
+    flex: 0.20, // 25% of the row width
+    justifyContent: 'center',
+    paddingTop: 6
   },
   comboRouteColumn: {
     flex: 0.70,
     justifyContent: 'center',
-    paddingHorizontal: 8,
   },
   comboRouteText: {
     fontSize: 18,
@@ -308,5 +308,31 @@ export const styles = StyleSheet.create({
     flex: 0.1, // 10% of the row width
     justifyContent: 'center',
     alignItems: 'flex-end',
+  },
+  difficultyDot: {
+    width: 16,
+    height: 16,
+    borderRadius: 16,
+    alignSelf: 'center',
+    marginTop: 8
+  },
+  legendContainer: {
+    marginVertical: 8,
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  legendDot: {
+    width: 16,
+    height: 16,
+    borderRadius: 16,
+    marginRight: 4,
+  },
+  legendText: {
+    fontSize: 16,
   },
 });
