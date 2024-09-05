@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import HeroComponent from './HeroComponent';
 import { characters } from '../../data/characters';
@@ -14,8 +14,9 @@ const CardComponent = ({ route, navigation }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [userRating, setUserRating] = useState(null);
   const [averageRating, setAverageRating] = useState(null);
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const userId = user?.userId;
+  const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
     fetchCard();
@@ -36,11 +37,17 @@ const CardComponent = ({ route, navigation }) => {
   }, [card]);
 
   const fetchCard = async () => {
+    setLoading(true);
     try {
       const data = await fetchCardById(id, userId || '');
       setCard(data);
+      setIsBookmarked(data.isBookmarked || false);
+      setAverageRating(data.averageRating || 0);
     } catch (error) {
       console.error('Error fetching card:', error);
+      Alert.alert('Error', 'Could not load the card. Please try again later.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,34 +68,39 @@ const CardComponent = ({ route, navigation }) => {
       if (isBookmarked) {
         await unbookmarkCardById(userId, id, user.token);
         setIsBookmarked(false);
-        console.log('Card unbookmarked successfully!');
+        Alert.alert('Success', 'Card unbookmarked successfully!');
       } else {
         await bookmarkCardById(userId, id, user.token);
         setIsBookmarked(true);
-        console.log('Card bookmarked successfully!');
+        Alert.alert('Success', 'Card bookmarked successfully!');
       }
     } catch (error) {
       console.error('Error toggling bookmark:', error);
+      Alert.alert('Error', 'Failed to update bookmark. Please try again.');
     }
   };
 
-  const rateCard = async () => {
+  const rateCard = async (rating) => {
     try {
       if (!userId) {
         Alert.alert('Please log in to rate this card');
         return;
       }
-      await rateCardById(id, userId, userRating, user?.username, user?.token);
+      await rateCardById(id, userId, rating, user?.username, token);
+      Alert.alert('Success', 'Rating submitted successfully!');
+      // Optionally fetch the new average rating from API or calculate based on submission
+      setAverageRating((prevAverage) => (prevAverage * card.numRatings + userRating) / (card.numRatings + 1));
     } catch (error) {
       console.error('Error submitting rating:', error);
+      Alert.alert('Error', 'Failed to submit your rating. Please try again.');
     }
   };
 
-  useEffect(() => {
-    if (userRating !== null) {
-      rateCard();
-    }
-  }, [userRating]);
+  const handleRatingChange = (newRating) => {
+    console.log('Selected Rating:', newRating);  // Debug log
+    setUserRating(newRating);
+    rateCard(newRating); // Immediately call rateCard when rating is changed
+  };
 
   const handleCreatorPress = () => {
     navigation.navigate('CreatorCardListComponent', { creatorId: card?.userId, creator: card?.username });
@@ -97,6 +109,10 @@ const CardComponent = ({ route, navigation }) => {
   const onDelete = () => {
     navigation.goBack();
   };
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" style={{ flex: 1, justifyContent: 'center' }} />;
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -111,7 +127,7 @@ const CardComponent = ({ route, navigation }) => {
             image={character?.image}
             frameData={frameData}
             toggleBookmark={toggleBookmark}
-            onRatingChange={setUserRating}
+            onRatingChange={handleRatingChange}
             onDelete={onDelete}
             navigation={navigation}
           />
@@ -163,15 +179,13 @@ const CardComponent = ({ route, navigation }) => {
               {card?.youtubeLink && (
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <FontAwesome name="youtube" size={32} color="red" style={{ marginRight: 8 }} />
-                  <Text>
-                    {card?.youtubeLink}
-                  </Text>
+                  <Text>{card?.youtubeLink}</Text>
                 </View>
               )}
               {card?.twitchLink && (
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <FontAwesome name="twitch" size={32} color="purple" style={{ marginRight: 8 }} />
-                  <Text> {card?.twitchLink} </Text>
+                  <Text>{card?.twitchLink}</Text>
                 </View>
               )}
             </View>

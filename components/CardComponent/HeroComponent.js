@@ -82,9 +82,11 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
   const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
 
   const handleStarPress = (starNumber) => {
+    console.log("Selected Rating:", starNumber); // Debugging: Check if starNumber is correct
     setSelectedRating(starNumber);
-    onRatingChange(starNumber);
+    onRatingChange(starNumber);  // This triggers the API call to save the rating
   };
+  
 
   const handleBookmarkPress = () => {
     toggleBookmark();

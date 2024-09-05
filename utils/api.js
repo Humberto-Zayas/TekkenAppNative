@@ -108,6 +108,7 @@ export const unbookmarkCardById = async (userId, cardId, token) => {
 };
 
 export const rateCardById = async (cardId, userId, rating, username, token) => {
+  console.log('api.js rating: ', rating)
   try {
     const response = await fetch(`${REACT_APP_API_BASE_URL}/cards/rate/${cardId}`, {
       method: 'POST',
@@ -152,7 +153,6 @@ export const createCard = async (cardData, token) => {
 
 export const updateCard = async (cardData, token) => {
   const cardId = cardData._id;
-  console.log('Token being sent:', token);
 
   try {
     const response = await fetch(`${REACT_APP_API_BASE_URL}/cards/edit/${cardId}`, {
