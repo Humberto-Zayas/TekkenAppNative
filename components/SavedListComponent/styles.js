@@ -12,12 +12,13 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     justifyContent: 'center',
+    marginTop: 16
   },
   cardItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 10,
-    padding: 10,
+    marginBottom: 16,
+    padding: 12,
     backgroundColor: 'lightgray',
     borderRadius: 10,
     width: '100%', // Full width

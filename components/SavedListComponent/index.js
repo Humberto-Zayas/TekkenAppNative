@@ -79,22 +79,19 @@ const SavedListComponent = ({ navigation, characterName }) => {
 
 
   const renderSavedCardItem = ({ item }) => {
-    const formattedCreatedAt = format(new Date(item.createdAt), 'MMMM dd, yyyy HH:mm:ss');
-    const formattedLastEditedAt = item.lastEditedAt ? format(new Date(item.lastEditedAt), 'MMMM dd, yyyy HH:mm:ss') : null;
 
     return (
       <TouchableOpacity style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]} onPress={() => handleSavedCardPress(item._id)}>
-        {/* <View style={{ marginRight: 10 }}>
-        <Image source={item.thumbnail} style={styles.thumbnailImage} />
-      </View> */}
         <View>
-          <Text style={{ fontSize: 16, fontWeight: 'bold' }} numberOfLines={1}>
+          <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }} numberOfLines={1}>
             {item.cardName}
           </Text>
-          <Text>Rating: {item.averageRating}</Text>
+          <Text style={{ color: 'white' }}>Rating: {item.averageRating}</Text>
           <Text style={{ color: 'white' }}>Creator: {item.username}</Text>
           <Text style={{ color: 'white' }}>
-            {item.lastEditedAt ? `Last Edited At: ${formattedLastEditedAt}` : `Created: ${formattedCreatedAt}`}
+            {item.lastEditedAt
+            ? `Last Edited: ${format(new Date(item.lastEditedAt), 'MMM dd, yyyy')}`
+            : `Created: ${format(new Date(item.createdAt), 'MMM dd, yyyy')}`}
           </Text>
         </View>
       </TouchableOpacity>

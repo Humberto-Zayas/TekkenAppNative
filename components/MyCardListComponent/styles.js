@@ -5,7 +5,8 @@ export const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'stretch',
-    padding: 20,
+    padding: 16,
+    paddingTop: 0,
     position: 'relative',
   },
   flatList: {
@@ -37,7 +38,7 @@ export const styles = StyleSheet.create({
   heroContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
+    marginBottom: 16,
   },
   heroImage: {
     width: 120,

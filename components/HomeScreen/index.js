@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: 16,
+    paddingBottom: 16
   },
   box: {
     alignItems: 'center',

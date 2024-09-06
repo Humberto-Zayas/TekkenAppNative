@@ -70,9 +70,6 @@ const CardListComponent = ({ route, navigation }) => {
   
 
   const renderCardItem = ({ item }) => {
-    const formattedCreatedAt = format(new Date(item.createdAt), 'MMMM dd, yyyy HH:mm:ss');
-    const formattedLastEditedAt = item.lastEditedAt ? format(new Date(item.lastEditedAt), 'MMMM dd, yyyy HH:mm:ss') : null;
-
     return (
       <TouchableOpacity
         style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]}
@@ -85,7 +82,9 @@ const CardListComponent = ({ route, navigation }) => {
           <Text style={{ color: 'white' }}>Average Rating: {item.averageRating}</Text>
           <Text style={{ color: 'white' }}>Creator: {item.username}</Text>
           <Text style={{ color: 'white' }}>
-            {item.lastEditedAt ? `Last Edited At: ${formattedLastEditedAt}` : `Created: ${formattedCreatedAt}`}
+          {item.lastEditedAt
+            ? `Last Edited: ${format(new Date(item.lastEditedAt), 'MMM dd, yyyy')}`
+            : `Created: ${format(new Date(item.createdAt), 'MMM dd, yyyy')}`}
           </Text>
         </View>
       </TouchableOpacity>

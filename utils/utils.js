@@ -5,10 +5,10 @@ export const calculateAverageRating = (card) => {
 
 export const getBackgroundColor = (averageRating) => {
   if (averageRating >= 4.5) {
-    return 'green';
+    return '#228B22'; // Forest Green
   } else if (averageRating >= 3) {
-    return 'yellow';
+    return '#a68d00'; // Gold
   } else {
-    return 'red';
+    return '#D32F2F'; // Firebrick Red
   }
 };
