@@ -246,7 +246,7 @@ const CardListComponent = ({ route, navigation }) => {
             </>
           ) : (
             <>
-              <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
+              <TouchableOpacity style={{marginBottom: 4}} onPress={toggleSortOrder}>
                 <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
               </TouchableOpacity>
               {selectedTags.length > 0 && cards.length === 0 && (

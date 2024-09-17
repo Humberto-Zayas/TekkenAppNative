@@ -14,8 +14,8 @@ const RatingModal = ({ visible, onClose, onStarPress, selectedRating, card }) =>
         activeOpacity={1}
         onPressOut={onClose}
       >
-        <View style={styles.modalContainer}>
-          <View style={styles.menuContainer}>
+        <View style={styles.menuContainer}>
+          <View style={{ display: 'flex', flexDirection: 'column' }}>
             <View style={styles.tagsContainer}>
               {card?.tags.map((tag) => (
                 <Pressable
@@ -28,7 +28,7 @@ const RatingModal = ({ visible, onClose, onStarPress, selectedRating, card }) =>
                 </Pressable>
               ))}
             </View>
-            <View>
+            <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
               {[1, 2, 3, 4, 5].map((i) => (
                 <TouchableOpacity key={i} onPress={() => onStarPress(i)}>
                   <FontAwesome
@@ -86,7 +86,7 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
     setSelectedRating(starNumber);
     onRatingChange(starNumber);  // This triggers the API call to save the rating
   };
-  
+
 
   const handleBookmarkPress = () => {
     toggleBookmark();
@@ -177,7 +177,7 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
         {/* {user?.userId === card?.userId && ( */}
 
         <TouchableOpacity onPress={openMenu}>
-          <FontAwesome name="ellipsis-h" size={24} color="blue" style={{marginBottom: 8}} />
+          <FontAwesome name="ellipsis-h" size={24} color="blue" style={{ marginBottom: 8 }} />
         </TouchableOpacity>
         <TouchableOpacity onPress={openRatingModal}>
           <FontAwesome name="star" size={24} color="gold" style={styles.starIcon} />

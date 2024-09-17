@@ -121,13 +121,13 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     height: 'auto',
-    paddingHorizontal: 10,
-    paddingVertical: 50,
-    borderRadius: 20,
+    paddingHorizontal: 8,
+    paddingVertical: 48,
+    borderRadius: 24,
     shadowColor: 'rgba(0,0,0,0.3)',
     shadowOffset: {
       width: 0,
-      height: -15,
+      height: -16,
     },
     shadowOpacity: 1,
     shadowRadius: 10,
@@ -176,7 +176,8 @@ export const styles = StyleSheet.create({
   tagsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginTop: 10,
+    justifyContent: 'center',
+    marginBottom: 8,
   },
   tag: {
     backgroundColor: '#e0e0e0',
