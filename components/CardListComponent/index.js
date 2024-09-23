@@ -95,7 +95,6 @@ const CardListComponent = ({ route, navigation }) => {
     setCardMenuVisible(!isCardMenuVisible);
   };
 
-
   const frameDataFiles = {
     Alisa: require('../../data/AlisaFrameData.js').default,
     Asuka: require('../../data/AsukaFrameData.js').default,

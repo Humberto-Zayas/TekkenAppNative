@@ -51,11 +51,52 @@ const CreatorCardListComponent = ({ route, navigation }) => {
     setCurrentPage(currentPage + 1);
   };
 
-  const handleCardPress = (id) => {
-    navigation.navigate('CardComponent', { id });
+  const frameDataFiles = {
+    Alisa: require('../../data/AlisaFrameData.js').default,
+    Asuka: require('../../data/AsukaFrameData.js').default,
+    Azucena: require('../../data/AzucenaFrameData.js').default,
+    Bryan: require('../../data/BryanFrameData.js').default,
+    Claudio: require('../../data/ClaudioFrameData.js').default,
+    Devil_Jin: require('../../data/Devil_JinFrameData.js').default,
+    Dragunov: require('../../data/DragunovFrameData.js').default,
+    Eddy: require('../../data/EddyFrameData.js').default,
+    Feng: require('../../data/FengFrameData.js').default,
+    Hwoarang: require('../../data/HwoarangFrameData.js').default,
+    Jin: require('../../data/JinFrameData.js').default,
+    Jun: require('../../data/JunFrameData.js').default,
+    Kazuya: require('../../data/KazuyaFrameData.js').default,
+    King: require('../../data/KingFrameData.js').default,
+    Kuma: require('../../data/KumaFrameData.js').default,
+    Lars: require('../../data/LarsFrameData.js').default,
+    Law: require('../../data/LawFrameData.js').default,
+    Lee: require('../../data/LeeFrameData.js').default,
+    Lili: require('../../data/LiliFrameData.js').default,
+    Nina: require('../../data/NinaFrameData.js').default,
+    Panda: require('../../data/PandaFrameData.js').default,
+    Paul: require('../../data/PaulFrameData.js').default,
+    Raven: require('../../data/RavenFrameData.js').default,
+    Reina: require('../../data/ReinaFrameData.js').default,
+    Shaheen: require('../../data/ShaheenFrameData.js').default,
+    Steve: require('../../data/SteveFrameData.js').default,
+    Victor: require('../../data/VictorFrameData.js').default,
+    Xiaoyu: require('../../data/XiaoyuFrameData.js').default,
+    Yoshimitsu: require('../../data/YoshimitsuFrameData.js').default,
+    Zafina: require('../../data/ZafinaFrameData.js').default,
   };
 
+  const loadFrameData = (characterName) => {
+    const sanitizedCharacterName = characterName.replace(/\s+/g, '');
+    return frameDataFiles[sanitizedCharacterName] || null;
+  };
 
+  const handleCardPress = (id, characterName) => {
+    const frameData = loadFrameData(characterName);
+    navigation.navigate('CardComponent', { 
+      id,
+      frameData
+    });
+  };
+  
   const renderCardItem = ({ item }) => {
     const formattedCreatedAt = format(new Date(item.createdAt), 'MMMM dd, yyyy');
     const formattedLastEditedAt = item.lastEditedAt ? format(new Date(item.lastEditedAt), 'MMMM dd, yyyy') : null;
@@ -66,7 +107,7 @@ const CreatorCardListComponent = ({ route, navigation }) => {
     return (
       <TouchableOpacity
         style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]}
-        onPress={() => handleCardPress(item._id)}
+        onPress={() => handleCardPress(item._id, item.characterName)}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           {/* Display the character's image */}
@@ -90,7 +131,7 @@ const CreatorCardListComponent = ({ route, navigation }) => {
     );
   };
   
-  
+
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
   };
