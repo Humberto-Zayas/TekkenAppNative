@@ -5,6 +5,7 @@ import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
 import { format } from 'date-fns';
+import { characters } from '../../data/characters';
 
 const CreatorCardListComponent = ({ route, navigation }) => {
   const { creatorId, creator } = route.params;
@@ -56,28 +57,40 @@ const CreatorCardListComponent = ({ route, navigation }) => {
 
 
   const renderCardItem = ({ item }) => {
-    const formattedCreatedAt = format(new Date(item.createdAt), 'MMMM dd, yyyy HH:mm:ss');
-    const formattedLastEditedAt = item.lastEditedAt ? format(new Date(item.lastEditedAt), 'MMMM dd, yyyy HH:mm:ss') : null;
-
+    const formattedCreatedAt = format(new Date(item.createdAt), 'MMMM dd, yyyy');
+    const formattedLastEditedAt = item.lastEditedAt ? format(new Date(item.lastEditedAt), 'MMMM dd, yyyy') : null;
+  
+    // Find the corresponding character by name
+    const character = characters.find((char) => char.name === item.characterName);
+  
     return (
       <TouchableOpacity
         style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]}
         onPress={() => handleCardPress(item._id)}
       >
-        <View>
-          <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }} numberOfLines={1}>
-            {item.cardName}
-          </Text>
-          <Text style={{ color: 'white' }}>Average Rating: {item.averageRating}</Text>
-          <Text style={{ color: 'white' }}>Creator: {item.username}</Text>
-          <Text style={{ color: 'white' }}>
-            {item.lastEditedAt ? `Last Edited At: ${formattedLastEditedAt}` : `Created: ${formattedCreatedAt}`}
-          </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          {/* Display the character's image */}
+          {character && (
+            <Image source={character.image} style={styles.thumbnailImage} />
+          )}
+  
+          {/* Display the card details */}
+          <View style={{ flex: 1, marginLeft: 10 }}>
+            <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }} numberOfLines={1}>
+              {item.cardName}
+            </Text>
+            <Text style={{ color: 'white' }}>Average Rating: {item.averageRating}</Text>
+            <Text style={{ color: 'white' }}>Creator: {item.username}</Text>
+            <Text style={{ color: 'white' }}>
+              {item.lastEditedAt ? `Last Edited At: ${formattedLastEditedAt}` : `Created: ${formattedCreatedAt}`}
+            </Text>
+          </View>
         </View>
       </TouchableOpacity>
     );
   };
-
+  
+  
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
   };
