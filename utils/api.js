@@ -175,3 +175,12 @@ export const updateCard = async (cardData, token) => {
   }
 };
 
+export const fetchUserBookmarks = async (userId, token) => {
+  const response = await fetch(`${REACT_APP_API_BASE_URL}/users/${userId}/bookmarks`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await response.json();
+  return data.bookmarks;
+};

@@ -16,10 +16,11 @@ const CreatorCardListComponent = ({ route, navigation }) => {
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize, setPageSize] = useState(10); // Number of items per page
   const { user } = useAuth();
+  const userId = user?.userId;
 
   const fetchCards = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/user/${creatorId}`);
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/user/${creatorId}?userId=${userId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch cards');
       }
@@ -89,11 +90,12 @@ const CreatorCardListComponent = ({ route, navigation }) => {
     return frameDataFiles[sanitizedCharacterName] || null;
   };
 
-  const handleCardPress = (id, characterName) => {
+  const handleCardPress = (id, characterName, bookmarked) => {
     const frameData = loadFrameData(characterName);
     navigation.navigate('CardComponent', { 
       id,
-      frameData
+      frameData,
+      bookmarked
     });
   };
   
@@ -107,7 +109,7 @@ const CreatorCardListComponent = ({ route, navigation }) => {
     return (
       <TouchableOpacity
         style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]}
-        onPress={() => handleCardPress(item._id, item.characterName)}
+        onPress={() => handleCardPress(item._id, item.characterName, item.isBookmarked)}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           {/* Display the character's image */}
@@ -143,7 +145,6 @@ const CreatorCardListComponent = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.heroContainer}>
-        {/* <Image source={image} style={styles.heroImage} /> */}
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10 }}>
           {creator}'s Cards
         </Text>
@@ -152,10 +153,7 @@ const CreatorCardListComponent = ({ route, navigation }) => {
         <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
           <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
         </TouchableOpacity>
-        {/* 
-          <TouchableOpacity style={styles.sortButton} onPress={toggleSortFilterModal}>
-            <Text style={styles.sortButtonText}>Sort & Filter</Text>
-          </TouchableOpacity> */}
+
         <FlatList
           contentContainerStyle={styles.flatList}
           data={cards}

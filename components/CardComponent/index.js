@@ -5,13 +5,14 @@ import HeroComponent from './HeroComponent';
 import { characters } from '../../data/characters';
 import { styles } from './styles';
 import { useAuth } from '../../utils/AuthContext';
-import { fetchCardById, bookmarkCardById, unbookmarkCardById, rateCardById } from '../../utils/api';
+import { fetchCardById, bookmarkCardById, unbookmarkCardById, rateCardById, fetchUserBookmarks } from '../../utils/api';
 
 const CardComponent = ({ route, navigation }) => {
   const { id, frameData } = route.params;
   const [card, setCard] = useState(null);
   const [character, setCharacter] = useState(null);
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(null); // Directly set the initial value
+  console.log('isBookmarked state: ', isBookmarked)
   const [userRating, setUserRating] = useState(null);
   const [averageRating, setAverageRating] = useState(null);
   const { user, token } = useAuth();
@@ -41,7 +42,16 @@ const CardComponent = ({ route, navigation }) => {
     try {
       const data = await fetchCardById(id, userId || '');
       setCard(data);
-      setIsBookmarked(data.isBookmarked || false);
+  
+      // Fetch user's bookmarks and check if this card is bookmarked
+      if (userId) {
+        const userBookmarks = await fetchUserBookmarks(userId, token);
+        const isBookmarkedByUser = userBookmarks.some(bookmark => bookmark._id === id);
+        setIsBookmarked(isBookmarkedByUser);
+      } else {
+        setIsBookmarked(false);
+      }
+  
       setAverageRating(data.averageRating || 0);
     } catch (error) {
       console.error('Error fetching card:', error);
@@ -50,6 +60,7 @@ const CardComponent = ({ route, navigation }) => {
       setLoading(false);
     }
   };
+  
 
   const handleMoveSetLinkPress = (moveSetName, moves) => {
     if (moveSetName === 'HeatEngagers') {
