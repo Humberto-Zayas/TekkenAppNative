@@ -22,11 +22,11 @@ const MoveFlowChartComponent = ({ onClose, setMoveFlowChartData, moveFlowChartDa
     if (isEditing) {
       const updatedFollowUps = [...moveFlowChartData];
       updatedFollowUps[editingIndex] = newFollowUp;
-      setMoveFlowChartData(updatedFollowUps);
+      setMoveFlowChartData(updatedFollowUps);  // Notify parent about the update
       setIsEditing(false);
       setEditingIndex(null);
     } else {
-      setMoveFlowChartData([...moveFlowChartData, newFollowUp]);
+      setMoveFlowChartData([...moveFlowChartData, newFollowUp]);  // Notify parent about the addition
     }
 
     resetForm();
@@ -43,8 +43,8 @@ const MoveFlowChartComponent = ({ onClose, setMoveFlowChartData, moveFlowChartDa
   const deleteFollowUp = useCallback((index) => {
     const updatedFollowUps = [...moveFlowChartData];
     updatedFollowUps.splice(index, 1);
-    setMoveFlowChartData(updatedFollowUps);
-  }, [moveFlowChartData, setMoveFlowChartData]);
+    setMoveFlowChartData(updatedFollowUps);  // Notify parent about the deletion
+  }, [moveFlowChartData, setMoveFlowChartData]);  
 
   const editFollowUp = useCallback((index) => {
     const followUp = moveFlowChartData[index];

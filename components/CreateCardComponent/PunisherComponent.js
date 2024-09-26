@@ -11,15 +11,17 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
   const [detailMove, setDetailMove] = useState(null);
 
   const addPunisher = (move) => {
-    setPunisherData([...punisherData, move]);
-    setModalVisible(false);
+    const updatedPunishers = [...punisherData, move];
+    setPunisherData(updatedPunishers);  // Notify parent of the change
+    setModalVisible(false);             // Close modal
   };
-
+  
   const deletePunisher = (index) => {
     const updatedPunishers = [...punisherData];
     updatedPunishers.splice(index, 1);
-    setPunisherData(updatedPunishers);
+    setPunisherData(updatedPunishers);  // Notify parent of the change
   };
+  
 
   const handleMovePress = (move) => {
     setDetailMove(move);

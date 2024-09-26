@@ -15,6 +15,7 @@ import { createCard, updateCard } from '../../utils/api';
 const CreateCardComponent = ({ route, navigation }) => {
   const { user, token } = useAuth(); // Get user and token from useAuth
   const { cardData: initialCardData, isEdit, characterName, characterImage, frameData } = route.params;
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showPunishers, setShowPunishers] = useState(false);
   const [showMoveFlowChart, setShowMoveFlowChart] = useState(false);
   const [showFollowUps, setShowFollowUps] = useState(false);
@@ -46,21 +47,54 @@ const CreateCardComponent = ({ route, navigation }) => {
     }
   }, [isEdit, initialCardData]);
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      if (!hasUnsavedChanges) {
+        // If there are no unsaved changes, do nothing
+        return;
+      }
+  
+      // Prevent default behavior of leaving the screen
+      e.preventDefault();
+  
+      // Show an alert to confirm navigation
+      Alert.alert(
+        'Discard changes?',
+        'You have unsaved changes. Are you sure you want to discard them and leave?',
+        [
+          { text: "Don't leave", style: 'cancel', onPress: () => {} },
+          {
+            text: 'Discard',
+            style: 'destructive',
+            onPress: () => navigation.dispatch(e.data.action),
+          },
+        ]
+      );
+    });
+  
+    return unsubscribe;
+  }, [navigation, hasUnsavedChanges]);  
+
   const handleCardNameChange = (name) => {
     setCardName(name);
+    if (name !== initialCardData?.cardName) setHasUnsavedChanges(true);
   };
-
+  
   const handleCardDescriptionChange = (description) => {
     setCardDescription(description);
+    if (description !== initialCardData?.cardDescription) setHasUnsavedChanges(true);
   };
-
+  
   const handleYouTubeLinkChange = (youtubeLink) => {
     setYoutubeLink(youtubeLink);
+    if (youtubeLink !== initialCardData?.youtubeLink) setHasUnsavedChanges(true);
   };
-
+  
   const handleTwitchLinkChange = (twitchLink) => {
     setTwitchLink(twitchLink);
+    if (twitchLink !== initialCardData?.twitchLink) setHasUnsavedChanges(true);
   };
+  
 
   const handleTagPress = (tag) => {
     const tagIndex = selectedTags.findIndex(t => t.name === tag.name);
@@ -69,6 +103,7 @@ const CreateCardComponent = ({ route, navigation }) => {
     } else {
       setSelectedTags([...selectedTags, { name: tag.name }]);
     }
+    setHasUnsavedChanges(true);
   };
 
   const handleSave = async () => {
@@ -152,7 +187,10 @@ const CreateCardComponent = ({ route, navigation }) => {
       <Modal visible={showPunishers} animationType="slide" onRequestClose={() => setShowPunishers(false)}>
         <PunisherComponent
           onClose={() => setShowPunishers(false)}
-          setPunisherData={setPunisherData}
+          setPunisherData={(data) => {
+            setPunisherData(data);
+            setHasUnsavedChanges(true); // Track unsaved changes
+          }}
           punisherData={punisherData}
           frameData={frameData}
         />
@@ -161,7 +199,10 @@ const CreateCardComponent = ({ route, navigation }) => {
       <Modal visible={showMoveFlowChart} animationType="slide" onRequestClose={() => setShowMoveFlowChart(false)}>
         <MoveFlowChartComponent
           onClose={() => setShowMoveFlowChart(false)}
-          setMoveFlowChartData={setMoveFlowChartData}
+          setMoveFlowChartData={(data) => {
+            setMoveFlowChartData(data);
+            setHasUnsavedChanges(true)
+          }}
           moveFlowChartData={moveFlowChartData}
           frameData={frameData}
         />
@@ -170,7 +211,10 @@ const CreateCardComponent = ({ route, navigation }) => {
       <Modal visible={showFollowUps} animationType="slide" onRequestClose={() => setShowFollowUps(false)}>
         <FollowUpsComponent
           onClose={() => setShowFollowUps(false)}
-          setFollowUpData={setFollowUpData}
+          setFollowUpData={(data) => {
+            setFollowUpData(data);
+            setHasUnsavedChanges(true);
+          }}
           followUpData={followUpData}
           frameData={frameData}
         />
@@ -179,7 +223,10 @@ const CreateCardComponent = ({ route, navigation }) => {
       <Modal visible={showCombos} animationType="slide" onRequestClose={() => setShowCombos(false)}>
         <ComboComponent
           onClose={() => setShowCombos(false)}
-          setComboData={setComboData}
+          setComboData={(data) => {
+            setComboData(data);
+            setHasUnsavedChanges(true);
+          }}
           comboData={comboData}
           frameData={frameData}
         />
@@ -188,7 +235,10 @@ const CreateCardComponent = ({ route, navigation }) => {
       <Modal visible={showImportantMoves} animationType="slide" onRequestClose={() => setShowImportantMoves(false)}>
         <ImportantMovesComponent
           onClose={() => setShowImportantMoves(false)}
-          setImportantMoveData={setImportantMoveData}
+          setImportantMoveData={(data) => {
+            setImportantMoveData(data);
+            setHasUnsavedChanges(true);
+          }}
           importantMoveData={importantMoveData}
           frameData={frameData}
         />
