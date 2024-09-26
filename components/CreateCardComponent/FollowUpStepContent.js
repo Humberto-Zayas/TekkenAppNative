@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, TextInput } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 
 const FollowUpStepContent = ({

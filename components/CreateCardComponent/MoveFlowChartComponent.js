@@ -44,7 +44,7 @@ const MoveFlowChartComponent = ({ onClose, setMoveFlowChartData, moveFlowChartDa
     const updatedFollowUps = [...moveFlowChartData];
     updatedFollowUps.splice(index, 1);
     setMoveFlowChartData(updatedFollowUps);  // Notify parent about the deletion
-  }, [moveFlowChartData, setMoveFlowChartData]);  
+  }, [moveFlowChartData, setMoveFlowChartData]);
 
   const editFollowUp = useCallback((index) => {
     const followUp = moveFlowChartData[index];
@@ -60,6 +60,11 @@ const MoveFlowChartComponent = ({ onClose, setMoveFlowChartData, moveFlowChartDa
   const handleAddFollowUpPress = () => {
     setIsAddingFollowUp(true);
     setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    resetForm(); // Reset the form data when closing
+    setModalVisible(false); // Close the modal
   };
 
   return (
@@ -98,6 +103,9 @@ const MoveFlowChartComponent = ({ onClose, setMoveFlowChartData, moveFlowChartDa
       )}
       <Modal visible={modalVisible} animationType="slide">
         <View style={styles.modalContainer}>
+          <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
+            <FontAwesome name="times" size={20} color="black" />
+          </TouchableOpacity>
           <FollowUpStepContent
             contentType={'flowchart'}
             step={step}

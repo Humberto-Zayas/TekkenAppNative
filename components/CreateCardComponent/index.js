@@ -33,6 +33,38 @@ const CreateCardComponent = ({ route, navigation }) => {
   const [importantMoveData, setImportantMoveData] = useState([]);
 
   useEffect(() => {
+    console.log('Unsaved Changes:', hasUnsavedChanges);
+  }, [hasUnsavedChanges]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      if (!hasUnsavedChanges) {
+        // If there are no unsaved changes, do nothing
+        return;
+      }
+
+      // Prevent default behavior of leaving the screen
+      e.preventDefault();
+
+      // Show an alert to confirm navigation
+      Alert.alert(
+        'Discard changes?',
+        'You have unsaved changes. Are you sure you want to discard them and leave?',
+        [
+          { text: "Don't leave", style: 'cancel', onPress: () => { } },
+          {
+            text: 'Discard',
+            style: 'destructive',
+            onPress: () => navigation.dispatch(e.data.action),
+          },
+        ]
+      );
+    });
+
+    return unsubscribe;
+  }, [navigation, hasUnsavedChanges]);
+
+  useEffect(() => {
     if (isEdit) {
       setCardName(initialCardData.cardName);
       setCardDescription(initialCardData.cardDescription);
@@ -44,57 +76,92 @@ const CreateCardComponent = ({ route, navigation }) => {
       setComboData(initialCardData.comboData);
       setImportantMoveData(initialCardData.moveData);
       setSelectedTags(initialCardData.tags || []);
+
+      // Reset unsaved changes because we are loading existing data
+      setHasUnsavedChanges(false);
     }
   }, [isEdit, initialCardData]);
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-      if (!hasUnsavedChanges) {
-        // If there are no unsaved changes, do nothing
+  const handleSave = async () => {
+    if (!cardName || !cardDescription) {
+        alert('Please enter a Card Name and Card Description.');
         return;
-      }
-  
-      // Prevent default behavior of leaving the screen
-      e.preventDefault();
-  
-      // Show an alert to confirm navigation
-      Alert.alert(
-        'Discard changes?',
-        'You have unsaved changes. Are you sure you want to discard them and leave?',
-        [
-          { text: "Don't leave", style: 'cancel', onPress: () => {} },
-          {
-            text: 'Discard',
-            style: 'destructive',
-            onPress: () => navigation.dispatch(e.data.action),
-          },
-        ]
-      );
-    });
-  
-    return unsubscribe;
-  }, [navigation, hasUnsavedChanges]);  
+    }
+
+    const formData = {
+        cardName,
+        characterName,
+        cardDescription,
+        youtubeLink,
+        twitchLink,
+        punisherData,
+        moveFlowChartData,
+        followUpData,
+        comboData,
+        moveData: importantMoveData,
+        userId: user?.userId,
+        username: user?.username,
+        tags: selectedTags,
+    };
+
+    try {
+        if (isEdit) {
+            await updateCard({ ...formData, _id: initialCardData._id }, token);
+            await new Promise((resolve) => {
+                Alert.alert('Success', 'Card updated successfully!', [
+                    {
+                        text: 'OK',
+                        onPress: () => {
+                            setHasUnsavedChanges(false); // Reset unsaved changes after update
+                            resolve(); // Resolve the promise to indicate the alert was dismissed
+                        },
+                    },
+                ], { cancelable: false });
+            });
+        } else {
+            await createCard(formData, token);
+            await new Promise((resolve) => {
+                Alert.alert('Success', 'Card created successfully!', [
+                    {
+                        text: 'OK',
+                        onPress: () => {
+                            setHasUnsavedChanges(false); // Reset unsaved changes after creation
+                            resolve(); // Resolve the promise to indicate the alert was dismissed
+                        },
+                    },
+                ], { cancelable: false });
+            });
+        }
+
+        // Navigate back after the alert is dismissed
+        navigation.goBack();
+
+    } catch (error) {
+        console.error('Error saving the card:', error);
+        alert('Failed to save the card. Please try again.');
+    }
+};
+
 
   const handleCardNameChange = (name) => {
     setCardName(name);
     if (name !== initialCardData?.cardName) setHasUnsavedChanges(true);
   };
-  
+
   const handleCardDescriptionChange = (description) => {
     setCardDescription(description);
     if (description !== initialCardData?.cardDescription) setHasUnsavedChanges(true);
   };
-  
+
   const handleYouTubeLinkChange = (youtubeLink) => {
     setYoutubeLink(youtubeLink);
     if (youtubeLink !== initialCardData?.youtubeLink) setHasUnsavedChanges(true);
   };
-  
+
   const handleTwitchLinkChange = (twitchLink) => {
     setTwitchLink(twitchLink);
     if (twitchLink !== initialCardData?.twitchLink) setHasUnsavedChanges(true);
   };
-  
 
   const handleTagPress = (tag) => {
     const tagIndex = selectedTags.findIndex(t => t.name === tag.name);
@@ -104,42 +171,6 @@ const CreateCardComponent = ({ route, navigation }) => {
       setSelectedTags([...selectedTags, { name: tag.name }]);
     }
     setHasUnsavedChanges(true);
-  };
-
-  const handleSave = async () => {
-    if (!cardName || !cardDescription) {
-      alert('Please enter a Card Name and Card Description.');
-      return;
-    }
-
-    const formData = {
-      cardName,
-      characterName,
-      cardDescription,
-      youtubeLink,
-      twitchLink,
-      punisherData,
-      moveFlowChartData,
-      followUpData,
-      comboData,
-      moveData: importantMoveData,
-      userId: user?.userId,
-      username: user?.username,
-      tags: selectedTags
-    };
-
-    try {
-      if (isEdit) {
-        await updateCard({ ...formData, _id: initialCardData._id }, token); // Pass token here
-        Alert.alert('Success', 'Card updated successfully!', [{ text: 'OK', onPress: () => navigation.goBack() }], { cancelable: false });
-      } else {
-        await createCard(formData, token); // Pass token here
-        Alert.alert('Success', 'Card created successfully!', [{ text: 'OK', onPress: () => navigation.goBack() }], { cancelable: false });
-      }
-    } catch (error) {
-      console.error('Error saving the card:', error);
-      alert('Failed to save the card. Please try again.');
-    }
   };
 
   return (

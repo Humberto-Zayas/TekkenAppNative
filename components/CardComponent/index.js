@@ -12,7 +12,6 @@ const CardComponent = ({ route, navigation }) => {
   const [card, setCard] = useState(null);
   const [character, setCharacter] = useState(null);
   const [isBookmarked, setIsBookmarked] = useState(null); // Directly set the initial value
-  console.log('isBookmarked state: ', isBookmarked)
   const [userRating, setUserRating] = useState(null);
   const [averageRating, setAverageRating] = useState(null);
   const { user, token } = useAuth();
