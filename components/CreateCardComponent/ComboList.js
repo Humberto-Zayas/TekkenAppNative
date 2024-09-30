@@ -17,11 +17,11 @@ const ComboList = ({ comboData, onDelete, onEdit }) => {
           </View>
           <Text style={styles.column}>{item.comboRoute}</Text>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={() => onDelete(index)} style={styles.deleteButton}>
-              <FontAwesome name="trash" size={24} color="red" />
+            <TouchableOpacity onPress={() => onEdit(index)} style={styles.editIcon}>
+              <FontAwesome name="edit" size={24} color="blue" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => onEdit(index)} style={{ marginTop: 8 }}>
-              <FontAwesome name="pencil" size={24} color="blue" />
+            <TouchableOpacity onPress={() => onDelete(index)} style={styles.deleteIcon}>
+              <FontAwesome name="trash" size={24} color="red" />
             </TouchableOpacity>
           </View>
         </View>

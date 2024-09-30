@@ -36,10 +36,10 @@ const ComboComponent = ({ onClose, comboData, setComboData, frameData }) => {
       type: comboType,
       notes: notes, // Add notes to new combo object
     };
-    const updatedCombos = editingIndex !== null 
+    const updatedCombos = editingIndex !== null
       ? comboData.map((combo, index) => index === editingIndex ? newCombo : combo)
       : [...comboData, newCombo];
-    
+
     setComboData(updatedCombos);
     resetForm();
   };
@@ -61,6 +61,11 @@ const ComboComponent = ({ onClose, comboData, setComboData, frameData }) => {
 
   const handleAddComboUpPress = () => setModalVisible(true);
 
+  const handleCloseModal = () => {
+    resetForm(); // Reset the form data when closing
+    setModalVisible(false); // Close the modal
+  };
+
   return (
     <View style={styles.rowContainer}>
       <TouchableOpacity onPress={onClose} style={styles.closeButton}>
@@ -68,7 +73,7 @@ const ComboComponent = ({ onClose, comboData, setComboData, frameData }) => {
       </TouchableOpacity>
       <Text style={styles.header}>Combos</Text>
       <MoveTableHeader firstHeader='Starter' secondHeader='Combo Route' />
-      <ComboList 
+      <ComboList
         comboData={comboData}
         onDelete={deleteCombo}
         onEdit={(index) => { setEditingIndex(index); setModalVisible(true); }}
@@ -78,6 +83,9 @@ const ComboComponent = ({ onClose, comboData, setComboData, frameData }) => {
       </TouchableOpacity>
       <Modal visible={modalVisible} animationType="slide">
         <View style={styles.modalContainer}>
+          <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
+            <FontAwesome name="times" size={20} color="black" />
+          </TouchableOpacity>
           <StepContent
             step={step}
             comboType={comboType}

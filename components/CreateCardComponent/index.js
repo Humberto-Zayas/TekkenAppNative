@@ -84,64 +84,63 @@ const CreateCardComponent = ({ route, navigation }) => {
 
   const handleSave = async () => {
     if (!cardName || !cardDescription) {
-        alert('Please enter a Card Name and Card Description.');
-        return;
+      alert('Please enter a Card Name and Card Description.');
+      return;
     }
 
     const formData = {
-        cardName,
-        characterName,
-        cardDescription,
-        youtubeLink,
-        twitchLink,
-        punisherData,
-        moveFlowChartData,
-        followUpData,
-        comboData,
-        moveData: importantMoveData,
-        userId: user?.userId,
-        username: user?.username,
-        tags: selectedTags,
+      cardName,
+      characterName,
+      cardDescription,
+      youtubeLink,
+      twitchLink,
+      punisherData,
+      moveFlowChartData,
+      followUpData,
+      comboData,
+      moveData: importantMoveData,
+      userId: user?.userId,
+      username: user?.username,
+      tags: selectedTags,
     };
 
     try {
-        if (isEdit) {
-            await updateCard({ ...formData, _id: initialCardData._id }, token);
-            await new Promise((resolve) => {
-                Alert.alert('Success', 'Card updated successfully!', [
-                    {
-                        text: 'OK',
-                        onPress: () => {
-                            setHasUnsavedChanges(false); // Reset unsaved changes after update
-                            resolve(); // Resolve the promise to indicate the alert was dismissed
-                        },
-                    },
-                ], { cancelable: false });
-            });
-        } else {
-            await createCard(formData, token);
-            await new Promise((resolve) => {
-                Alert.alert('Success', 'Card created successfully!', [
-                    {
-                        text: 'OK',
-                        onPress: () => {
-                            setHasUnsavedChanges(false); // Reset unsaved changes after creation
-                            resolve(); // Resolve the promise to indicate the alert was dismissed
-                        },
-                    },
-                ], { cancelable: false });
-            });
-        }
+      if (isEdit) {
+        await updateCard({ ...formData, _id: initialCardData._id }, token);
+        await new Promise((resolve) => {
+          Alert.alert('Success', 'Card updated successfully!', [
+            {
+              text: 'OK',
+              onPress: () => {
+                setHasUnsavedChanges(false); // Reset unsaved changes after update
+                resolve(); // Resolve the promise to indicate the alert was dismissed
+              },
+            },
+          ], { cancelable: false });
+        });
+      } else {
+        await createCard(formData, token);
+        await new Promise((resolve) => {
+          Alert.alert('Success', 'Card created successfully!', [
+            {
+              text: 'OK',
+              onPress: () => {
+                setHasUnsavedChanges(false); // Reset unsaved changes after creation
+                resolve(); // Resolve the promise to indicate the alert was dismissed
+              },
+            },
+          ], { cancelable: false });
+        });
+      }
 
-        // Navigate back after the alert is dismissed
-        navigation.goBack();
+      // Navigate back after the alert is dismissed
+      navigation.goBack();
 
     } catch (error) {
-        console.error('Error saving the card:', error);
-        alert('Failed to save the card. Please try again.');
+      console.error('Error saving the card:', error);
+      alert('Failed to save the card. Please try again.');
     }
-};
-
+  };
 
   const handleCardNameChange = (name) => {
     setCardName(name);

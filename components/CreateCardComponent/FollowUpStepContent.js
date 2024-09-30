@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, TextInput, ScrollView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 
@@ -57,6 +57,11 @@ const FollowUpStepContent = ({
     </View>
   );
 
+  const getColorForIndex = (index) => {
+    const colors = ['#3498db', '#9b59b6', '#e67e22', '#e74c3c'];
+    return colors[index % colors.length];
+  };
+
   switch (step) {
     case 1:
       return (
@@ -90,10 +95,11 @@ const FollowUpStepContent = ({
                       <Text style={styles.column}>{item.startupFrame}</Text>
                       <Text style={styles.column}>{item.blockFrame}</Text>
                       <Text style={styles.column}>{item.hitFrame}</Text>
-                    </View>
-                    {isSelected && (
-                      <Text style={styles.counter}>{selectedMoves.indexOf(item) + 1}</Text>
+                      {isSelected && (
+                      <Text style={styles.flowCounter}>{selectedMoves.indexOf(item) + 1}</Text>
                     )}
+                    </View>
+                   
                   </View>
                 </TouchableOpacity>
               );
@@ -105,7 +111,7 @@ const FollowUpStepContent = ({
               onPress={() => setStep(2)}
               style={styles.nextButton}
             >
-              <Text style={styles.nextButtonText}>Next</Text>
+              <Text style={{color: 'white', fontSize: 18}}>Next</Text>
             </TouchableOpacity>
           </View>
         </>
@@ -114,22 +120,38 @@ const FollowUpStepContent = ({
       return (
         <>
           <Text style={styles.header}>Add Notes About Flowchart</Text>
-          {renderMoveListHeader}
-          <FlatList
-            style={styles.flatList}
-            data={selectedMoves}
-            renderItem={({ item }) => (
-              <View style={styles.tableRow}>
-                <Text style={styles.column}>{item.move}</Text>
-                <Text style={styles.column}>{item.hitLevel}</Text>
-                <Text style={styles.column}>{item.damage}</Text>
-                <Text style={styles.column}>{item.startupFrame}</Text>
-                <Text style={styles.column}>{item.blockFrame}</Text>
-                <Text style={styles.column}>{item.hitFrame}</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.flowChartContainer}
+          >
+            {selectedMoves.map((move, moveIndex) => (
+              <View
+                key={moveIndex}
+                style={[
+                  styles.flowChartItemWrapper,
+                  { zIndex: selectedMoves.length - moveIndex },
+                ]}
+              >
+                <TouchableOpacity
+                  onPress={() => openDrawer(move)}
+                  style={[
+                    styles.flowChartItem,
+                    { backgroundColor: getColorForIndex(moveIndex) },
+                  ]}
+                >
+                  <Text style={styles.flowChartItemText}>{move.move}</Text>
+                </TouchableOpacity>
+                <View
+                  style={[
+                    styles.rotatedSquare,
+                    { backgroundColor: getColorForIndex(moveIndex) },
+                  ]}
+                />
               </View>
-            )}
-            keyExtractor={(item, index) => index.toString()}
-          />
+            ))}
+          </ScrollView>
+
           <View style={styles.flatList}>
             <TextInput
               style={styles.input}
@@ -137,15 +159,15 @@ const FollowUpStepContent = ({
               value={notes}
               onChangeText={setNotes}
             />
-            <View style={styles.stepperButtons}>
+            <View style={{flexDirection: 'row'}}>
               <TouchableOpacity
                 onPress={() => setStep(1)}
-                style={styles.previousButton}
+                style={styles.backButton}
               >
-                <Text style={styles.previousButtonText}>Back</Text>
+                <Text style={{color: 'white', fontSize: 18}}>Back</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={addFollowUp} style={styles.addButton}>
-                <Text style={styles.addButtonText}>
+                <Text style={{color: 'white', fontSize: 18}}>
                   {contentType === 'followups' ? 'Add Follow Up' : 'Add Flow Chart'}
                 </Text>
               </TouchableOpacity>

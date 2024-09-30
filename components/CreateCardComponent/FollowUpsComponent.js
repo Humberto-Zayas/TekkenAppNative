@@ -62,6 +62,11 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
     setModalVisible(true);
   };
 
+  const handleCloseModal = () => {
+    resetForm(); // Reset the form data when closing
+    setModalVisible(false); // Close the modal
+  };
+
   return (
     <View style={styles.rowContainer}>
       {!isAddingFollowUp && (
@@ -98,6 +103,9 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
       )}
       <Modal visible={modalVisible} animationType="slide">
         <View style={styles.modalContainer}>
+        <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
+            <FontAwesome name="times" size={20} color="black" />
+          </TouchableOpacity>
           <FollowUpStepContent
             contentType={'followups'}
             step={step}

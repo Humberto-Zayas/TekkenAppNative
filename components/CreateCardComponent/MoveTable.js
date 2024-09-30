@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 
-const MoveTableHeader = ({firstHeader, secondHeader}) => (
+const MoveTableHeader = ({ firstHeader, secondHeader }) => (
   <View style={styles.tableHeader}>
     <View style={styles.columnLeft}>
       <Text style={styles.headerText}>{firstHeader}</Text>
@@ -17,8 +17,12 @@ const MoveTableHeader = ({firstHeader, secondHeader}) => (
 const MoveTableRow = ({ item, index, onMovePress, onDelete }) => (
   <TouchableOpacity onPress={() => onMovePress(item)}>
     <View style={styles.tableRow}>
-      <Text style={styles.columnLeft}>{item.move}</Text>
-      <Text style={styles.column}>{item.startupFrame}</Text>
+      <View style={styles.columnLeft}>
+        <Text style={{ fontSize: '18px' }}>{item.move}</Text>
+      </View>
+      <View style={styles.column}>
+        <Text style={{ fontSize: '18px' }}>{item.startupFrame}</Text>
+      </View>
       <TouchableOpacity style={styles.deleteIcon} onPress={() => onDelete(index)}>
         <FontAwesome name="trash" size={20} color="red" />
       </TouchableOpacity>

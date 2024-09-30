@@ -45,12 +45,12 @@ export const styles = StyleSheet.create({
   },
   searchInput: {
     padding: 16,
-    fontSize: 16,
+    fontSize: 18,
     width: '100%'
   },
   inputArea: {
     padding: 16,
-    fontSize: 16,
+    fontSize: 18,
     height: 96,
     maxHeight: 96,
   },
@@ -82,10 +82,11 @@ export const styles = StyleSheet.create({
   plusButton: {
     backgroundColor: 'blue',
     padding: 8,
-    borderRadius: 10,
+    borderRadius: 40,
     alignItems: 'center',
     marginBottom: 20,
-    width: 150,
+    width: 40,
+    height: 40,
     alignSelf: 'center',
     justifyContent: 'center',
   },
@@ -122,7 +123,6 @@ export const styles = StyleSheet.create({
     borderBottomColor: '#ddd',
     paddingBottom: 8,
     paddingTop: 8,
-    marginBottom: 8,
     backgroundColor: 'lightblue',
   },
   tableRow: {
@@ -134,6 +134,7 @@ export const styles = StyleSheet.create({
   },
   buttonContainer: {
     display: 'flex',
+    flexDirection: 'row',
     justifyContent: 'center'
   },
   headerText: {
@@ -146,7 +147,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   column: {
-    fontSize: 16,
+    fontSize: 18,
     flex: 1,
     padding: 10,
     alignItems: 'flex-start',
@@ -158,9 +159,11 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   deleteIcon: {
-    width: '9%',
-    paddingRight: 5,
-    justifyContent: 'center',
+    alignSelf: 'center'
+  },
+  editIcon: {
+    marginRight: 8,
+    alignSelf: 'center'
   },
   moveDetails: {
     width: '100%',
@@ -210,23 +213,30 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  selectedMoveItem: {
+  selectedMove: {
     backgroundColor: '#d3d3d3', // Example selected color
   },
   nextButton: {
-    padding: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
     backgroundColor: 'blue',
     alignItems: 'center',
+    borderRadius: 8
   },
   backButton: {
     padding: 10,
     backgroundColor: 'gray',
     alignItems: 'center',
+    width: '49%',
+    marginRight: 8,
+    borderRadius: 8 
   },
   addButton: {
     padding: 10,
-    backgroundColor: 'green',
+    backgroundColor: 'blue',
     alignItems: 'center',
+    width: '49%',
+    borderRadius: 8
   },
   disabledButton: {
     backgroundColor: 'gray',
@@ -237,5 +247,49 @@ export const styles = StyleSheet.create({
     marginLeft: 'auto',
     fontSize: 16,
     color: 'white',
+  },
+  flowCounter: {
+    position: 'absolute',
+    top: 0,
+    alignSelf: 'flex-end',
+    marginLeft: 'auto',
+    fontSize: 16,
+    color: 'white',
+    backgroundColor: 'blue',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 20
+  },
+  flowChartContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap', // Allow items to wrap to the next line
+  },
+  flowChartItemWrapper: {
+    position: 'relative',
+    // marginRight: 10, // Space between items
+    marginBottom: 20, // Space between rows
+  },
+  flowChartItem: {
+    // paddingVertical: 10,
+    paddingHorizontal: 20,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2, // Ensure text is above rotated square
+  },
+  flowChartItemText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  rotatedSquare: {
+    position: 'absolute',
+    right: -8, // Positioning the pointed end outside
+    top: 6, // Start positioning from the vertical center
+    width: 27,
+    height: 27, // Equal width and height for a square shape
+    transform: [{ rotate: '45deg' }], // TranslateY to adjust for rotation
+    zIndex: 1,
   },
 });
