@@ -150,7 +150,7 @@ const StepContent = ({
     case 3:
       return (
         <View style={styles.flatList}>
-          <Text style={styles.header}>Combo String</Text>
+          <Text style={{paddingHorizontal: 16}}>Add The Combo String</Text>
           <TextInput
             style={styles.input}
             placeholder="Enter Combo String"
@@ -158,7 +158,7 @@ const StepContent = ({
             onChangeText={setComboString}
           />
           
-          <Text style={styles.header}>Difficulty</Text>
+          <Text style={{paddingHorizontal: 16}}>Difficulty</Text>
           <Picker
             selectedValue={difficulty}
             style={styles.picker}
@@ -169,7 +169,7 @@ const StepContent = ({
             <Picker.Item label="Difficult" value="Difficult" />
           </Picker>
 
-          <Text style={styles.header}>Notes</Text>
+          <Text style={{paddingHorizontal: 16}}>Add Notes</Text>
           <TextInput
             style={styles.input}
             placeholder="Enter Notes"
