@@ -6,13 +6,13 @@ import { styles } from './styles';
 const difficultyColors = {
   easy: '#34db6e',
   intermediate: '#b8a93e',
-  hard: '#e67e22',
+  difficult: '#e67e22',
 };
 
 const difficultyOrder = {
   easy: 0,
   intermediate: 1,
-  hard: 2,
+  difficult: 2,
 };
 
 // Function to group combos by type
@@ -52,7 +52,7 @@ const ComboList = ({ comboData, onDelete, onEdit }) => {
           <Text style={styles.legendText}>Intermediate</Text>
         </View>
         <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: difficultyColors.hard }]} />
+          <View style={[styles.legendDot, { backgroundColor: difficultyColors.difficult }]} />
           <Text style={styles.legendText}>Hard</Text>
         </View>
       </View>
