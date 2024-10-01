@@ -203,7 +203,7 @@ const CardDetailComponent = ({ route }) => {
       <ScrollView>
         {moveSetName === 'Combos' && Object.keys(groupedCombos).map((type) => (
           <View key={type}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginVertical: 10 }}>{type}</Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginVertical: 8 }}>{type}</Text>
             {groupedCombos[type].map((combo, comboIndex) => renderCombo(combo, comboIndex))}
           </View>
         ))}

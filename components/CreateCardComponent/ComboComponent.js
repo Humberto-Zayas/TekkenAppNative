@@ -24,7 +24,7 @@ const ComboComponent = ({ onClose, comboData, setComboData, frameData }) => {
       setDifficulty(comboToEdit.difficulty);
       setComboType(comboToEdit.type);
       setNotes(comboToEdit.notes || ''); // Initialize notes if present
-      setStep(4);
+      setStep(3);
     }
   }, [editingIndex]);
 
@@ -72,12 +72,13 @@ const ComboComponent = ({ onClose, comboData, setComboData, frameData }) => {
         <FontAwesome name="times" size={20} color="black" />
       </TouchableOpacity>
       <Text style={styles.header}>Combos</Text>
-      <MoveTableHeader firstHeader='Starter' secondHeader='Combo Route' />
       <ComboList
         comboData={comboData}
         onDelete={deleteCombo}
-        onEdit={(index) => { setEditingIndex(index); setModalVisible(true); }}
+        onEdit={(index) => { setEditingIndex(index); setModalVisible(true) }}
       />
+      <View style={{ marginVertical: 8 }}></View>
+
       <TouchableOpacity onPress={handleAddComboUpPress} style={styles.plusButton}>
         <FontAwesome name="plus" size={20} color="white" />
       </TouchableOpacity>

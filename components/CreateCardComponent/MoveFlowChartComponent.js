@@ -126,7 +126,6 @@ const MoveFlowChartComponent = ({ onClose, setMoveFlowChartData, moveFlowChartDa
               </View>
             </ScrollView>
           ))}
-
         
           <TouchableOpacity onPress={handleAddFollowUpPress} style={styles.plusButton}>
             <FontAwesome name="plus" size={20} color="white" />

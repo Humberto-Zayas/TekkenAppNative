@@ -23,7 +23,7 @@ const StepContent = ({
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleMoveSelect = (move) => {
-    setSelectedComboStarters(selectedComboStarters.includes(move) 
+    setSelectedComboStarters(selectedComboStarters.includes(move)
       ? selectedComboStarters.filter((starter) => starter !== move)
       : [...selectedComboStarters, move]
     );
@@ -82,33 +82,39 @@ const StepContent = ({
             <Picker.Item label="Wall Ender" value="Wall Ender" />
             <Picker.Item label="Wall Tornado" value="Wall Tornado" />
           </Picker>
-          <TouchableOpacity
-            onPress={() => (comboType === 'Wall Ender' || comboType === 'Wall Tornado' ? setStep(3) : setStep(2))}
-            style={[styles.nextButton, (!comboType) && styles.disabledButton]}
-            disabled={!comboType}
-          >
-            <Text style={{ color: 'white' }}>Next</Text>
-          </TouchableOpacity>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', paddingHorizontal: 16 }}>
+            <TouchableOpacity
+              onPress={() => (comboType === 'Wall Ender' || comboType === 'Wall Tornado' ? setStep(3) : setStep(2))}
+              style={[styles.addButton, (!comboType) && styles.disabledButton]}
+              disabled={!comboType}
+            >
+              <Text style={{ color: 'white' }}>Next</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       );
     case 2:
       return (
         <>
-          {renderMoveListHeader()}
+          <Text style={styles.header}>Choose The Combo Starters</Text>
           <TextInput
             style={styles.searchInput} // Add some styling for this input
             placeholder="Search moves..."
             value={searchQuery}
             onChangeText={(text) => setSearchQuery(text)}
           />
+          {renderMoveListHeader()}
+          
           <FlatList
             style={styles.flatList}
             data={filteredFrameData}
-            renderItem={({ item }) => (
+            renderItem={({ item }) => {
+              const isSelected = selectedComboStarters.includes(item.move);
+              return (
               <TouchableOpacity
                 style={[
                   styles.moveItem,
-                  selectedComboStarters.includes(item.move) && styles.selectedMoveItem
+                  isSelected ? styles.selectedMove : null
                 ]}
                 onPress={() => handleMoveSelect(item.move)}
               >
@@ -123,16 +129,17 @@ const StepContent = ({
                   </View>
                 </View>
               </TouchableOpacity>
-            )}
+              );
+            }}
             keyExtractor={(item) => item.move}
           />
-          <View style={styles.stepperNavigation}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', paddingHorizontal: 16 }}>
             <TouchableOpacity onPress={() => setStep(1)} style={styles.backButton}>
               <Text style={{ color: 'white' }}>Back</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => setStep(3)}
-              style={[styles.nextButton, (selectedComboStarters.length === 0) && styles.disabledButton]}
+              style={[styles.addButton, (selectedComboStarters.length === 0) && styles.disabledButton]}
               disabled={selectedComboStarters.length === 0}
             >
               <Text style={{ color: 'white' }}>Next</Text>
@@ -143,12 +150,15 @@ const StepContent = ({
     case 3:
       return (
         <View style={styles.flatList}>
+          <Text style={styles.header}>Combo String</Text>
           <TextInput
             style={styles.input}
             placeholder="Enter Combo String"
             value={comboString}
             onChangeText={setComboString}
           />
+          
+          <Text style={styles.header}>Difficulty</Text>
           <Picker
             selectedValue={difficulty}
             style={styles.picker}
@@ -158,39 +168,25 @@ const StepContent = ({
             <Picker.Item label="Intermediate" value="Intermediate" />
             <Picker.Item label="Difficult" value="Difficult" />
           </Picker>
-          <View style={styles.stepperNavigation}>
-            <TouchableOpacity onPress={() => setStep(2)} style={styles.backButton}>
-              <Text style={{ color: 'white' }}>Back</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setStep(4)}
-              style={[styles.nextButton, (!comboString) && styles.disabledButton]}
-              disabled={!comboString}
-            >
-              <Text style={{ color: 'white' }}>Next</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      );
-    case 4:
-      return (
-        <View style={styles.flatList}>
+
+          <Text style={styles.header}>Notes</Text>
           <TextInput
             style={styles.input}
             placeholder="Enter Notes"
             value={notes}
             onChangeText={setNotes}
           />
-          <View style={styles.stepperNavigation}>
-            <TouchableOpacity onPress={() => setStep(3)} style={styles.backButton}>
+
+          <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', paddingHorizontal: 16 }}>
+            <TouchableOpacity onPress={() => setStep(2)} style={styles.backButton}>
               <Text style={{ color: 'white' }}>Back</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={addCombo}
-              style={[styles.addButton, (!notes) && styles.disabledButton]}
-              disabled={!notes}
+              style={[styles.addButton, (!comboString || !notes) && styles.disabledButton]}
+              disabled={!comboString || !notes}
             >
-              <Text>{editingIndex !== null ? 'Update Combo' : 'Add Combo'}</Text>
+              <Text style={{color: 'white'}}>{editingIndex !== null ? 'Update Combo' : 'Add Combo'}</Text>
             </TouchableOpacity>
           </View>
         </View>

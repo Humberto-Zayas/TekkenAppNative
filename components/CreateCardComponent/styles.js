@@ -292,4 +292,47 @@ export const styles = StyleSheet.create({
     transform: [{ rotate: '45deg' }], // TranslateY to adjust for rotation
     zIndex: 1,
   },
+  difficultyDot: {
+    width: 16,
+    height: 16,
+    borderRadius: 16,
+    alignSelf: 'center',
+    marginTop: 8
+  },
+  legendContainer: {
+    marginVertical: 8,
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  legendDot: {
+    width: 16,
+    height: 16,
+    borderRadius: 16,
+    marginRight: 4,
+  },
+  legendText: {
+    fontSize: 16,
+  },
+  comboStarterColumn: {
+    flex: 0.20, // 25% of the row width
+    justifyContent: 'center',
+    paddingTop: 6
+  },
+  comboRouteColumn: {
+    flex: 0.70,
+    justifyContent: 'center',
+  },
+  comboRouteText: {
+    fontSize: 18,
+  },
+  notesColumn: {
+    flex: 0.1, // 10% of the row width
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+  },
 });

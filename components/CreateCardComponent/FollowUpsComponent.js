@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Modal, ScrollView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 import FollowUpStepContent from './FollowUpStepContent';
@@ -67,6 +67,11 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
     setModalVisible(false); // Close the modal
   };
 
+  const getColorForIndex = (index) => {
+    const colors = ['#3498db', '#9b59b6', '#e67e22', '#e74c3c'];
+    return colors[index % colors.length];
+  };
+
   return (
     <View style={styles.rowContainer}>
       {!isAddingFollowUp && (
@@ -75,27 +80,53 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
             <FontAwesome name="times" size={20} color="black" />
           </TouchableOpacity>
           <Text style={styles.header}>Follow Ups</Text>
-          <FlatList
-            style={styles.flatList}
-            data={followUpData}
-            renderItem={({ item, index }) => (
-              <View style={styles.tableRow}>
-                {item.moves.map((moveObj, moveIdx) => (
-                  <Text style={styles.column} key={moveIdx}>
-                    {moveObj.move}
-                  </Text>
-                ))}
-                <TouchableOpacity style={styles.editIcon} onPress={() => editFollowUp(index)}>
+
+          {followUpData.map((followUp, moveIndex) => (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.flowChartContainer}
+              key={moveIndex}
+            >
+              {followUp.moves.map((moveObj, moveObjIndex) => (
+                <View
+                  key={`move-${moveIndex}-${moveObjIndex}`}
+                  style={[
+                    styles.flowChartItemWrapper,
+                    { zIndex: selectedMoves.length - moveIndex },
+                  ]}
+                >
+                  <View
+
+                    style={[
+                      styles.flowChartItem,
+                      { backgroundColor: getColorForIndex(moveObjIndex) },
+                    ]}
+                  >
+                    <Text style={styles.flowChartItemText}>
+                      {moveObj.move} {/* Adjust this to match your move object structure */}
+                    </Text>
+                  </View>
+                  <View
+                    style={[
+                      styles.rotatedSquare,
+                      { backgroundColor: getColorForIndex(moveIndex) },
+                    ]}
+                  />
+                </View>
+
+              ))}
+              <View style={{ flexDirection: 'row', marginLeft: 16 }}>
+                <TouchableOpacity style={styles.editIcon} onPress={() => editFollowUp(moveIndex)}>
                   <FontAwesome name="edit" size={20} color="blue" />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.deleteIcon} onPress={() => deleteFollowUp(index)}>
                   <FontAwesome name="trash" size={20} color="red" />
                 </TouchableOpacity>
               </View>
-            )}
-            keyExtractor={(_, index) => index.toString()}
-            ListEmptyComponent={<Text style={styles.emptyList}>No follow ups added yet</Text>}
-          />
+            </ScrollView>
+          ))}
+
           <TouchableOpacity onPress={handleAddFollowUpPress} style={styles.plusButton}>
             <FontAwesome name="plus" size={20} color="white" />
           </TouchableOpacity>
@@ -103,7 +134,7 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
       )}
       <Modal visible={modalVisible} animationType="slide">
         <View style={styles.modalContainer}>
-        <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
+          <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
             <FontAwesome name="times" size={20} color="black" />
           </TouchableOpacity>
           <FollowUpStepContent
