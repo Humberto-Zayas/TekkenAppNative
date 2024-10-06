@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { View, Text, FlatList, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { Animated, View, Text, FlatList, TouchableOpacity, Image, ScrollView, Pressable } from 'react-native';
+import { Swipeable } from 'react-native-gesture-handler';
 import SavedListComponent from '../SavedListComponent';
 import LoginSignupModalComponent from './LoginSignupModalComponent';
 import Pagination from '../Pagination';
@@ -49,7 +50,7 @@ const CardListComponent = ({ route, navigation }) => {
 
   const fetchCards = async (page = 1) => {
     try {
-      const { cards: fetchedCards, totalCount: fetchedTotalCount, totalPages: fetchedTotalPages } = await fetchCardsByCharacter(name, page, selectedTags, youtubeQuery, twitchQuery, pageSize);
+      const { cards: fetchedCards, totalCount: fetchedTotalCount, totalPages: fetchedTotalPages } = await fetchCardsByCharacter(name, page, selectedTags, youtubeQuery, twitchQuery, pageSize, user?.userId);
       const sortedCards = sortOrder === 'ascending' ? fetchedCards : fetchedCards.reverse();
 
       setCards(sortedCards);
@@ -67,27 +68,57 @@ const CardListComponent = ({ route, navigation }) => {
       frameData, // Pass the frame data to the CardComponent
     });
   };
-  
+
+  const renderRightActions = (progress, dragX) => {
+    const actionWidth = 85; // Change this to fit your needs
+
+    const trans = dragX.interpolate({
+      inputRange: [-actionWidth * 3, 0], // Adjust input range based on the number of buttons
+      outputRange: [0, actionWidth * 3], // Make sure the output range aligns with the total width of the buttons
+    });
+
+    return (
+      <Animated.View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          transform: [{ translateX: trans }], // Apply the transformation
+        }}
+      >
+        <TouchableOpacity style={{ backgroundColor: 'red', padding: 20 }}>
+          <Text style={{ color: 'white' }}>Delete</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ backgroundColor: 'blue', padding: 20 }}>
+          <Text style={{ color: 'white' }}>Edit</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ backgroundColor: 'green', padding: 20 }}>
+          <Text style={{ color: 'white' }}>Bookmark</Text>
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  };
 
   const renderCardItem = ({ item }) => {
     return (
-      <TouchableOpacity
-        style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]}
-        onPress={() => handleCardPress(item._id)}
-      >
-        <View>
-          <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }} numberOfLines={1}>
-            {item.cardName}
-          </Text>
-          <Text style={{ color: 'white' }}>Average Rating: {item.averageRating}</Text>
-          <Text style={{ color: 'white' }}>Creator: {item.username}</Text>
-          <Text style={{ color: 'white' }}>
-          {item.lastEditedAt
-            ? `Last Edited: ${format(new Date(item.lastEditedAt), 'MMM dd, yyyy')}`
-            : `Created: ${format(new Date(item.createdAt), 'MMM dd, yyyy')}`}
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <Swipeable renderRightActions={renderRightActions}>
+        <Pressable
+          style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]}
+          onPress={() => handleCardPress(item._id)}
+        >
+          <View>
+            <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }} numberOfLines={1}>
+              {item.cardName}
+            </Text>
+            <Text style={{ color: 'white' }}>Average Rating: {item.averageRating}</Text>
+            <Text style={{ color: 'white' }}>Creator: {item.username}</Text>
+            <Text style={{ color: 'white' }}>
+              {item.lastEditedAt
+                ? `Last Edited: ${format(new Date(item.lastEditedAt), 'MMM dd, yyyy')}`
+                : `Created: ${format(new Date(item.createdAt), 'MMM dd, yyyy')}`}
+            </Text>
+          </View>
+        </Pressable>
+      </Swipeable>
     );
   };
 
@@ -133,7 +164,7 @@ const CardListComponent = ({ route, navigation }) => {
     const sanitizedCharacterName = characterName.replace(/\s+/g, '');
     return frameDataFiles[sanitizedCharacterName] || null;
   };
-  
+
   const handleCreateCard = () => {
     setCardMenuVisible(false);
     if (!user) {
@@ -146,7 +177,7 @@ const CardListComponent = ({ route, navigation }) => {
         frameData, // Pass the frame data to the next component
       });
     }
-  };   
+  };
 
   const closeModal = () => {
     setShowModal(false);
@@ -245,7 +276,7 @@ const CardListComponent = ({ route, navigation }) => {
             </>
           ) : (
             <>
-              <TouchableOpacity style={{marginBottom: 4}} onPress={toggleSortOrder}>
+              <TouchableOpacity style={{ marginBottom: 4 }} onPress={toggleSortOrder}>
                 <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
               </TouchableOpacity>
               {selectedTags.length > 0 && cards.length === 0 && (

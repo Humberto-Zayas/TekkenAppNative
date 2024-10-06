@@ -4,7 +4,7 @@ import { calculateAverageRating } from './utils';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-export const fetchCardsByCharacter = async (characterName, page = 1, selectedTags = [], youtubeQuery = false, twitchQuery = false, pageSize = 10) => {
+export const fetchCardsByCharacter = async (characterName, page = 1, selectedTags = [], youtubeQuery = false, twitchQuery = false, pageSize = 10, userId = null) => {
   try {
     let queryParams = `${API_BASE_URL}/cards/character/${characterName}?page=${page}`;
 
@@ -22,6 +22,11 @@ export const fetchCardsByCharacter = async (characterName, page = 1, selectedTag
     // Append Twitch query parameter if true
     if (twitchQuery) {
       queryParams += '&Twitch=true';
+    }
+
+    // Append userId query parameter if provided
+    if (userId) {
+      queryParams += `&userId=${userId}`;
     }
 
     const response = await fetch(queryParams);
