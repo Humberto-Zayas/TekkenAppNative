@@ -71,8 +71,10 @@ const CardListComponent = ({ route, navigation }) => {
     });
   };
 
-  const renderRightActions = (progress, dragX) => {
-    const actionWidth = 65; // Change this to fit your needs
+  const renderRightActions = (progress, dragX, item) => {
+    const isCardOwner = user?.userId === item.userId;
+    const bookmarkIconName = item.bookmarked ? 'bookmark' : 'bookmark-o';
+    const actionWidth = isCardOwner ? 65 : 25;
 
     const trans = dragX.interpolate({
       inputRange: [-actionWidth * 3, 0], // Adjust input range based on the number of buttons
@@ -87,18 +89,22 @@ const CardListComponent = ({ route, navigation }) => {
           transform: [{ translateX: trans }], // Apply the transformation
         }}
       >
-        <TouchableOpacity style={{ padding: 20 }}>
-          <FontAwesome name="trash" size={28} color="red" style={styles.menuItemIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity style={{ padding: 20 }}>
-          <FontAwesome name="edit" size={28} color="blue" style={styles.menuItemIcon} />
-        </TouchableOpacity>
+        {isCardOwner && (
+          <>
+            <TouchableOpacity style={{ padding: 20 }}>
+              <FontAwesome name="trash" size={28} color="red" />
+            </TouchableOpacity>
+            <TouchableOpacity style={{ padding: 20 }}>
+              <FontAwesome name="edit" size={28} color="blue" />
+            </TouchableOpacity>
+          </>
+        )}
         <TouchableOpacity style={{ padding: 20 }}>
           <FontAwesome
-            name={'bookmark-o'}
+            name={bookmarkIconName}
             size={28}
             color="blue"
-            style={styles.bookmarkIcon}
+
           />
         </TouchableOpacity>
       </Animated.View>
@@ -107,7 +113,7 @@ const CardListComponent = ({ route, navigation }) => {
 
   const renderCardItem = ({ item }) => {
     return (
-      <Swipeable renderRightActions={renderRightActions}>
+      <Swipeable renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, item)}>
         <Pressable
           style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]}
           onPress={() => handleCardPress(item._id)}
