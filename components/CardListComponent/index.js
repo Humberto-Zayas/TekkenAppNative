@@ -11,6 +11,7 @@ import { styles } from './styles';
 import { format } from 'date-fns';
 import tags from '../../data/tags';
 import { fetchCardsByCharacter } from '../../utils/api'; // Import the API function
+import { FontAwesome } from '@expo/vector-icons';
 
 const CardListComponent = ({ route, navigation }) => {
   const { character } = route.params;
@@ -19,6 +20,7 @@ const CardListComponent = ({ route, navigation }) => {
   const [isCardMenuVisible, setCardMenuVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [cards, setCards] = useState([]);
+  console.log(cards)
   const [sortOrder, setSortOrder] = useState('ascending');
   const [selectedTags, setSelectedTags] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -70,7 +72,7 @@ const CardListComponent = ({ route, navigation }) => {
   };
 
   const renderRightActions = (progress, dragX) => {
-    const actionWidth = 85; // Change this to fit your needs
+    const actionWidth = 65; // Change this to fit your needs
 
     const trans = dragX.interpolate({
       inputRange: [-actionWidth * 3, 0], // Adjust input range based on the number of buttons
@@ -85,14 +87,19 @@ const CardListComponent = ({ route, navigation }) => {
           transform: [{ translateX: trans }], // Apply the transformation
         }}
       >
-        <TouchableOpacity style={{ backgroundColor: 'red', padding: 20 }}>
-          <Text style={{ color: 'white' }}>Delete</Text>
+        <TouchableOpacity style={{ padding: 20 }}>
+          <FontAwesome name="trash" size={28} color="red" style={styles.menuItemIcon} />
         </TouchableOpacity>
-        <TouchableOpacity style={{ backgroundColor: 'blue', padding: 20 }}>
-          <Text style={{ color: 'white' }}>Edit</Text>
+        <TouchableOpacity style={{ padding: 20 }}>
+          <FontAwesome name="edit" size={28} color="blue" style={styles.menuItemIcon} />
         </TouchableOpacity>
-        <TouchableOpacity style={{ backgroundColor: 'green', padding: 20 }}>
-          <Text style={{ color: 'white' }}>Bookmark</Text>
+        <TouchableOpacity style={{ padding: 20 }}>
+          <FontAwesome
+            name={'bookmark-o'}
+            size={28}
+            color="blue"
+            style={styles.bookmarkIcon}
+          />
         </TouchableOpacity>
       </Animated.View>
     );
