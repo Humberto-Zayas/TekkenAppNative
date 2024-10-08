@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { useFocusEffect } from '@react-navigation/native';
 import SavedListComponent from '../SavedListComponent';
 import Pagination from '../Pagination';
+import CardItem from '../CardItem/index.js';
 import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
 
 const MyCardListComponent = ({ navigation }) => {
@@ -101,25 +102,15 @@ const MyCardListComponent = ({ navigation }) => {
   };
 
   const renderCardItem = ({ item }) => {
-
     return (
-      <TouchableOpacity
-        style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]}
-        onPress={() => handleCardPress(item._id,  item.characterName)}
-      >
-        <View>
-          <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }} numberOfLines={1}>
-            {item.cardName}
-          </Text>
-          <Text style={{ color: 'white' }}>Average Rating: {item.averageRating}</Text>
-          <Text style={{ color: 'white' }}>Creator: {item.username}</Text>
-          <Text style={{ color: 'white' }}>
-          {item.lastEditedAt
-            ? `Last Edited: ${format(new Date(item.lastEditedAt), 'MMM dd, yyyy')}`
-            : `Created: ${format(new Date(item.createdAt), 'MMM dd, yyyy')}`}
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <CardItem
+        item={item}
+        user={user}
+        handleCardPress={(id) => handleCardPress(id, item.characterName, item.isBookmarked)}
+        handleDeletePress={() => {/* Implement delete action here */}}
+        handleEditPress={() => {/* Implement edit action here */}}
+        getBackgroundColor={getBackgroundColor}
+      />
     );
   };
 

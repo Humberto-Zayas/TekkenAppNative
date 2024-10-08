@@ -5,6 +5,7 @@ import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
 import { format } from 'date-fns';
 import Pagination from '../Pagination';
+import CardItem from '../CardItem';
 import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
 
 const SavedListComponent = ({ navigation, characterName }) => {
@@ -116,23 +117,16 @@ const SavedListComponent = ({ navigation, characterName }) => {
   };
 
 
-  const renderSavedCardItem = ({ item }) => {
-
+  const renderCardItem = ({ item }) => {
     return (
-      <TouchableOpacity style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]} onPress={() => handleSavedCardPress(item._id, item.characterName)}>
-        <View>
-          <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }} numberOfLines={1}>
-            {item.cardName}
-          </Text>
-          <Text style={{ color: 'white' }}>Rating: {item.averageRating}</Text>
-          <Text style={{ color: 'white' }}>Creator: {item.username}</Text>
-          <Text style={{ color: 'white' }}>
-            {item.lastEditedAt
-            ? `Last Edited: ${format(new Date(item.lastEditedAt), 'MMM dd, yyyy')}`
-            : `Created: ${format(new Date(item.createdAt), 'MMM dd, yyyy')}`}
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <CardItem
+        item={item}
+        user={user}
+        handleCardPress={(id) => handleCardPress(id, item.characterName, item.isBookmarked)}
+        handleDeletePress={() => {/* Implement delete action here */}}
+        handleEditPress={() => {/* Implement edit action here */}}
+        getBackgroundColor={getBackgroundColor}
+      />
     );
   };
 
@@ -153,7 +147,7 @@ const SavedListComponent = ({ navigation, characterName }) => {
                 contentContainerStyle={styles.flatList}
                 data={bookmarkedCards}
                 keyExtractor={(item) => item._id}
-                renderItem={renderSavedCardItem}
+                renderItem={renderCardItem}
                 showsVerticalScrollIndicator={false}
               />
             </>

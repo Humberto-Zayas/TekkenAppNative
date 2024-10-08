@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
 import Pagination from '../Pagination';
+import CardItem from '../CardItem'; // Use the CardItem component
 import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
@@ -20,27 +21,39 @@ const CreatorCardListComponent = ({ route, navigation }) => {
 
   const fetchCards = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/user/${creatorId}?userId=${userId}`);
+      let url = `${process.env.REACT_APP_API_BASE_URL}/cards/user/${creatorId}`;
+  
+      if (userId) {
+        url += `?userId=${userId}`;
+      }
+  
+      const response = await fetch(url);
+  
       if (!response.ok) {
         throw new Error('Failed to fetch cards');
       }
+  
       const totalCount = response.headers.get('X-Total-Count');
-      const totalPages = Math.ceil(totalCount / pageSize); // Calculate total pages
+      
+      const totalPages = Math.ceil(totalCount / pageSize);
+  
       const data = await response.json();
+  
       const cardsWithAverageRating = data.map((card) => ({
         ...card,
-        averageRating: calculateAverageRating(card),
+        averageRating: calculateAverageRating(card), // Assuming calculateAverageRating is a function that exists
       }));
+  
       const sortedCards = sortOrder === 'ascending' ? cardsWithAverageRating : cardsWithAverageRating.reverse();
-
-      // Save both as initial and current set of cards
+  
       setCards(sortedCards);
       setTotalCount(totalCount);
       setTotalPages(totalPages);
     } catch (error) {
+      // Log any error that occurs during the fetch
       console.error('Error fetching cards:', error);
     }
-  };
+  };  
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
@@ -100,40 +113,18 @@ const CreatorCardListComponent = ({ route, navigation }) => {
   };
   
   const renderCardItem = ({ item }) => {
-    const formattedCreatedAt = format(new Date(item.createdAt), 'MMMM dd, yyyy');
-    const formattedLastEditedAt = item.lastEditedAt ? format(new Date(item.lastEditedAt), 'MMMM dd, yyyy') : null;
-  
-    // Find the corresponding character by name
-    const character = characters.find((char) => char.name === item.characterName);
-  
     return (
-      <TouchableOpacity
-        style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]}
-        onPress={() => handleCardPress(item._id, item.characterName, item.isBookmarked)}
-      >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {/* Display the character's image */}
-          {character && (
-            <Image source={character.image} style={styles.thumbnailImage} />
-          )}
-  
-          {/* Display the card details */}
-          <View style={{ flex: 1, marginLeft: 10 }}>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }} numberOfLines={1}>
-              {item.cardName}
-            </Text>
-            <Text style={{ color: 'white' }}>Average Rating: {item.averageRating}</Text>
-            <Text style={{ color: 'white' }}>Creator: {item.username}</Text>
-            <Text style={{ color: 'white' }}>
-              {item.lastEditedAt ? `Last Edited At: ${formattedLastEditedAt}` : `Created: ${formattedCreatedAt}`}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+      <CardItem
+        item={item}
+        user={user}
+        handleCardPress={(id) => handleCardPress(id, item.characterName, item.isBookmarked)}
+        handleDeletePress={() => {/* Implement delete action here */}}
+        handleEditPress={() => {/* Implement edit action here */}}
+        getBackgroundColor={getBackgroundColor}
+      />
     );
   };
   
-
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
   };
@@ -161,7 +152,7 @@ const CreatorCardListComponent = ({ route, navigation }) => {
           renderItem={renderCardItem}
           showsVerticalScrollIndicator={false}
         />
-        {cards.length > 0 && (
+        {cards.length > 10 && (
           <View style={styles.bottomContainer}>
             <Pagination
               currentPage={currentPage}

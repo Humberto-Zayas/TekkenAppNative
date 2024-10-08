@@ -91,8 +91,7 @@ const CardListComponent = ({ route, navigation }) => {
     } finally {
       setConfirmationModalVisible(false);
     }
-  };
-  
+  };  
 
   const renderCardItem = ({ item }) => (
     <CardItem
