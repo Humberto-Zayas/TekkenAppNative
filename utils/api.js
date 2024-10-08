@@ -180,6 +180,29 @@ export const updateCard = async (cardData, token) => {
   }
 };
 
+export const deleteCard = async (cardId, userId, token) => {
+  try {
+    const response = await fetch(`${REACT_APP_API_BASE_URL}/cards/${cardId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ userId }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete the card.');
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('Error deleting the card:', error);
+    throw error;
+  }
+};
+
+
 export const fetchUserBookmarks = async (userId, token) => {
   const response = await fetch(`${REACT_APP_API_BASE_URL}/users/${userId}/bookmarks`, {
     headers: {

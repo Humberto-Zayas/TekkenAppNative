@@ -119,7 +119,6 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
   };
 
   const handleConfirmDelete = async () => {
-    console.log(user?.userId)
     try {
       const response = await fetch(`${REACT_APP_API_BASE_URL}/cards/${card._id}`, {
         method: 'DELETE',

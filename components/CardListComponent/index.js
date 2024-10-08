@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { Animated, View, Text, FlatList, TouchableOpacity, Image, ScrollView, Pressable } from 'react-native';
-import { Swipeable } from 'react-native-gesture-handler';
+import { View, Text, FlatList, TouchableOpacity, Image, ScrollView } from 'react-native';
 import SavedListComponent from '../SavedListComponent';
 import LoginSignupModalComponent from './LoginSignupModalComponent';
 import Pagination from '../Pagination';
+import CardItem from '../CardItem';
 import { useAuth } from '../../utils/AuthContext';
 import { getBackgroundColor } from '../../utils/utils';
+import { deleteCard } from '../../utils/api';
 import { styles } from './styles';
 import { format } from 'date-fns';
 import tags from '../../data/tags';
 import { fetchCardsByCharacter } from '../../utils/api'; // Import the API function
-import { FontAwesome } from '@expo/vector-icons';
+import ConfirmationModal from '../ConfirmationModal'; // Adjust the path as needed
 
 const CardListComponent = ({ route, navigation }) => {
   const { character } = route.params;
@@ -20,7 +21,6 @@ const CardListComponent = ({ route, navigation }) => {
   const [isCardMenuVisible, setCardMenuVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [cards, setCards] = useState([]);
-  console.log(cards)
   const [sortOrder, setSortOrder] = useState('ascending');
   const [selectedTags, setSelectedTags] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,6 +29,7 @@ const CardListComponent = ({ route, navigation }) => {
   const [pageSize, setPageSize] = useState(10);
   const [youtubeQuery, setYouTubeQuery] = useState(false);
   const [twitchQuery, setTwitchQuery] = useState(false);
+  const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
 
   const { user } = useAuth();
 
@@ -71,69 +72,38 @@ const CardListComponent = ({ route, navigation }) => {
     });
   };
 
-  const renderRightActions = (progress, dragX, item) => {
-    const isCardOwner = user?.userId === item.userId;
-    const bookmarkIconName = item.bookmarked ? 'bookmark' : 'bookmark-o';
-    const actionWidth = isCardOwner ? 65 : 25;
-
-    const trans = dragX.interpolate({
-      inputRange: [-actionWidth * 3, 0], // Adjust input range based on the number of buttons
-      outputRange: [0, actionWidth * 3], // Make sure the output range aligns with the total width of the buttons
-    });
-
-    return (
-      <Animated.View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          transform: [{ translateX: trans }], // Apply the transformation
-        }}
-      >
-        {isCardOwner && (
-          <>
-            <TouchableOpacity style={{ padding: 20 }}>
-              <FontAwesome name="trash" size={28} color="red" />
-            </TouchableOpacity>
-            <TouchableOpacity style={{ padding: 20 }}>
-              <FontAwesome name="edit" size={28} color="blue" />
-            </TouchableOpacity>
-          </>
-        )}
-        <TouchableOpacity style={{ padding: 20 }}>
-          <FontAwesome
-            name={bookmarkIconName}
-            size={28}
-            color="blue"
-
-          />
-        </TouchableOpacity>
-      </Animated.View>
-    );
+  const handleEditPress = (item) => {
+    const frameData = loadFrameData(name);
+    navigation.navigate('CreateCardComponent', { cardData: item, isEdit: true, characterImage: image, frameData: frameData });
   };
 
-  const renderCardItem = ({ item }) => {
-    return (
-      <Swipeable renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, item)}>
-        <Pressable
-          style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]}
-          onPress={() => handleCardPress(item._id)}
-        >
-          <View>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }} numberOfLines={1}>
-              {item.cardName}
-            </Text>
-            <Text style={{ color: 'white' }}>Average Rating: {item.averageRating}</Text>
-            <Text style={{ color: 'white' }}>Creator: {item.username}</Text>
-            <Text style={{ color: 'white' }}>
-              {item.lastEditedAt
-                ? `Last Edited: ${format(new Date(item.lastEditedAt), 'MMM dd, yyyy')}`
-                : `Created: ${format(new Date(item.createdAt), 'MMM dd, yyyy')}`}
-            </Text>
-          </View>
-        </Pressable>
-      </Swipeable>
-    );
+  const handleDeletePress = () => {
+    setConfirmationModalVisible(true);
   };
+
+  const handleConfirmDelete = async (cardId) => {
+    try {
+      await deleteCard(cardId, user.userId, user.token);
+      console.log('Card deleted successfully');
+      // Optionally, refresh the card list or remove the deleted card from the state
+    } catch (error) {
+      console.error('Error deleting card:', error);
+    } finally {
+      setConfirmationModalVisible(false);
+    }
+  };
+  
+
+  const renderCardItem = ({ item }) => (
+    <CardItem
+      item={item}
+      user={user}
+      handleCardPress={handleCardPress}
+      handleDeletePress={() => handleDeletePress(item._id)}
+      handleEditPress={handleEditPress}
+      getBackgroundColor={getBackgroundColor}
+    />
+  );
 
   const toggleCardMenu = () => {
     setCardMenuVisible(!isCardMenuVisible);
@@ -353,6 +323,11 @@ const CardListComponent = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
       )}
+      <ConfirmationModal
+        visible={isConfirmationModalVisible}
+        onClose={() => setConfirmationModalVisible(false)}
+        onConfirm={handleConfirmDelete}
+      />
 
       {showModal && renderLoginSignupModal()}
     </View>
