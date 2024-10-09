@@ -31,9 +31,9 @@ const CardComponent = ({ route, navigation }) => {
 
   useEffect(() => {
     if (card?.characterName) {
-      const foundCharacter = characters.find(c => c.name === card.characterName);
+      const foundCharacter = Object.values(characters).find(c => c.name === card.characterName);
       setCharacter(foundCharacter);
-    }
+    }    
   }, [card]);
 
   const fetchCard = async () => {

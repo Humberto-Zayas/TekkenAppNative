@@ -1,6 +1,6 @@
 // characters.js
-export const characters = [
-  { 
+export const characters = {
+  alisa: { 
     id: 1, 
     name: 'Alisa', 
     image: require('./images/characters/alisa.webp'),
@@ -67,7 +67,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  asuka: { 
     id: 2, 
     name: 'Asuka', 
     image: require('./images/characters/asuka.webp') ,
@@ -134,7 +134,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  azucena: { 
     id: 3, 
     name: 'Azucena', 
     image: require('./images/characters/azucena.webp') ,
@@ -201,7 +201,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  bryan: { 
     id: 4, 
     name: 'Bryan', 
     image: require('./images/characters/bryan.webp') ,
@@ -268,7 +268,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  claudio: { 
     id: 5, 
     name: 'Claudio', 
     image: require('./images/characters/claudio.webp') ,
@@ -335,7 +335,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  devil_jin: { 
     id: 6, 
     name: 'Devil_Jin', 
     image: require('./images/characters/deviljin.webp') ,
@@ -402,7 +402,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  dragunov: { 
     id: 7, 
     name: 'Dragunov', 
     image: require('./images/characters/dragunov.webp') ,
@@ -469,7 +469,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  eddy: { 
     id: 8, 
     name: 'Eddy', 
     image: require('./images/characters/eddy.webp') ,
@@ -536,7 +536,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  feng: { 
     id: 9, 
     name: 'Feng', 
     image: require('./images/characters/feng.webp') ,
@@ -603,7 +603,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  hwoarang: { 
     id: 10, 
     name: 'Hwoarang', 
     image: require('./images/characters/hwoarang.webp') ,
@@ -670,7 +670,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  jack_8: { 
     id: 11, 
     name: 'Jack-8', 
     image: require('./images/characters/jack-8.webp') ,
@@ -737,7 +737,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  jin: { 
     id: 12, 
     name: 'Jin', 
     image: require('./images/characters/jin.webp') ,
@@ -804,7 +804,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  jun: { 
     id: 13, 
     name: 'Jun', 
     image: require('./images/characters/jun.webp') ,
@@ -871,7 +871,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  kazuya: { 
     id: 14, 
     name: 'Kazuya', 
     image: require('./images/characters/kazuya.webp') ,
@@ -938,7 +938,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  king: { 
     id: 15, 
     name: 'King', 
     image: require('./images/characters/king.webp') ,
@@ -1005,7 +1005,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  kuma: { 
     id: 16, 
     name: 'Kuma', 
     image: require('./images/characters/kuma.webp') ,
@@ -1072,7 +1072,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  lars: { 
     id: 17, 
     name: 'Lars', 
     image: require('./images/characters/lars.webp') ,
@@ -1139,7 +1139,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  law: { 
     id: 18, 
     name: 'Law', 
     image: require('./images/characters/law.webp') ,
@@ -1206,7 +1206,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  lee: { 
     id: 19, 
     name: 'Lee', 
     image: require('./images/characters/lee.webp') ,
@@ -1273,7 +1273,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  leo: { 
     id: 20, 
     name: 'Leo', 
     image: require('./images/characters/leo.webp') ,
@@ -1340,7 +1340,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  leroy: { 
     id: 21, 
     name: 'Leroy', 
     image: require('./images/characters/leroy.webp') ,
@@ -1407,7 +1407,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  lidia: { 
     id: 22, 
     name: 'Lidia', 
     image: require('./images/characters/lidia.webp') ,
@@ -1474,7 +1474,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  lili: { 
     id: 23, 
     name: 'Lili', 
     image: require('./images/characters/lili.webp') ,
@@ -1541,7 +1541,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  nina: { 
     id: 24, 
     name: 'Nina', 
     image: require('./images/characters/nina.webp') ,
@@ -1608,7 +1608,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  panda: { 
     id: 25, 
     name: 'Panda', 
     image: require('./images/characters/panda.webp') ,
@@ -1675,7 +1675,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  paul: { 
     id: 26, 
     name: 'Paul', 
     image: require('./images/characters/paul.webp') ,
@@ -1742,7 +1742,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  raven: { 
     id: 27, 
     name: 'Raven', 
     image: require('./images/characters/raven.webp') ,
@@ -1809,7 +1809,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  reina: { 
     id: 28, 
     name: 'Reina', 
     image: require('./images/characters/reina.webp') ,
@@ -1876,7 +1876,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  shaheen: { 
     id: 29, 
     name: 'Shaheen', 
     image: require('./images/characters/shaheen.webp') ,
@@ -1943,7 +1943,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  steve: { 
     id: 30, 
     name: 'Steve', 
     image: require('./images/characters/steve.webp') ,
@@ -2010,7 +2010,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  victor: { 
     id: 31, 
     name: 'Victor', 
     image: require('./images/characters/victor.webp') ,
@@ -2077,7 +2077,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  xiaoyu: { 
     id: 32, 
     name: 'Xiaoyu', 
     image: require('./images/characters/xiaoyu.webp') ,
@@ -2144,7 +2144,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  yoshimitsu: { 
     id: 33, 
     name: 'Yoshimitsu', 
     image: require('./images/characters/yoshi.webp') ,
@@ -2211,7 +2211,7 @@ export const characters = [
       }
     ] 
   },
-  { 
+  zafina: { 
     id: 34, 
     name: 'Zafina', 
     image: require('./images/characters/zafina.webp') ,
@@ -2279,4 +2279,4 @@ export const characters = [
     ] 
   }
   // Add more characters as needed
-];
+};

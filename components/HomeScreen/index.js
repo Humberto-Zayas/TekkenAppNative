@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
-import { characters } from '../../data/characters';
+import {characters} from '../../data/characters'; // Ensure you're importing the default export
 import { useAuth } from '../../utils/AuthContext';
 
 const HomeScreen = ({ navigation }) => {
@@ -15,14 +15,15 @@ const HomeScreen = ({ navigation }) => {
         </Text>
       )}
       <ScrollView contentContainerStyle={styles.gridContainer}>
-        {characters.map((character) => (
+        {/* Convert characters object to an array and map over it */}
+        {Object.values(characters).map((character) => (
           <TouchableOpacity
             key={character.id}
             style={styles.box}
             onPress={() => navigation.navigate('CardList', { character })}
           >
             <Image source={character.image} style={{ width: 72, height: 72, borderRadius: 8 }} />
-            <Text style={{marginTop: 12}}>{character.name.replace(/_/g, ' ')}</Text>
+            <Text style={{ marginTop: 12 }}>{character.name.replace(/_/g, ' ')}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -37,17 +38,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  menuContainer: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    zIndex: 1,
-  },
-  menuText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'blue',
-  },
   gridContainer: {
     marginTop: 16,
     flexDirection: 'row',
@@ -59,7 +49,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: 16,
-    paddingBottom: 16
+    paddingBottom: 16,
   },
   box: {
     alignItems: 'center',
