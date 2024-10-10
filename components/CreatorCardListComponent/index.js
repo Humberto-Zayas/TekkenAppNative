@@ -22,30 +22,44 @@ const CreatorCardListComponent = ({ route, navigation }) => {
   const fetchCards = async () => {
     try {
       let url = `${process.env.REACT_APP_API_BASE_URL}/cards/user/${creatorId}`;
-  
+
       if (userId) {
         url += `?userId=${userId}`;
       }
-  
+
       const response = await fetch(url);
-  
+
       if (!response.ok) {
         throw new Error('Failed to fetch cards');
       }
-  
+
       const totalCount = response.headers.get('X-Total-Count');
-      
+
       const totalPages = Math.ceil(totalCount / pageSize);
-  
+
       const data = await response.json();
-  
-      const cardsWithAverageRating = data.map((card) => ({
-        ...card,
-        averageRating: calculateAverageRating(card), // Assuming calculateAverageRating is a function that exists
-      }));
-  
-      const sortedCards = sortOrder === 'ascending' ? cardsWithAverageRating : cardsWithAverageRating.reverse();
-  
+
+      const cardsWithData = data.map((card) => {
+        // Sanitize the characterName
+        const sanitizedCharacterName = card.characterName.toLowerCase().replace(/\s+|_/g, '');
+
+        const matchingCharacterKey = Object.keys(characters).find((char) => {
+          const sanitizedCharKey = char.toLowerCase().replace(/\s+|_/g, '');
+          return sanitizedCharKey === sanitizedCharacterName;
+        });
+
+        const character = characters[matchingCharacterKey] || null; // Use null if not found
+        const characterImage = character ? character.image : null;
+
+        return {
+          ...card,
+          averageRating: calculateAverageRating(card),
+          characterImage,
+        };
+      });
+
+      const sortedCards = sortOrder === 'ascending' ? cardsWithData : cardsWithData.reverse();
+
       setCards(sortedCards);
       setTotalCount(totalCount);
       setTotalPages(totalPages);
@@ -53,7 +67,7 @@ const CreatorCardListComponent = ({ route, navigation }) => {
       // Log any error that occurs during the fetch
       console.error('Error fetching cards:', error);
     }
-  };  
+  };
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
@@ -105,26 +119,33 @@ const CreatorCardListComponent = ({ route, navigation }) => {
 
   const handleCardPress = (id, characterName, bookmarked) => {
     const frameData = loadFrameData(characterName);
-    navigation.navigate('CardComponent', { 
+    navigation.navigate('CardComponent', {
       id,
       frameData,
       bookmarked
     });
   };
-  
+
+  // Add the handleEditPress function
+  const handleEditPress = (item) => {
+    const frameData = loadFrameData(item.characterName); // Get frame data for the specific character
+    const characterImage = item.characterImage; // Get the image from the item
+    navigation.navigate('CreateCardComponent', { cardData: item, isEdit: true, characterImage, frameData });
+  };
+
   const renderCardItem = ({ item }) => {
     return (
       <CardItem
         item={item}
         user={user}
         handleCardPress={(id) => handleCardPress(id, item.characterName, item.isBookmarked)}
-        handleDeletePress={() => {/* Implement delete action here */}}
-        handleEditPress={() => {/* Implement edit action here */}}
+        handleDeletePress={() => {/* Implement delete action here */ }}
+        handleEditPress={() => handleEditPress(item)}
         getBackgroundColor={getBackgroundColor}
       />
     );
   };
-  
+
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
   };

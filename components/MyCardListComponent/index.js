@@ -10,7 +10,6 @@ import CardItem from '../CardItem/index.js';
 import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
 import { characters } from '../../data/characters';
 
-
 const MyCardListComponent = ({ navigation }) => {
   const [cards, setCards] = useState([]);
   const [sortOrder, setSortOrder] = useState('ascending');
@@ -31,23 +30,14 @@ const MyCardListComponent = ({ navigation }) => {
       const totalPages = Math.ceil(totalCount / pageSize); // Calculate total pages
       const data = await response.json();
   
-      // Log all keys in the characters object
-      console.log('Character keys:', Object.keys(characters));
-  
       const cardsWithData = data.map((card) => {
         // Sanitize the characterName
         const sanitizedCharacterName = card.characterName.toLowerCase().replace(/\s+|_/g, '');
   
-        // Find matching character in characters object
         const matchingCharacterKey = Object.keys(characters).find((char) => {
           const sanitizedCharKey = char.toLowerCase().replace(/\s+|_/g, '');
-          console.log(`Comparing sanitized: ${sanitizedCharacterName} with key: ${sanitizedCharKey}`);
           return sanitizedCharKey === sanitizedCharacterName;
         });
-  
-        console.log('API Character Name:', card.characterName);
-        console.log('Sanitized Character Name:', sanitizedCharacterName);
-        console.log('Matching Character:', matchingCharacterKey);
   
         const character = characters[matchingCharacterKey] || null; // Use null if not found
         const characterImage = character ? character.image : null;
@@ -68,9 +58,6 @@ const MyCardListComponent = ({ navigation }) => {
       console.error('Error fetching cards:', error);
     }
   };
-  
-  
-
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
@@ -128,6 +115,13 @@ const MyCardListComponent = ({ navigation }) => {
     });
   };
 
+  // Add the handleEditPress function
+  const handleEditPress = (item) => {
+    const frameData = loadFrameData(item.characterName); // Get frame data for the specific character
+    const characterImage = item.characterImage; // Get the image from the item
+    navigation.navigate('CreateCardComponent', { cardData: item, isEdit: true, characterImage, frameData });
+  };
+
   const renderCardItem = ({ item }) => {
     return (
       <CardItem
@@ -135,7 +129,7 @@ const MyCardListComponent = ({ navigation }) => {
         user={user}
         handleCardPress={(id) => handleCardPress(id, item.characterName, item.isBookmarked)}
         handleDeletePress={() => {/* Implement delete action here */ }}
-        handleEditPress={() => {/* Implement edit action here */ }}
+        handleEditPress={() => handleEditPress(item)}
         getBackgroundColor={getBackgroundColor}
       />
     );
