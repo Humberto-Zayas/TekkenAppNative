@@ -6,6 +6,7 @@ import { styles } from './styles';
 import { format } from 'date-fns';
 import Pagination from '../Pagination';
 import CardItem from '../CardItem';
+import { characters } from '../../data/characters.js';
 import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
 
 const SavedListComponent = ({ navigation, characterName }) => {
@@ -22,30 +23,46 @@ const SavedListComponent = ({ navigation, characterName }) => {
       if (user) {
         try {
           let url = `${process.env.REACT_APP_API_BASE_URL}/users/${user.userId}/bookmarks`;
-
+  
           // Append character name to the URL if provided
           if (characterName) {
             url += `?characterName=${encodeURIComponent(characterName)}`;
           }
-
+  
           const response = await fetch(url);
           if (!response.ok) {
             throw new Error('Failed to fetch bookmarks');
           }
           const totalCount = response.headers.get('X-Total-Count');
           const totalPages = Math.ceil(totalCount / pageSize); // Calculate total pages
-
+  
           const data = await response.json();
-          const cardsWithAverageRating = data.bookmarks.map((card) => ({
-            ...card,
-            averageRating: calculateAverageRating(card),
-          }));
-
-          // Sort the cards based on createdAt field
+  
+          // Map the fetched cards and add the character image
+          const cardsWithData = data.bookmarks.map((card) => {
+            const sanitizedCharacterName = card.characterName.toLowerCase().replace(/\s+|_/g, '');
+  
+            // Find the matching character
+            const matchingCharacterKey = Object.keys(characters).find((char) => {
+              const sanitizedCharKey = char.toLowerCase().replace(/\s+|_/g, '');
+              return sanitizedCharKey === sanitizedCharacterName;
+            });
+  
+            const character = characters[matchingCharacterKey] || null; // Use null if not found
+            const characterImage = character ? character.image : null;
+  
+            return {
+              ...card,
+              averageRating: calculateAverageRating(card),
+              characterImage, // Add the character image to the card object
+            };
+          });
+  
+          // Sort the cards
           const sortedBookmarks = sortOrder === 'ascending'
-            ? cardsWithAverageRating.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
-            : cardsWithAverageRating.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
+            ? cardsWithData.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+            : cardsWithData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  
           setBookmarkedCards(sortedBookmarks);
           setTotalCount(totalCount);
           setTotalPages(totalPages);
@@ -54,9 +71,10 @@ const SavedListComponent = ({ navigation, characterName }) => {
         }
       }
     };
-
+  
     fetchBookmarks();
   }, [user, sortOrder]);
+  
 
   const frameDataFiles = {
     Alisa: require('../../data/AlisaFrameData.js').default,
@@ -102,6 +120,18 @@ const SavedListComponent = ({ navigation, characterName }) => {
     navigation.navigate('CardComponent', { id, frameData });
   };
 
+  const handleEditPress = (item) => {
+    const frameData = loadFrameData(item.characterName); // Load frame data for the specific character
+    const characterImage = item.characterImage; // Get the character image from the item
+    navigation.navigate('CreateCardComponent', { 
+      cardData: item, 
+      isEdit: true, 
+      characterImage, 
+      frameData 
+    });
+  };
+  
+
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
   };
@@ -116,15 +146,14 @@ const SavedListComponent = ({ navigation, characterName }) => {
     setCurrentPage(currentPage + 1);
   };
 
-
   const renderCardItem = ({ item }) => {
     return (
       <CardItem
         item={item}
         user={user}
-        handleCardPress={(id) => handleCardPress(id, item.characterName, item.isBookmarked)}
+        handleCardPress={(id) => handleSavedCardPress(id, item.characterName, item.isBookmarked)}
         handleDeletePress={() => {/* Implement delete action here */}}
-        handleEditPress={() => {/* Implement edit action here */}}
+        handleEditPress={() => handleEditPress(item)}
         getBackgroundColor={getBackgroundColor}
       />
     );
