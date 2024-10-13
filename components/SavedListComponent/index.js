@@ -6,7 +6,9 @@ import { styles } from './styles';
 import { format } from 'date-fns';
 import Pagination from '../Pagination';
 import CardItem from '../CardItem';
+import ConfirmationModal from '../ConfirmationModal';
 import { characters } from '../../data/characters.js';
+import { deleteCard } from '../../utils/api';
 import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
 
 const SavedListComponent = ({ navigation, characterName }) => {
@@ -16,53 +18,55 @@ const SavedListComponent = ({ navigation, characterName }) => {
   const [totalCount, setTotalCount] = useState(0); // Number of items per page
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize, setPageSize] = useState(10); // Number of items per page
-  const { user } = useAuth();
+  const [cardToDelete, setCardToDelete] = useState(null);
+  const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
+  const { user, token } = useAuth();
 
   useEffect(() => {
     const fetchBookmarks = async () => {
       if (user) {
         try {
           let url = `${process.env.REACT_APP_API_BASE_URL}/users/${user.userId}/bookmarks`;
-  
+
           // Append character name to the URL if provided
           if (characterName) {
             url += `?characterName=${encodeURIComponent(characterName)}`;
           }
-  
+
           const response = await fetch(url);
           if (!response.ok) {
             throw new Error('Failed to fetch bookmarks');
           }
           const totalCount = response.headers.get('X-Total-Count');
           const totalPages = Math.ceil(totalCount / pageSize); // Calculate total pages
-  
+
           const data = await response.json();
-  
+
           // Map the fetched cards and add the character image
           const cardsWithData = data.bookmarks.map((card) => {
             const sanitizedCharacterName = card.characterName.toLowerCase().replace(/\s+|_/g, '');
-  
+
             // Find the matching character
             const matchingCharacterKey = Object.keys(characters).find((char) => {
               const sanitizedCharKey = char.toLowerCase().replace(/\s+|_/g, '');
               return sanitizedCharKey === sanitizedCharacterName;
             });
-  
+
             const character = characters[matchingCharacterKey] || null; // Use null if not found
             const characterImage = character ? character.image : null;
-  
+
             return {
               ...card,
               averageRating: calculateAverageRating(card),
               characterImage, // Add the character image to the card object
             };
           });
-  
+
           // Sort the cards
           const sortedBookmarks = sortOrder === 'ascending'
             ? cardsWithData.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
             : cardsWithData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  
+
           setBookmarkedCards(sortedBookmarks);
           setTotalCount(totalCount);
           setTotalPages(totalPages);
@@ -71,10 +75,10 @@ const SavedListComponent = ({ navigation, characterName }) => {
         }
       }
     };
-  
+
     fetchBookmarks();
   }, [user, sortOrder]);
-  
+
 
   const frameDataFiles = {
     Alisa: require('../../data/AlisaFrameData.js').default,
@@ -123,14 +127,31 @@ const SavedListComponent = ({ navigation, characterName }) => {
   const handleEditPress = (item) => {
     const frameData = loadFrameData(item.characterName); // Load frame data for the specific character
     const characterImage = item.characterImage; // Get the character image from the item
-    navigation.navigate('CreateCardComponent', { 
-      cardData: item, 
-      isEdit: true, 
-      characterImage, 
-      frameData 
+    navigation.navigate('CreateCardComponent', {
+      cardData: item,
+      isEdit: true,
+      characterImage,
+      frameData
     });
   };
-  
+
+  const handleDeletePress = (item) => {
+    setCardToDelete(item); // Set the card that will be deleted
+    setConfirmationModalVisible(true); // Show the confirmation modal
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (cardToDelete) {
+      try {
+        await deleteCard(cardToDelete._id, user.userId, token);
+        setBookmarkedCards((prevCards) => prevCards.filter((card) => card._id !== cardToDelete._id));
+        setConfirmationModalVisible(false); // Close the modal after deletion
+        setCardToDelete(null); // Reset the card to delete
+      } catch (error) {
+        console.error("Error deleting card:", error);
+      }
+    }
+  };
 
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
@@ -152,7 +173,7 @@ const SavedListComponent = ({ navigation, characterName }) => {
         item={item}
         user={user}
         handleCardPress={(id) => handleSavedCardPress(id, item.characterName, item.isBookmarked)}
-        handleDeletePress={() => {/* Implement delete action here */}}
+        handleDeletePress={() => handleDeletePress(item)}
         handleEditPress={() => handleEditPress(item)}
         getBackgroundColor={getBackgroundColor}
       />
@@ -222,7 +243,12 @@ const SavedListComponent = ({ navigation, characterName }) => {
           />
         </View>
       )}
-
+      <ConfirmationModal
+        visible={isConfirmationModalVisible}
+        onClose={() => setConfirmationModalVisible(false)} // Close modal if cancelled
+        onConfirm={handleDeleteConfirm} // Confirm deletion
+        message={`Are you sure you want to delete this card?`}
+      />
     </View>
   )
 };

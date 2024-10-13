@@ -11,6 +11,7 @@ const ConfirmationModal = ({ visible, onClose, onConfirm }) => {
         activeOpacity={1}
         onPressOut={onClose}
       >
+        <View style={styles.modalContainer}>
         <View style={styles.centeredModalContainer}>
           <View style={styles.centeredMenuContainer}>
             <Text style={styles.confirmationText}>Are you sure you want to delete this card?</Text>
@@ -25,6 +26,7 @@ const ConfirmationModal = ({ visible, onClose, onConfirm }) => {
               </TouchableOpacity>
             </View>
           </View>
+        </View>
         </View>
       </TouchableOpacity>
     </Modal>

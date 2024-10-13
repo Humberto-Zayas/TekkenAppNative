@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
-import { format } from 'date-fns';
 import { useFocusEffect } from '@react-navigation/native';
 import SavedListComponent from '../SavedListComponent';
 import Pagination from '../Pagination';
 import CardItem from '../CardItem/index.js';
+import ConfirmationModal from '../ConfirmationModal';
 import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
+import { deleteCard } from '../../utils/api';
 import { characters } from '../../data/characters';
 
 const MyCardListComponent = ({ navigation }) => {
@@ -18,7 +19,9 @@ const MyCardListComponent = ({ navigation }) => {
   const [totalCount, setTotalCount] = useState(0); // Number of items per page
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize, setPageSize] = useState(10); // Number of items per page
-  const { user } = useAuth();
+  const [cardToDelete, setCardToDelete] = useState(null);
+  const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
+  const { user, token } = useAuth();
 
   const fetchCards = async () => {
     try {
@@ -115,6 +118,24 @@ const MyCardListComponent = ({ navigation }) => {
     });
   };
 
+  const handleDeletePress = (item) => {
+    setCardToDelete(item); // Set the card that will be deleted
+    setConfirmationModalVisible(true); // Show the confirmation modal
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (cardToDelete) {
+      try {
+        await deleteCard(cardToDelete._id, user.userId, token);
+        setCards((prevCards) => prevCards.filter((card) => card._id !== cardToDelete._id));
+        setConfirmationModalVisible(false); // Close the modal after deletion
+        setCardToDelete(null); // Reset the card to delete
+      } catch (error) {
+        console.error("Error deleting card:", error);
+      }
+    }
+  };
+
   // Add the handleEditPress function
   const handleEditPress = (item) => {
     const frameData = loadFrameData(item.characterName); // Get frame data for the specific character
@@ -128,7 +149,7 @@ const MyCardListComponent = ({ navigation }) => {
         item={item}
         user={user}
         handleCardPress={(id) => handleCardPress(id, item.characterName, item.isBookmarked)}
-        handleDeletePress={() => {/* Implement delete action here */ }}
+        handleDeletePress={() => handleDeletePress(item)}
         handleEditPress={() => handleEditPress(item)}
         getBackgroundColor={getBackgroundColor}
       />
@@ -138,10 +159,6 @@ const MyCardListComponent = ({ navigation }) => {
 
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
-  };
-
-  const toggleSavedList = () => {
-    setShowSavedList(!showSavedList);
   };
 
   useFocusEffect(
@@ -212,6 +229,12 @@ const MyCardListComponent = ({ navigation }) => {
           <Text style={styles.toggleButtonText}>Show Saved List</Text>
         </TouchableOpacity>
       </View>
+      <ConfirmationModal
+        visible={isConfirmationModalVisible}
+        onClose={() => setConfirmationModalVisible(false)} // Close modal if cancelled
+        onConfirm={handleDeleteConfirm} // Confirm deletion
+        message={`Are you sure you want to delete this card?`}
+      />
     </View>
   );
 };

@@ -9,7 +9,6 @@ import { useAuth } from '../../utils/AuthContext';
 import { getBackgroundColor } from '../../utils/utils';
 import { deleteCard } from '../../utils/api';
 import { styles } from './styles';
-import { format } from 'date-fns';
 import tags from '../../data/tags';
 import { fetchCardsByCharacter } from '../../utils/api'; // Import the API function
 import ConfirmationModal from '../ConfirmationModal'; // Adjust the path as needed
@@ -29,9 +28,10 @@ const CardListComponent = ({ route, navigation }) => {
   const [pageSize, setPageSize] = useState(10);
   const [youtubeQuery, setYouTubeQuery] = useState(false);
   const [twitchQuery, setTwitchQuery] = useState(false);
+  const [cardToDelete, setCardToDelete] = useState(null);
   const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
 
-  const { user } = useAuth();
+  const { user, token } = useAuth();
 
   const handleTagClick = (tag) => {
     const index = selectedTags.findIndex(t => t.name === tag.name);
@@ -77,28 +77,30 @@ const CardListComponent = ({ route, navigation }) => {
     navigation.navigate('CreateCardComponent', { cardData: item, isEdit: true, characterImage: image, frameData: frameData });
   };
 
-  const handleDeletePress = () => {
-    setConfirmationModalVisible(true);
+  const handleDeletePress = (item) => {
+    setCardToDelete(item); // Set the card that will be deleted
+    setConfirmationModalVisible(true); // Show the confirmation modal
   };
 
-  const handleConfirmDelete = async (cardId) => {
-    try {
-      await deleteCard(cardId, user.userId, user.token);
-      console.log('Card deleted successfully');
-      // Optionally, refresh the card list or remove the deleted card from the state
-    } catch (error) {
-      console.error('Error deleting card:', error);
-    } finally {
-      setConfirmationModalVisible(false);
+  const handleDeleteConfirm = async () => {
+    if (cardToDelete) {
+      try {
+        await deleteCard(cardToDelete._id, user.userId, token);
+        setCards((prevCards) => prevCards.filter((card) => card._id !== cardToDelete._id));
+        setConfirmationModalVisible(false); // Close the modal after deletion
+        setCardToDelete(null); // Reset the card to delete
+      } catch (error) {
+        console.error("Error deleting card:", error);
+      }
     }
-  };  
+  };
 
   const renderCardItem = ({ item }) => (
     <CardItem
       item={item}
       user={user}
       handleCardPress={handleCardPress}
-      handleDeletePress={() => handleDeletePress(item._id)}
+      handleDeletePress={() => handleDeletePress(item)}
       handleEditPress={handleEditPress}
       getBackgroundColor={getBackgroundColor}
     />
@@ -324,10 +326,10 @@ const CardListComponent = ({ route, navigation }) => {
       )}
       <ConfirmationModal
         visible={isConfirmationModalVisible}
-        onClose={() => setConfirmationModalVisible(false)}
-        onConfirm={handleConfirmDelete}
+        onClose={() => setConfirmationModalVisible(false)} // Close modal if cancelled
+        onConfirm={handleDeleteConfirm} // Confirm deletion
+        message={`Are you sure you want to delete this card?`}
       />
-
       {showModal && renderLoginSignupModal()}
     </View>
   );
