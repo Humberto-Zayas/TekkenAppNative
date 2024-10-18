@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import RightActions from '../RightActions';
 import {styles} from './styles.js'; // Import your styles
 
-const CardItem = ({ item, user, handleCardPress, handleDeletePress, handleEditPress, getBackgroundColor }) => {
+const CardItem = ({ item, user, handleCardPress, handleDeletePress, handleEditPress, handleBookmarkPress, getBackgroundColor }) => {
   return (
     <Swipeable
       renderRightActions={(progress, dragX) => (
@@ -16,6 +16,7 @@ const CardItem = ({ item, user, handleCardPress, handleDeletePress, handleEditPr
           user={user}
           handleDeletePress={handleDeletePress}
           handleEditPress={handleEditPress}
+          handleBookmarkPress={handleBookmarkPress}
         />
       )}
     >

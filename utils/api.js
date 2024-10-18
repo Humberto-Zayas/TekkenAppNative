@@ -76,7 +76,7 @@ export const bookmarkCardById = async (userId, cardId, token) => {
     if (!response.ok) {
       const responseData = await response.json();
       if (responseData.error === 'Card already bookmarked') {
-        Alert.alert('Already Bookmarked', 'This card is already bookmarked!');
+        console.log('Already Bookmarked', 'This card is already bookmarked!');
       } else {
         throw new Error('Failed to bookmark card');
       }
