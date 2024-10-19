@@ -4,7 +4,7 @@ import Pagination from '../Pagination';
 import CardItem from '../CardItem';
 import ConfirmationModal from '../ConfirmationModal';
 import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
-import { deleteCard } from '../../utils/api';
+import { deleteCard, bookmarkCardById, unbookmarkCardById } from '../../utils/api';
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
 import { characters } from '../../data/characters';
@@ -154,6 +154,27 @@ const CreatorCardListComponent = ({ route, navigation }) => {
     }
   };
 
+  const handleBookmarkPress = async (item, isBookmarked) => {
+    try {
+      if (isBookmarked) {
+        // Call bookmark API if the card should now be bookmarked
+        await bookmarkCardById(user.userId, item._id, token);
+      } else {
+        // Call removeBookmark API if the card should be unbookmarked
+        await unbookmarkCardById(user.userId, item._id, token);
+      }
+  
+      // Update the local state after successfully toggling the bookmark
+      setCards((prevCards) =>
+        prevCards.map((card) =>
+          card._id === item._id ? { ...card, isBookmarked } : card
+        )
+      );
+    } catch (error) {
+      console.error('Error toggling bookmark:', error);
+    }
+  };
+
   const renderCardItem = ({ item }) => {
     return (
       <CardItem
@@ -162,6 +183,7 @@ const CreatorCardListComponent = ({ route, navigation }) => {
         handleCardPress={(id) => handleCardPress(id, item.characterName, item.isBookmarked)}
         handleDeletePress={() => handleDeletePress(item)}
         handleEditPress={() => handleEditPress(item)}
+        handleBookmarkPress={handleBookmarkPress}
         getBackgroundColor={getBackgroundColor}
       />
     );

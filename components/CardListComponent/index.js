@@ -103,7 +103,6 @@ const CardListComponent = ({ route, navigation }) => {
     }
   };
   
-
   const handleDeleteConfirm = async () => {
     if (cardToDelete) {
       try {

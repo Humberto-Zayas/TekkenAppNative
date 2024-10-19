@@ -8,7 +8,7 @@ import Pagination from '../Pagination';
 import CardItem from '../CardItem';
 import ConfirmationModal from '../ConfirmationModal';
 import { characters } from '../../data/characters.js';
-import { deleteCard } from '../../utils/api';
+import { deleteCard, bookmarkCardById, unbookmarkCardById } from '../../utils/api';
 import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
 
 const SavedListComponent = ({ navigation, characterName }) => {
@@ -21,6 +21,7 @@ const SavedListComponent = ({ navigation, characterName }) => {
   const [cardToDelete, setCardToDelete] = useState(null);
   const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
   const { user, token } = useAuth();
+  const userId = user?.userId;
 
   useEffect(() => {
     const fetchBookmarks = async () => {
@@ -143,7 +144,7 @@ const SavedListComponent = ({ navigation, characterName }) => {
   const handleDeleteConfirm = async () => {
     if (cardToDelete) {
       try {
-        await deleteCard(cardToDelete._id, user.userId, token);
+        await deleteCard(cardToDelete._id, userId, token);
         setBookmarkedCards((prevCards) => prevCards.filter((card) => card._id !== cardToDelete._id));
         setConfirmationModalVisible(false); // Close the modal after deletion
         setCardToDelete(null); // Reset the card to delete
@@ -152,6 +153,19 @@ const SavedListComponent = ({ navigation, characterName }) => {
       }
     }
   };
+
+  const handleBookmarkPress = async (item) => {
+    try {
+      // Unbookmark the card
+      await unbookmarkCardById(user.userId, item._id, token);
+
+      // Remove the unbookmarked card from the list
+      setBookmarkedCards((prevCards) => prevCards.filter((card) => card._id !== item._id));
+    } catch (error) {
+      console.error("Error unbookmarking card:", error);
+    }
+  };
+
 
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
@@ -175,6 +189,7 @@ const SavedListComponent = ({ navigation, characterName }) => {
         handleCardPress={(id) => handleSavedCardPress(id, item.characterName, item.isBookmarked)}
         handleDeletePress={() => handleDeletePress(item)}
         handleEditPress={() => handleEditPress(item)}
+        handleBookmarkPress={handleBookmarkPress}
         getBackgroundColor={getBackgroundColor}
       />
     );

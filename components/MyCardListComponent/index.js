@@ -8,7 +8,7 @@ import Pagination from '../Pagination';
 import CardItem from '../CardItem/index.js';
 import ConfirmationModal from '../ConfirmationModal';
 import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
-import { deleteCard } from '../../utils/api';
+import { deleteCard, bookmarkCardById, unbookmarkCardById } from '../../utils/api';
 import { characters } from '../../data/characters';
 
 const MyCardListComponent = ({ navigation }) => {
@@ -22,10 +22,11 @@ const MyCardListComponent = ({ navigation }) => {
   const [cardToDelete, setCardToDelete] = useState(null);
   const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
   const { user, token } = useAuth();
+  const userId = user?.userId;
 
   const fetchCards = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/user/${user.userId}`);
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cards/user/${user.userId}?userId=${userId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch cards');
       }
@@ -143,6 +144,27 @@ const MyCardListComponent = ({ navigation }) => {
     navigation.navigate('CreateCardComponent', { cardData: item, isEdit: true, characterImage, frameData });
   };
 
+  const handleBookmarkPress = async (item, isBookmarked) => {
+    try {
+      if (isBookmarked) {
+        // Call bookmark API if the card should now be bookmarked
+        await bookmarkCardById(user.userId, item._id, token);
+      } else {
+        // Call removeBookmark API if the card should be unbookmarked
+        await unbookmarkCardById(user.userId, item._id, token);
+      }
+  
+      // Update the local state after successfully toggling the bookmark
+      setCards((prevCards) =>
+        prevCards.map((card) =>
+          card._id === item._id ? { ...card, isBookmarked } : card
+        )
+      );
+    } catch (error) {
+      console.error('Error toggling bookmark:', error);
+    }
+  };
+
   const renderCardItem = ({ item }) => {
     return (
       <CardItem
@@ -151,11 +173,11 @@ const MyCardListComponent = ({ navigation }) => {
         handleCardPress={(id) => handleCardPress(id, item.characterName, item.isBookmarked)}
         handleDeletePress={() => handleDeletePress(item)}
         handleEditPress={() => handleEditPress(item)}
+        handleBookmarkPress={handleBookmarkPress}
         getBackgroundColor={getBackgroundColor}
       />
     );
   };
-
 
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
