@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
+import { Alert, View, Text, FlatList, TouchableOpacity } from 'react-native';
 import Pagination from '../Pagination';
 import CardItem from '../CardItem';
-import ConfirmationModal from '../ConfirmationModal';
 import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
 import { deleteCard, bookmarkCardById, unbookmarkCardById } from '../../utils/api';
 import { useAuth } from '../../utils/AuthContext';
@@ -17,8 +16,6 @@ const CreatorCardListComponent = ({ route, navigation }) => {
   const [totalCount, setTotalCount] = useState(0); // Number of items per page
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize, setPageSize] = useState(10); // Number of items per page
-  const [cardToDelete, setCardToDelete] = useState(null);
-  const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
   const { user, token } = useAuth();
   const userId = user?.userId;
 
@@ -137,20 +134,23 @@ const CreatorCardListComponent = ({ route, navigation }) => {
   };
 
   const handleDeletePress = (item) => {
-    setCardToDelete(item); // Set the card that will be deleted
-    setConfirmationModalVisible(true); // Show the confirmation modal
+    Alert.alert(
+      "Delete Card",
+      "Are you sure you want to delete this card?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Delete", style: "destructive", onPress: () => handleDeleteConfirm(item) },
+      ],
+      { cancelable: true }
+    );
   };
 
-  const handleDeleteConfirm = async () => {
-    if (cardToDelete) {
-      try {
-        await deleteCard(cardToDelete._id, user.userId, token);
-        setCards((prevCards) => prevCards.filter((card) => card._id !== cardToDelete._id));
-        setConfirmationModalVisible(false); // Close the modal after deletion
-        setCardToDelete(null); // Reset the card to delete
-      } catch (error) {
-        console.error("Error deleting card:", error);
-      }
+  const handleDeleteConfirm = async (item) => {
+    try {
+      await deleteCard(item._id, user.userId, token);
+      setCards((prevCards) => prevCards.filter((card) => card._id !== item._id));
+    } catch (error) {
+      console.error("Error deleting card:", error);
     }
   };
 
@@ -228,12 +228,6 @@ const CreatorCardListComponent = ({ route, navigation }) => {
           </View>
         )}
       </View>
-      <ConfirmationModal
-        visible={isConfirmationModalVisible}
-        onClose={() => setConfirmationModalVisible(false)} // Close modal if cancelled
-        onConfirm={handleDeleteConfirm} // Confirm deletion
-        message={`Are you sure you want to delete this card?`}
-      />
     </View>
   );
 };

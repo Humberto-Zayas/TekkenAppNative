@@ -5,8 +5,8 @@ export const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'stretch',
-    padding: 20,
-    paddingBottom: 0,
+    padding: 16,
+    paddingTop: 0,
     position: 'relative',
   },
   flatList: {

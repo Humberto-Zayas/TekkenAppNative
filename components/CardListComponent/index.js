@@ -11,7 +11,6 @@ import { deleteCard, bookmarkCardById, unbookmarkCardById } from '../../utils/ap
 import { styles } from './styles';
 import tags from '../../data/tags';
 import { fetchCardsByCharacter } from '../../utils/api'; // Import the API function
-import ConfirmationModal from '../ConfirmationModal'; // Adjust the path as needed
 
 const CardListComponent = ({ route, navigation }) => {
   const { character } = route.params;
@@ -29,7 +28,6 @@ const CardListComponent = ({ route, navigation }) => {
   const [youtubeQuery, setYouTubeQuery] = useState(false);
   const [twitchQuery, setTwitchQuery] = useState(false);
   const [cardToDelete, setCardToDelete] = useState(null);
-  const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
 
   const { user, token } = useAuth();
 
@@ -77,11 +75,6 @@ const CardListComponent = ({ route, navigation }) => {
     navigation.navigate('CreateCardComponent', { cardData: item, isEdit: true, characterImage: image, frameData: frameData });
   };
 
-  const handleDeletePress = (item) => {
-    setCardToDelete(item); // Set the card that will be deleted
-    setConfirmationModalVisible(true); // Show the confirmation modal
-  };
-
   const handleBookmarkPress = async (item, isBookmarked) => {
     try {
       if (isBookmarked) {
@@ -102,17 +95,25 @@ const CardListComponent = ({ route, navigation }) => {
       console.error('Error toggling bookmark:', error);
     }
   };
+
+  const handleDeletePress = (item) => {
+    Alert.alert(
+      "Delete Card",
+      "Are you sure you want to delete this card?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Delete", style: "destructive", onPress: () => handleDeleteConfirm(item) },
+      ],
+      { cancelable: true }
+    );
+  };
   
-  const handleDeleteConfirm = async () => {
-    if (cardToDelete) {
-      try {
-        await deleteCard(cardToDelete._id, user.userId, token);
-        setCards((prevCards) => prevCards.filter((card) => card._id !== cardToDelete._id));
-        setConfirmationModalVisible(false); // Close the modal after deletion
-        setCardToDelete(null); // Reset the card to delete
-      } catch (error) {
-        console.error("Error deleting card:", error);
-      }
+  const handleDeleteConfirm = async (item) => {
+    try {
+      await deleteCard(item._id, user.userId, token);
+      setCards((prevCards) => prevCards.filter((card) => card._id !== item._id));
+    } catch (error) {
+      console.error("Error deleting card:", error);
     }
   };
 
@@ -346,12 +347,6 @@ const CardListComponent = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
       )}
-      <ConfirmationModal
-        visible={isConfirmationModalVisible}
-        onClose={() => setConfirmationModalVisible(false)} // Close modal if cancelled
-        onConfirm={handleDeleteConfirm} // Confirm deletion
-        message={`Are you sure you want to delete this card?`}
-      />
       {showModal && renderLoginSignupModal()}
     </View>
   );

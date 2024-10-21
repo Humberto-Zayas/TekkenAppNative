@@ -151,5 +151,13 @@ export const styles = StyleSheet.create({
   },
   noCardsText: {
     fontSize: 18
+  },
+  bottomContainer: {
+    marginTop: 'auto',
+    width: '100%',
+    paddingBottom: 100,
+    paddingTop: 10,
+    backgroundColor: '#f2f2f2',
+    zIndex: 999
   }
 });

@@ -1,14 +1,12 @@
 // SavedListComponent.js
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
+import { Alert, View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
-import { format } from 'date-fns';
 import Pagination from '../Pagination';
 import CardItem from '../CardItem';
-import ConfirmationModal from '../ConfirmationModal';
 import { characters } from '../../data/characters.js';
-import { deleteCard, bookmarkCardById, unbookmarkCardById } from '../../utils/api';
+import { deleteCard, unbookmarkCardById } from '../../utils/api';
 import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
 
 const SavedListComponent = ({ navigation, characterName }) => {
@@ -19,7 +17,6 @@ const SavedListComponent = ({ navigation, characterName }) => {
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize, setPageSize] = useState(10); // Number of items per page
   const [cardToDelete, setCardToDelete] = useState(null);
-  const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
   const { user, token } = useAuth();
   const userId = user?.userId;
 
@@ -137,21 +134,26 @@ const SavedListComponent = ({ navigation, characterName }) => {
   };
 
   const handleDeletePress = (item) => {
-    setCardToDelete(item); // Set the card that will be deleted
-    setConfirmationModalVisible(true); // Show the confirmation modal
+    Alert.alert(
+      "Delete Card",
+      "Are you sure you want to delete this card?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Delete", style: "destructive", onPress: () => handleDeleteConfirm(item) },
+      ],
+      { cancelable: true }
+    );
   };
 
-  const handleDeleteConfirm = async () => {
-    if (cardToDelete) {
+  const handleDeleteConfirm = async (item) => {
+   
       try {
-        await deleteCard(cardToDelete._id, userId, token);
-        setBookmarkedCards((prevCards) => prevCards.filter((card) => card._id !== cardToDelete._id));
-        setConfirmationModalVisible(false); // Close the modal after deletion
-        setCardToDelete(null); // Reset the card to delete
+        await deleteCard(item._id, userId, token);
+        setBookmarkedCards((prevCards) => prevCards.filter((card) => card._id !== item._id));
       } catch (error) {
         console.error("Error deleting card:", error);
       }
-    }
+
   };
 
   const handleBookmarkPress = async (item) => {
@@ -258,12 +260,6 @@ const SavedListComponent = ({ navigation, characterName }) => {
           />
         </View>
       )}
-      <ConfirmationModal
-        visible={isConfirmationModalVisible}
-        onClose={() => setConfirmationModalVisible(false)} // Close modal if cancelled
-        onConfirm={handleDeleteConfirm} // Confirm deletion
-        message={`Are you sure you want to delete this card?`}
-      />
     </View>
   )
 };
