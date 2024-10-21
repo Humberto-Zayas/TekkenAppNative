@@ -146,14 +146,12 @@ const SavedListComponent = ({ navigation, characterName }) => {
   };
 
   const handleDeleteConfirm = async (item) => {
-   
-      try {
-        await deleteCard(item._id, userId, token);
-        setBookmarkedCards((prevCards) => prevCards.filter((card) => card._id !== item._id));
-      } catch (error) {
-        console.error("Error deleting card:", error);
-      }
-
+    try {
+      await deleteCard(item._id, userId, token);
+      setBookmarkedCards((prevCards) => prevCards.filter((card) => card._id !== item._id));
+    } catch (error) {
+      console.error("Error deleting card:", error);
+    }
   };
 
   const handleBookmarkPress = async (item) => {
@@ -167,7 +165,6 @@ const SavedListComponent = ({ navigation, characterName }) => {
       console.error("Error unbookmarking card:", error);
     }
   };
-
 
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
@@ -243,7 +240,6 @@ const SavedListComponent = ({ navigation, characterName }) => {
       );
     }
   };
-
 
   return (
     <View>
