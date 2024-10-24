@@ -35,6 +35,7 @@ const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData 
 
   const handleBack = () => {
     setSelectedMove(null); // Clear the selected move
+    setContext('');
   };
 
   const renderMoveListHeader = () => (
@@ -71,10 +72,7 @@ const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData 
       <View style={styles.modalContainer}>
         {selectedMove ? (
           <>
-            <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-              <FontAwesome name="arrow-left" size={20} color="black" />
-            </TouchableOpacity>
-            <Text style={styles.header}>Add Context for {selectedMove.move}</Text>
+            <Text style={{ paddingVertical: 8 }}>Add Context for {selectedMove.move}</Text>
             {renderMoveListHeader()}
             <View style={styles.flatList}>
               <View style={styles.tableRow}>
@@ -86,23 +84,31 @@ const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData 
                 <Text style={styles.column}>{selectedMove.hitFrame}</Text>
               </View>
               <View style={styles.flatList}>
-                <TextInput
-                  style={styles.input}
-                  placeholder={`Add Context for ${selectedMove.move}`}
-                  value={context}
-                  numberOfLines={4}
-                  onChangeText={(text) => setContext(text)}
-                  multiline
-                />
+                <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
+                  <FontAwesome name="pencil" size={20} color="black" />
+                  <TextInput
+                    style={styles.input}
+                    placeholder={`Add Context for ${selectedMove.move}`}
+                    value={context}
+                    numberOfLines={4}
+                    onChangeText={(text) => setContext(text)}
+                    multiline
+                  />
+                </View>
               </View>
-              <TouchableOpacity style={styles.addButton} onPress={handleAddMove}>
-                <Text>Add Move</Text>
-              </TouchableOpacity>
+              <View style={{ flexDirection: 'row', marginTop: -8 }}>
+                <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+                  <Text style={{ color: 'white' }}>Back</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.addButton} onPress={handleAddMove}>
+                  <Text style={{ color: 'white' }}>Add Move</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </>
         ) : (
           <>
-            <View style={{flexDirection: 'row',  alignItems: 'center', paddingHorizontal: 16}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
               <FontAwesome name="search" size={20} color="black" />
               <TextInput
                 style={styles.searchInput} // Add some styling for this input

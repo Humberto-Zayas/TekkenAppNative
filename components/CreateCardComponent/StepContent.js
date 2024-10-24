@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, TextInput } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { styles } from './styles';
+import { FontAwesome } from '@expo/vector-icons';
 
 const StepContent = ({
   step,
@@ -96,39 +97,43 @@ const StepContent = ({
     case 2:
       return (
         <>
+
           <Text style={styles.header}>Choose The Combo Starters</Text>
-          <TextInput
-            style={styles.searchInput} // Add some styling for this input
-            placeholder="Search moves..."
-            value={searchQuery}
-            onChangeText={(text) => setSearchQuery(text)}
-          />
+          <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
+            <FontAwesome name="search" size={20} color="black" />
+            <TextInput
+              style={styles.searchInput} // Add some styling for this input
+              placeholder="Search moves..."
+              value={searchQuery}
+              onChangeText={(text) => setSearchQuery(text)}
+            />
+          </View>
           {renderMoveListHeader()}
-          
+
           <FlatList
             style={styles.flatList}
             data={filteredFrameData}
             renderItem={({ item }) => {
               const isSelected = selectedComboStarters.includes(item.move);
               return (
-              <TouchableOpacity
-                style={[
-                  styles.moveItem,
-                  isSelected ? styles.selectedMove : null
-                ]}
-                onPress={() => handleMoveSelect(item.move)}
-              >
-                <View style={{ width: '100%' }}>
-                  <View style={styles.tableRow}>
-                    <Text style={styles.column}>{item.move}</Text>
-                    <Text style={styles.column}>{item.hitLevel}</Text>
-                    <Text style={styles.column}>{item.damage}</Text>
-                    <Text style={styles.column}>{item.startupFrame}</Text>
-                    <Text style={styles.column}>{item.blockFrame}</Text>
-                    <Text style={styles.column}>{item.hitFrame}</Text>
+                <TouchableOpacity
+                  style={[
+                    styles.moveItem,
+                    isSelected ? styles.selectedMove : null
+                  ]}
+                  onPress={() => handleMoveSelect(item.move)}
+                >
+                  <View style={{ width: '100%' }}>
+                    <View style={styles.tableRow}>
+                      <Text style={styles.column}>{item.move}</Text>
+                      <Text style={styles.column}>{item.hitLevel}</Text>
+                      <Text style={styles.column}>{item.damage}</Text>
+                      <Text style={styles.column}>{item.startupFrame}</Text>
+                      <Text style={styles.column}>{item.blockFrame}</Text>
+                      <Text style={styles.column}>{item.hitFrame}</Text>
+                    </View>
                   </View>
-                </View>
-              </TouchableOpacity>
+                </TouchableOpacity>
               );
             }}
             keyExtractor={(item) => item.move}
@@ -150,15 +155,17 @@ const StepContent = ({
     case 3:
       return (
         <View style={styles.flatList}>
-          <Text style={{paddingHorizontal: 16}}>Add The Combo String</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Combo String"
-            value={comboString}
-            onChangeText={setComboString}
-          />
-          
-          <Text style={{paddingHorizontal: 16}}>Difficulty</Text>
+          <Text style={{ paddingHorizontal: 16 }}>Add The Combo String</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
+            <FontAwesome name="pencil" size={20} color="black" />
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Combo String"
+              value={comboString}
+              onChangeText={setComboString}
+            />
+          </View>
+          <Text style={{ paddingHorizontal: 16 }}>Difficulty</Text>
           <Picker
             selectedValue={difficulty}
             style={styles.picker}
@@ -169,13 +176,16 @@ const StepContent = ({
             <Picker.Item label="Difficult" value="Difficult" />
           </Picker>
 
-          <Text style={{paddingHorizontal: 16}}>Add Notes</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Notes"
-            value={notes}
-            onChangeText={setNotes}
-          />
+          <Text style={{ paddingHorizontal: 16 }}>Add Notes</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
+            <FontAwesome name="pencil" size={20} color="black" />
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Notes"
+              value={notes}
+              onChangeText={setNotes}
+            />
+          </View>
 
           <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', paddingHorizontal: 16 }}>
             <TouchableOpacity onPress={() => setStep(2)} style={styles.backButton}>
@@ -186,7 +196,7 @@ const StepContent = ({
               style={[styles.addButton, (!comboString || !notes) && styles.disabledButton]}
               disabled={!comboString || !notes}
             >
-              <Text style={{color: 'white'}}>{editingIndex !== null ? 'Update Combo' : 'Add Combo'}</Text>
+              <Text style={{ color: 'white' }}>{editingIndex !== null ? 'Update Combo' : 'Add Combo'}</Text>
             </TouchableOpacity>
           </View>
         </View>

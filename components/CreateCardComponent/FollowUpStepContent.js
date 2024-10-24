@@ -67,12 +67,15 @@ const FollowUpStepContent = ({
       return (
         <>
           <Text style={styles.header}>Select moves</Text>
-          <TextInput
-            style={styles.searchInput} // Add some styling for this input
-            placeholder="Search moves..."
-            value={searchQuery}
-            onChangeText={(text) => setSearchQuery(text)}
-          />
+          <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
+            <FontAwesome name="search" size={20} color="black" />
+            <TextInput
+              style={styles.searchInput} // Add some styling for this input
+              placeholder="Search moves..."
+              value={searchQuery}
+              onChangeText={(text) => setSearchQuery(text)}
+            />
+          </View>
           {renderMoveListHeader}
           <FlatList
             data={filteredFrameData}
@@ -96,10 +99,10 @@ const FollowUpStepContent = ({
                       <Text style={styles.column}>{item.blockFrame}</Text>
                       <Text style={styles.column}>{item.hitFrame}</Text>
                       {isSelected && (
-                      <Text style={styles.flowCounter}>{selectedMoves.indexOf(item) + 1}</Text>
-                    )}
+                        <Text style={styles.flowCounter}>{selectedMoves.indexOf(item) + 1}</Text>
+                      )}
                     </View>
-                   
+
                   </View>
                 </TouchableOpacity>
               );
@@ -111,7 +114,7 @@ const FollowUpStepContent = ({
               onPress={() => setStep(2)}
               style={styles.nextButton}
             >
-              <Text style={{color: 'white', fontSize: 18}}>Next</Text>
+              <Text style={{ color: 'white', fontSize: 18 }}>Next</Text>
             </TouchableOpacity>
           </View>
         </>
@@ -153,21 +156,25 @@ const FollowUpStepContent = ({
           </ScrollView>
 
           <View style={styles.flatList}>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter notes"
-              value={notes}
-              onChangeText={setNotes}
-            />
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
+              <FontAwesome name="pencil" size={20} color="black" />
+              <TextInput
+                style={styles.input}
+                placeholder="Enter notes"
+                value={notes}
+                onChangeText={setNotes}
+              />
+            </View>
+
+            <View style={{ flexDirection: 'row' }}>
               <TouchableOpacity
                 onPress={() => setStep(1)}
                 style={styles.backButton}
               >
-                <Text style={{color: 'white', fontSize: 18}}>Back</Text>
+                <Text style={{ color: 'white', fontSize: 18 }}>Back</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={addFollowUp} style={styles.addButton}>
-                <Text style={{color: 'white', fontSize: 18}}>
+                <Text style={{ color: 'white', fontSize: 18 }}>
                   {contentType === 'followups' ? 'Add Follow Up' : 'Add Flow Chart'}
                 </Text>
               </TouchableOpacity>

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Modal } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
-import { MoveTableHeader } from './MoveTable';
 import ComboList from './ComboList';
 import StepContent from './StepContent';
 
