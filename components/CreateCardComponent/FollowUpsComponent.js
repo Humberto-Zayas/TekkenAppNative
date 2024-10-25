@@ -120,7 +120,7 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
                 <TouchableOpacity style={styles.editIcon} onPress={() => editFollowUp(moveIndex)}>
                   <FontAwesome name="edit" size={20} color="blue" />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.deleteIcon} onPress={() => deleteFollowUp(index)}>
+                <TouchableOpacity style={styles.deleteIcon} onPress={() => deleteFollowUp(moveIndex)}>
                   <FontAwesome name="trash" size={20} color="red" />
                 </TouchableOpacity>
               </View>
