@@ -122,7 +122,10 @@ const FollowUpStepContent = ({
     case 2:
       return (
         <>
-          <Text style={styles.header}>Add Notes About Flowchart</Text>
+          <Text style={styles.header}>
+            
+            {contentType === 'followups' ? 'Add Notes About Follow Ups' : 'Add Notes About Flowchart'}
+          </Text>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
