@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Alert, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { REACT_APP_API_BASE_URL } from '@env';
-import { useAuth } from '../../utils/AuthContext'; 
+import { useAuth } from '../../utils/AuthContext';
 
 const Login = ({ route }) => {
   const { isSignUp } = route.params || { isSignUp: false };
@@ -11,7 +11,7 @@ const Login = ({ route }) => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const navigation = useNavigation();
-  const { login } = useAuth(); // Use the useAuth hook to access authentication context
+  const { login } = useAuth();
 
   const handleLogin = async () => {
     try {
@@ -22,27 +22,42 @@ const Login = ({ route }) => {
         },
         body: JSON.stringify({ email, password }),
       });
-  
+
       if (response.ok) {
         const userData = await response.json();
         const { token, refreshToken, username, userId } = userData;
-  
+
         if (token && refreshToken && username && userId) {
           login({ username, userId }, token, refreshToken);
           navigation.navigate('Home');
         } else {
-          console.error('Token or refresh token missing in the response');
+          Alert.alert('Login Error', 'Token or refresh token missing in the response');
         }
       } else {
-        console.error('Login failed');
+        Alert.alert('Login Failed', 'Invalid email or password');
       }
     } catch (error) {
+      Alert.alert('Login Error', 'An error occurred during login. Please try again later.');
       console.error('Error during login:', error);
     }
   };
-  
-  
+
+  const validateSignup = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Alert.alert('Invalid Email', 'Please enter a valid email address.');
+      return false;
+    }
+    if (password.length < 6) {
+      Alert.alert('Weak Password', 'Password should be at least 6 characters long.');
+      return false;
+    }
+    return true;
+  };
+
   const handleSignup = async () => {
+    if (!validateSignup()) return;
+  
     try {
       const response = await fetch(`${REACT_APP_API_BASE_URL}/users/signup`, {
         method: 'POST',
@@ -53,35 +68,32 @@ const Login = ({ route }) => {
       });
   
       if (response.ok) {
-        // Signup successful, show an alert message
-        Alert.alert('Signup Successful', 'You can now login with your credentials.', [
+        Alert.alert('Signup Successful', 'You can now log in with your credentials.', [
           {
             text: 'OK',
-            onPress: () => {
-              // Navigate to the login screen
-              setSignUp(false);
-            },
+            onPress: () => setSignUp(false),
           },
         ]);
-      } else {
-        // Signup failed, show an error alert
+      } else if (response.status === 409) {
         const responseData = await response.json();
-        Alert.alert('Signup Failed', responseData.error, [
-          {
-            text: 'OK',
-            onPress: () => {
-              // Optionally, you can handle retries or other actions here
-            },
-          },
-        ]);
-        console.error('Signup failed:', responseData.error);
+        
+        if (responseData.error === "User with this email already exists") {
+          Alert.alert('Signup Failed', 'User with this email already exists.');
+        } else if (responseData.error === "Username is already taken") {
+          Alert.alert('Signup Failed', 'Username is already taken.');
+        } else {
+          Alert.alert('Signup Failed', 'An error occurred. Please try again.');
+        }
+      } else {
+        const responseData = await response.json();
+        Alert.alert('Signup Failed', responseData.error || 'An error occurred. Please try again.');
       }
     } catch (error) {
+      Alert.alert('Signup Error', 'An error occurred during signup. Please try again later.');
       console.error('Error during signup:', error);
     }
   };
   
-
   const handleToggle = () => {
     setSignUp(!signUp);
   };
@@ -103,7 +115,7 @@ const Login = ({ route }) => {
             style={styles.input}
             placeholder="Email"
             value={email}
-            onChangeText={(text) => setEmail(text.toLowerCase())} // Convert email to lowercase
+            onChangeText={(text) => setEmail(text.toLowerCase())}
           />
         )}
         {signUp ? (
@@ -118,7 +130,7 @@ const Login = ({ route }) => {
             style={styles.input}
             placeholder="Email"
             value={email}
-            onChangeText={(text) => setEmail(text.toLowerCase())} // Convert email to lowercase
+            onChangeText={(text) => setEmail(text.toLowerCase())}
           />
         )}
         <TextInput
