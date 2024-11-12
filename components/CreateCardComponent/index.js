@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, ScrollView, Modal, TouchableOpacity, Text, Alert } from 'react-native';
+import { View, ScrollView, Modal, TouchableOpacity, Text, Alert } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import HeroCreateComponent from './HeroCreateComponent';
 import PunisherComponent from './PunisherComponent';
@@ -153,13 +153,42 @@ const CreateCardComponent = ({ route, navigation }) => {
   };
 
   const handleYouTubeLinkChange = (youtubeLink) => {
-    setYoutubeLink(youtubeLink);
-    if (youtubeLink !== initialCardData?.youtubeLink) setHasUnsavedChanges(true);
+    if (!youtubeLink) {
+      // Clear link without triggering validation
+      setYoutubeLink('');
+      setHasUnsavedChanges(false);
+      return;
+    }
+
+    const youtubeRegex = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|.+\?v=)|youtu\.be\/)([\w-]{11})(?:\S+)?$/;
+    const match = youtubeLink.match(youtubeRegex);
+
+    if (match) {
+      const videoId = match[1];
+      const shortenedLink = `https://youtu.be/${videoId}`;
+      setYoutubeLink(shortenedLink);
+      setHasUnsavedChanges(true);
+    } else {
+      Alert.alert("Invalid URL", "Please enter a valid YouTube link.");
+    }
   };
 
   const handleTwitchLinkChange = (twitchLink) => {
-    setTwitchLink(twitchLink);
-    if (twitchLink !== initialCardData?.twitchLink) setHasUnsavedChanges(true);
+    if (!twitchLink) {
+      setTwitchLink('');
+      setHasUnsavedChanges(false);
+      return;
+    }
+
+    const twitchUrlPattern = /^(https?:\/\/)?(www\.)?(twitch\.tv\/)([a-zA-Z0-9_]+(\/v\/\d+|\/videos\/\d+|\/clip\/[a-zA-Z0-9_-]+)?)$/;
+
+    if (twitchUrlPattern.test(twitchLink)) {
+      const normalizedLink = twitchLink.startsWith("http") ? twitchLink : `https://${twitchLink}`;
+      setTwitchLink(normalizedLink);
+      setHasUnsavedChanges(true);
+    } else {
+      Alert.alert("Invalid Twitch Link", "Please enter a valid Twitch channel, VOD, or clip link.");
+    }
   };
 
   const handleTagPress = (tag) => {

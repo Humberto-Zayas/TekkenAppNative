@@ -10,20 +10,21 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.23.1",
+    "@react-native-clipboard/clipboard": "^1.15.0",
     "@react-native-picker/picker": "2.7.5",
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/stack": "^6.3.20",
     "date-fns": "^3.3.1",
     "expo": "^51.0.28",
+    "expo-build-properties": "~0.12.5",
     "expo-linear-gradient": "~13.0.2",
     "expo-status-bar": "~1.12.1",
     "jwt-decode": "^4.0.0",
     "react": "18.2.0",
     "react-native": "0.74.5",
     "react-native-dotenv": "^3.4.9",
-    "react-native-gesture-handler": "~2.16.1",
-    "expo-build-properties": "~0.12.5"
+    "react-native-gesture-handler": "~2.16.1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0"
