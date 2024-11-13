@@ -1,12 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { View, TextInput, Image, StyleSheet, Animated, TouchableWithoutFeedback, TouchableOpacity, Keyboard } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import * as Clipboard from 'expo-clipboard';
 
 const HeroComponent = ({ cardName, thumbnail, onCardNameChange, cardDescription, onCardDescriptionChange, youtubeLink, onYouTubeLinkChange, twitchLink, onTwitchLinkChange }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isFocused, setIsFocused] = useState(false); // Track focus state
+  const [isFocused, setIsFocused] = useState(false); 
   const animation = useRef(new Animated.Value(0)).current;
-  const inputRefs = useRef([null, null, null, null]); // Initialize with 4 null values
+  const inputRefs = useRef([null, null, null, null]); 
 
   const toggleExpanded = () => {
     setIsExpanded(prevState => !prevState);
@@ -20,7 +21,7 @@ const HeroComponent = ({ cardName, thumbnail, onCardNameChange, cardDescription,
 
   const handleFocus = () => {
     setIsExpanded(true);
-    setIsFocused(true); // Update focus state
+    setIsFocused(true); 
     Animated.timing(animation, {
       toValue: 1,
       duration: 300,
@@ -30,10 +31,10 @@ const HeroComponent = ({ cardName, thumbnail, onCardNameChange, cardDescription,
 
   const handleBlur = () => {
     setTimeout(() => {
-      if (inputRefs.current.every(ref => ref && !ref.isFocused())) { // Ensure ref exists and check focus
+      if (inputRefs.current.every(ref => ref && !ref.isFocused())) { 
         if (!cardName) {
           setIsExpanded(false);
-          setIsFocused(false); // Update focus state
+          setIsFocused(false); 
           Animated.timing(animation, {
             toValue: 0,
             duration: 300,
@@ -44,13 +45,18 @@ const HeroComponent = ({ cardName, thumbnail, onCardNameChange, cardDescription,
     }, 100);
   };
 
-  const handleDescriptionChange = (text) => {
-    onCardDescriptionChange(text);
+  const handlePaste = async (setLink) => {
+    const clipboardText = await Clipboard.getStringAsync();
+    setLink(clipboardText);
+  };
+
+  const handleClear = (setLink) => {
+    setLink('');
   };
 
   const containerHeight = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [70, 280], // Adjust the expanded height as needed
+    outputRange: [70, 280], 
   });
 
   return (
@@ -82,17 +88,18 @@ const HeroComponent = ({ cardName, thumbnail, onCardNameChange, cardDescription,
             <View style={styles.inputContainer}>
               <FontAwesome name="pencil" size={20} color="#000" style={styles.icon} />
               <TextInput
-                style={[styles.descriptionInput, isFocused ? styles.descriptionInputFocused : null]} // Apply focused style conditionally
+                style={[styles.descriptionInput, isFocused ? styles.descriptionInputFocused : null]} 
                 placeholder="Enter Your Strategy"
                 value={cardDescription}
-                onChangeText={handleDescriptionChange}
+                onChangeText={onCardDescriptionChange}
                 multiline={true}
-                numberOfLines={4} // Limit to 4 visible lines
+                numberOfLines={4}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 ref={(ref) => inputRefs.current[1] = ref}
               />
             </View>
+
             <View style={styles.inputContainer}>
               <FontAwesome name="youtube-play" size={20} color="#000" style={styles.icon} />
               <TextInput
@@ -105,7 +112,14 @@ const HeroComponent = ({ cardName, thumbnail, onCardNameChange, cardDescription,
                 ref={(ref) => inputRefs.current[2] = ref}
                 numberOfLines={1}
               />
+              <TouchableOpacity onPress={() => handlePaste(onYouTubeLinkChange)} style={styles.actionIcon}>
+                <FontAwesome name="clipboard" size={20} color="black" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleClear(onYouTubeLinkChange)} style={styles.actionIcon}>
+                <FontAwesome name="times" size={20} color="red" />
+              </TouchableOpacity>
             </View>
+
             <View style={styles.inputContainer}>
               <FontAwesome name="twitch" size={20} color="#000" style={styles.icon} />
               <TextInput
@@ -118,6 +132,12 @@ const HeroComponent = ({ cardName, thumbnail, onCardNameChange, cardDescription,
                 ref={(ref) => inputRefs.current[3] = ref}
                 numberOfLines={1}
               />
+              <TouchableOpacity onPress={() => handlePaste(onTwitchLinkChange)} style={styles.actionIcon}>
+                <FontAwesome name="clipboard" size={20} color="black" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleClear(onTwitchLinkChange)} style={styles.actionIcon}>
+                <FontAwesome name="times" size={20} color="red" />
+              </TouchableOpacity>
             </View>
           </View>
         )}
@@ -127,18 +147,14 @@ const HeroComponent = ({ cardName, thumbnail, onCardNameChange, cardDescription,
 };
 
 const styles = StyleSheet.create({
-  container: {
-    overflow: 'hidden',
-  },
+  container: { overflow: 'hidden' },
   heroContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 16,
   },
-  thumbnailContainer: {
-    position: 'relative',
-  },
+  thumbnailContainer: { position: 'relative' },
   thumbnail: {
     width: 50,
     height: 50,
@@ -152,25 +168,15 @@ const styles = StyleSheet.create({
     right: 2,
     borderRadius: 12,
   },
-  heroInfo: {
-    flex: 1,
-  },
-  heroNameInput: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  additionalInputs: {
-    paddingBottom: 0,
-  },
+  heroInfo: { flex: 1 },
+  heroNameInput: { fontSize: 24, fontWeight: 'bold' },
+  additionalInputs: { paddingBottom: 0 },
   inputContainer: {
     flexDirection: 'row',
-    alignItems: 'start',
+    alignItems: 'center',
     marginBottom: 16,
   },
-  icon: {
-    marginRight: 16,
-    marginTop: 8,
-  },
+  icon: { marginRight: 16, marginTop: 8 },
   descriptionInput: {
     fontSize: 16,
     paddingVertical: 8,
@@ -179,9 +185,7 @@ const styles = StyleSheet.create({
     maxHeight: 96,
     flex: 1,
   },
-  descriptionInputFocused: {
-    fontSize: 16, // Reduce font size when focused
-  },
+  descriptionInputFocused: { fontSize: 16 },
   cardLinkInput: {
     fontSize: 16,
     paddingVertical: 8,
@@ -192,6 +196,10 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 8,
     padding: 8,
+  },
+  actionIcon: {
+    marginLeft: 8,
+    padding: 4,
   },
 });
 
