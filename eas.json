@@ -8,9 +8,18 @@
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "API_URL": "https://expressjs-mongoose-production-563e.up.railway.app",
+        "APP_ENV": "preview"
+      }
     },
-    "production": {}
+    "production": {
+      "env": {
+        "API_URL": "https://expressjs-mongoose-production-563e.up.railway.app",
+        "APP_ENV": "production"
+      }
+    }
   },
   "submit": {
     "production": {}
