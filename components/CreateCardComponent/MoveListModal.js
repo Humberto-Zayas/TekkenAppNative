@@ -87,7 +87,7 @@ const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData 
                 <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
                   <FontAwesome name="pencil" size={20} color="black" />
                   <TextInput
-                    style={[styles.input, { fontSize: 16 }]}
+                    style={styles.input}
                     placeholder={`Add Context for ${selectedMove.move}`}
                     value={context}
                     numberOfLines={4}

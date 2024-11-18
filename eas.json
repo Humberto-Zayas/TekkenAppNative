@@ -10,13 +10,13 @@
     "preview": {
       "distribution": "internal",
       "env": {
-        "REACT_APP_API_BASE_URL": "https://expressjs-mongoose-production-563e.up.railway.app",
+        "API_URL": "https://expressjs-mongoose-production-563e.up.railway.app",
         "APP_ENV": "preview"
       }
     },
     "production": {
       "env": {
-        "REACT_APP_API_BASE_URL": "https://expressjs-mongoose-production-563e.up.railway.app",
+        "API_URL": "https://expressjs-mongoose-production-563e.up.railway.app",
         "APP_ENV": "production"
       }
     }

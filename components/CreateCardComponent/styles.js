@@ -41,6 +41,7 @@ export const styles = StyleSheet.create({
   },
   input: {
     padding: 16,
+    fontSize: 16
   },
   searchInput: {
     padding: 16,
