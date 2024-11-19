@@ -18,10 +18,10 @@ const MoveTableRow = ({ item, index, onMovePress, onDelete }) => (
   <TouchableOpacity onPress={() => onMovePress(item)}>
     <View style={styles.tableRow}>
       <View style={styles.columnLeft}>
-        <Text style={{ fontSize: '18px' }}>{item.move}</Text>
+        <Text style={{ fontSize: 18 }}>{item.move}</Text>
       </View>
       <View style={styles.column}>
-        <Text style={{ fontSize: '18px' }}>{item.startupFrame}</Text>
+        <Text style={{ fontSize: 18 }}>{item.startupFrame}</Text>
       </View>
       <TouchableOpacity style={styles.deleteIcon} onPress={() => onDelete(index)}>
         <FontAwesome name="trash" size={20} color="red" />

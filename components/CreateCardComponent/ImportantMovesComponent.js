@@ -44,7 +44,7 @@ const ImportantMovesComponent = ({ onClose, setImportantMoveData, importantMoveD
           <MoveTableRow item={item} index={index} onMovePress={handleMovePress} onDelete={deletePunisher} />
         )}
         keyExtractor={(item, index) => index.toString()}
-        ListEmptyComponent={() => <Text style={styles.emptyList}>No punishers added yet</Text>}
+        ListEmptyComponent={() => <Text style={styles.emptyList}>No moves added yet</Text>}
       />
       <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.plusButton}>
         <FontAwesome name="plus" size={20} color="white" />
