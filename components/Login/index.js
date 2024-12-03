@@ -115,7 +115,7 @@ const Login = ({ route }) => {
             style={styles.input}
             placeholder="Email"
             value={email}
-            onChangeText={(text) => setEmail(text.toLowerCase())}
+            onChangeText={(text) => setEmail(text)}
           />
         )}
         {signUp ? (

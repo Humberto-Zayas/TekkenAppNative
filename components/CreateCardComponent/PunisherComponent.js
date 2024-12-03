@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 import MoveDetailsModal from './MoveDetailsModal';
@@ -33,24 +33,45 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
   // };
 
   return (
-    <View style={styles.rowContainer}>
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={styles.scrollViewContent}
+      showsVerticalScrollIndicator={false}
+    >
+      {/* Close Button */}
       <TouchableOpacity onPress={onClose} style={styles.closeButton}>
         <FontAwesome name="times" size={20} color="black" />
       </TouchableOpacity>
+      {/* Header */}
       <Text style={styles.header}>Punishers</Text>
-      <MoveTableHeader firstHeader='Move' secondHeader='Start Up' />
-      <FlatList
-        style={styles.flatList}
-        data={punisherData}
-        renderItem={({ item, index }) => (
-          <MoveTableRow item={item} index={index} onMovePress={handleMovePress} onDelete={deletePunisher} />
-        )}
-        keyExtractor={(item, index) => index.toString()}
-        ListEmptyComponent={() => <Text style={{marginTop: 8}}>No punishers added yet</Text>}
-      />
-      <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.plusButton}>
+
+      {/* MoveTableHeader */}
+      <MoveTableHeader firstHeader="Move" secondHeader="Start Up" />
+
+      {/* Render MoveTableRow components */}
+      {punisherData.length > 0 ? (
+        punisherData.map((item, index) => (
+          <MoveTableRow
+            key={index.toString()}
+            item={item}
+            index={index}
+            onMovePress={handleMovePress}
+            onDelete={deletePunisher}
+          />
+        ))
+      ) : (
+        <Text style={styles.emptyText}>No punishers added yet</Text>
+      )}
+
+      {/* Add Button */}
+      <TouchableOpacity
+        onPress={() => setModalVisible(true)}
+        style={styles.plusButton}
+      >
         <FontAwesome name="plus" size={20} color="white" />
       </TouchableOpacity>
+
+      {/* Modals */}
       <MoveListModal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
@@ -58,7 +79,7 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
         frameData={frameData}
       />
       <MoveDetailsModal detailMove={detailMove} setDetailMove={setDetailMove} />
-    </View>
+    </ScrollView>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert, ActivityIndicator, Linking } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import HeroComponent from './HeroComponent';
 import { characters } from '../../data/characters';
@@ -33,7 +33,7 @@ const CardComponent = ({ route, navigation }) => {
     if (card?.characterName) {
       const foundCharacter = Object.values(characters).find(c => c.name === card.characterName);
       setCharacter(foundCharacter);
-    }    
+    }
   }, [card]);
 
   const fetchCard = async () => {
@@ -41,7 +41,7 @@ const CardComponent = ({ route, navigation }) => {
     try {
       const data = await fetchCardById(id, userId || '');
       setCard(data);
-  
+
       // Fetch user's bookmarks and check if this card is bookmarked
       if (userId) {
         const userBookmarks = await fetchUserBookmarks(userId, token);
@@ -50,7 +50,7 @@ const CardComponent = ({ route, navigation }) => {
       } else {
         setIsBookmarked(false);
       }
-  
+
       setAverageRating(data.averageRating || 0);
     } catch (error) {
       console.error('Error fetching card:', error);
@@ -59,7 +59,7 @@ const CardComponent = ({ route, navigation }) => {
       setLoading(false);
     }
   };
-  
+
 
   const handleMoveSetLinkPress = (moveSetName, moves) => {
     if (moveSetName === 'HeatEngagers') {
@@ -119,6 +119,16 @@ const CardComponent = ({ route, navigation }) => {
   const onDelete = () => {
     navigation.goBack();
   };
+
+  const openLink = (url) => {
+    if (url) {
+      Linking.openURL(url).catch((err) => {
+        Alert.alert('Error', 'Failed to open the link. It may be incorrect or does not exist anymore');
+      }
+      );
+    }
+  };
+
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" style={{ flex: 1, justifyContent: 'center' }} />;
@@ -185,18 +195,30 @@ const CardComponent = ({ route, navigation }) => {
                 <Text style={styles.counter}>{card?.comboData.length}</Text>
               </TouchableOpacity>
             )}
-            <View style={{ marginTop: 8 }}>
+
+            {(card?.youtubeLink || card?.twitchLink) && (
+              <Text style={{ ...styles.heroName, marginBottom: 8 }}>Guide and Stream Links</Text>
+            )}
+            <View style={{ marginTop: 0 }}>
               {card?.youtubeLink && (
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <FontAwesome name="youtube" size={32} color="red" style={{ marginRight: 8 }} />
-                  <Text>{card?.youtubeLink}</Text>
-                </View>
+                <TouchableOpacity
+                  onPress={() => openLink(card.youtubeLink)}
+                  style={styles.link}
+                >
+                  <FontAwesome name="youtube" size={24} color="white" />
+                  <Text style={styles.linkText}>{card?.youtubeLink}</Text>
+                  <FontAwesome name="external-link" size={20} color="white" style={styles.counter} />
+                </TouchableOpacity>
               )}
               {card?.twitchLink && (
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <FontAwesome name="twitch" size={32} color="purple" style={{ marginRight: 8 }} />
-                  <Text>{card?.twitchLink}</Text>
-                </View>
+                <TouchableOpacity
+                  onPress={() => openLink(card.twitchLink)}
+                  style={styles.link}
+                >
+                  <FontAwesome name="twitch" size={24} color="white" />
+                  <Text style={styles.linkText}>{card?.twitchLink}</Text>
+                  <FontAwesome name="external-link" size={20} color="white" style={styles.counter} />
+                </TouchableOpacity>
               )}
             </View>
           </View>

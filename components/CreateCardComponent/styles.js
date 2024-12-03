@@ -24,6 +24,14 @@ export const styles = StyleSheet.create({
     ...commonContainer,
     marginTop: 64,
   },
+  scrollView: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  scrollViewContent: {
+    padding: 16,
+    paddingBottom: 40,
+  },
   title: {
     ...commonText,
     marginBottom: 10,
@@ -107,6 +115,7 @@ export const styles = StyleSheet.create({
     // overflow: 'hidden',
     marginBottom: 16,
     width: '100%',
+    overflow: 'scroll'
     // height: 200
   },
   tableTitle: {

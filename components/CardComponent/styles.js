@@ -61,6 +61,14 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 10,
   },
+  linkButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#333',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
   closeButton: {
     alignItems: 'center',
     padding: 10,
@@ -231,6 +239,9 @@ export const styles = StyleSheet.create({
     marginLeft: 8, // Space between the icon and text
     color: 'white', // Text color
     fontWeight: 'bold',
+  },
+  linkIcon: {
+    alignSelf: 'flex-end',
   },
   socialLink: {
     alignSelf: 'start'

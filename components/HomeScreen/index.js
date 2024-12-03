@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
-import {characters} from '../../data/characters'; // Ensure you're importing the default export
+import { characters } from '../../data/characters'; // Ensure you're importing the default export
 import { useAuth } from '../../utils/AuthContext';
 
 const HomeScreen = ({ navigation }) => {
   const { user } = useAuth();
 
   return (
-    <View style={styles.container}>
+    <View style={styles.screen}>
       {/* Conditionally display user status */}
       {user && (
         <Text style={styles.userStatus}>
@@ -32,11 +32,16 @@ const HomeScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  screen: {
+    flex: 1, // Ensures the root view occupies full screen
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  },
+  userStatus: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 16,
+    textAlign: 'center', // Align text to the center horizontally
+    paddingBottom: 16,
   },
   gridContainer: {
     marginTop: 16,
@@ -44,12 +49,9 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     paddingBottom: 40,
-  },
-  userStatus: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 16,
-    paddingBottom: 16,
+    maxWidth: 767,
+    alignSelf: 'center',
+    overflow: 'scroll'
   },
   box: {
     alignItems: 'center',
