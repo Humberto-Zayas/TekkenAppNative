@@ -104,7 +104,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   flatList: {
-    overflow: 'hidden',
+    // overflow: 'hidden',
     marginBottom: 16,
     width: '100%',
     // height: 200
