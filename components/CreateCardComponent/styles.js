@@ -25,6 +25,7 @@ export const styles = StyleSheet.create({
     marginTop: 64,
   },
   scrollView: {
+    paddingTop: 64,
     flex: 1,
     backgroundColor: '#fff',
   },

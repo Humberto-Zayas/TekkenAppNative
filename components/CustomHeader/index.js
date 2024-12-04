@@ -1,14 +1,21 @@
-// CustomHeader.js
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal, Image } from 'react-native';
 import { useAuth } from '../../utils/AuthContext';
 import { useRoute } from '@react-navigation/native';
+import { FontAwesome } from '@expo/vector-icons';
+import logo from '../../assets/favicon.png';
 
 const CustomHeader = ({ navigation }) => {
   const [isMenuVisible, setMenuVisible] = useState(false);
   const { user, logout } = useAuth();
   const route = useRoute();
-  const [screenName, setScreenName] = useState(route.name);
+  const screenName = route.name;
+
+  const handleBack = () => {
+    if (navigation.canGoBack()) {
+      navigation.navigate('Home');
+    }
+  };
 
   const handleLoginNavigation = (isSignUp) => {
     setMenuVisible(false);
@@ -26,65 +33,63 @@ const CustomHeader = ({ navigation }) => {
     navigation.navigate('Home');
   };
 
-  const handleBack = () => {
-    if (navigation.canGoBack()) {
-      navigation.goBack();
-    }
-  };
-
   return (
     <View style={styles.headerContainer}>
-      {navigation.canGoBack() && (
-        <TouchableOpacity onPress={handleBack}>
-          <Text style={styles.backArrow}>{'< Back'}</Text>
-        </TouchableOpacity>
-      )}
-
+      <TouchableOpacity onPress={handleBack}>
+        <Image source={logo} style={styles.logo} />
+      </TouchableOpacity>
       <Text style={styles.screenName}>{screenName}</Text>
-
       <TouchableOpacity onPress={() => setMenuVisible(true)}>
-        <Text style={styles.menuText}>☰ Menu</Text>
+        <FontAwesome name="bars" size={24} color="blue" />
       </TouchableOpacity>
       <Modal
         transparent
-        animationType="slide"
+        animationType="fade"
         visible={isMenuVisible}
         onRequestClose={() => setMenuVisible(false)}
       >
         <View style={styles.modalContainer}>
-          <>
+          <View style={styles.modalContent}>
+            {/* Close Icon */}
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setMenuVisible(false)}
+            >
+              <FontAwesome name="close" size={24} color="blue" />
+            </TouchableOpacity>
+            {/* Menu Items */}
             {user ? (
               <>
                 <TouchableOpacity
-                  style={styles.modalContent}
+                  style={{...styles.menuItem, borderBottomWidth: 1, borderBottomColor: '#ddd' }}
                   onPress={handleCreatorPress}
                 >
-                  <Text style={styles.menuText}>My Cards</Text>
+                  <Text style={styles.menuText}>{user.username} Cards</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.modalContent} onPress={handleLogout}>
+                <TouchableOpacity
+                  style={styles.menuItem}
+                  onPress={handleLogout}
+                >
                   <Text style={styles.menuText}>Logout</Text>
                 </TouchableOpacity>
               </>
             ) : (
               <>
                 <TouchableOpacity
-                  style={styles.modalContent}
+                 style={{...styles.menuItem, borderBottomWidth: 1, borderBottomColor: '#ddd' }}
                   onPress={() => handleLoginNavigation(false)}
                 >
                   <Text style={styles.menuText}>Login</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.modalContent}
+                  style={styles.menuItem}
                   onPress={() => handleLoginNavigation(true)}
                 >
                   <Text style={styles.menuText}>Sign Up</Text>
                 </TouchableOpacity>
               </>
             )}
-            <TouchableOpacity style={styles.modalContent} onPress={() => setMenuVisible(false)}>
-              <Text style={styles.menuText}>Close Menu</Text>
-            </TouchableOpacity>
-          </>
+          </View>
         </View>
       </Modal>
     </View>
@@ -96,24 +101,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 20,
-    marginTop: 50,
+    paddingTop: 64,
+    paddingBottom: 24,
+    paddingHorizontal: 24,
     backgroundColor: 'transparent',
   },
-  backArrow: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'blue',
+  logo: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
   screenName: {
     fontSize: 18,
     fontWeight: 'bold',
     color: 'blue',
-  },
-  menuText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'blue',
+    textAlign: 'center',
   },
   modalContainer: {
     flex: 1,
@@ -122,10 +124,27 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    padding: 20,
+    width: '80%',
     backgroundColor: 'white',
     borderRadius: 10,
-    marginBottom: 20,
+    padding: 20,
+    alignItems: 'center',
+    position: 'relative',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+  },
+  menuItem: {
+    paddingVertical: 15,
+    width: '100%',
+    alignItems: 'center',
+  },
+  menuText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'blue',
   },
 });
 

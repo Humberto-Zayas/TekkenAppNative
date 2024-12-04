@@ -9,11 +9,11 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.screen}>
       {/* Conditionally display user status */}
-      {user && (
+      {/* {user && (
         <Text style={styles.userStatus}>
           Logged In as {user.username}
         </Text>
-      )}
+      )} */}
       <ScrollView contentContainerStyle={styles.gridContainer}>
         {/* Convert characters object to an array and map over it */}
         {Object.values(characters).map((character) => (
@@ -23,7 +23,7 @@ const HomeScreen = ({ navigation }) => {
             onPress={() => navigation.navigate('CardList', { character })}
           >
             <Image source={character.image} style={{ width: 72, height: 72, borderRadius: 8 }} />
-            <Text style={{ marginTop: 12 }}>{character.name.replace(/_/g, ' ')}</Text>
+            <Text style={{ marginTop: 8, fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', color: '#222' }}>{character.name.replace(/_/g, ' ')}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
