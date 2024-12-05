@@ -72,7 +72,7 @@ const CardListComponent = ({ route, navigation }) => {
 
   const handleEditPress = (item) => {
     const frameData = loadFrameData(name);
-    navigation.navigate('CreateCardComponent', { cardData: item, isEdit: true, characterImage: image, frameData: frameData });
+    navigation.navigate('CreateCardComponent', { cardData: item, isEdit: true, characterImage: image, characterName: `Edit ${item.cardName}`, frameData: frameData });
   };
 
   const handleBookmarkPress = async (item, isBookmarked) => {

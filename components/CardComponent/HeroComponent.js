@@ -110,7 +110,7 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
 
   const handleEditPress = (card) => {
     setMenuVisible(false);
-    navigation.navigate('CreateCardComponent', { cardData: card, isEdit: true, characterImage: image, frameData: frameData });
+    navigation.navigate('CreateCardComponent', { cardData: card, isEdit: true, characterImage: image, characterName: `Edit ${card.cardName}`, frameData: frameData });
   };
 
   const handleDeletePress = () => {

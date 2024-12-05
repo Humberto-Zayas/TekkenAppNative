@@ -15,6 +15,7 @@ import { createCard, updateCard } from '../../utils/api';
 const CreateCardComponent = ({ route, navigation }) => {
   const { user, token } = useAuth(); // Get user and token from useAuth
   const { cardData: initialCardData, isEdit, characterName, characterImage, frameData } = route.params;
+  console.log(characterName)
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showPunishers, setShowPunishers] = useState(false);
   const [showMoveFlowChart, setShowMoveFlowChart] = useState(false);
@@ -81,6 +82,12 @@ const CreateCardComponent = ({ route, navigation }) => {
       setHasUnsavedChanges(false);
     }
   }, [isEdit, initialCardData]);
+
+  useEffect(() => {
+    if (characterName) {
+      navigation.setParams({ screenName: characterName }); // Update params dynamically
+    }
+  }, [characterName]);
 
   const handleSave = async () => {
     if (!cardName || !cardDescription) {

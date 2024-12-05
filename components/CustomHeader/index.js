@@ -9,8 +9,8 @@ const CustomHeader = ({ navigation }) => {
   const [isMenuVisible, setMenuVisible] = useState(false);
   const { user, logout } = useAuth();
   const route = useRoute();
-  const screenName = route.name;
-
+  const screenName = route.params?.character?.name || route.params?.screenName || route.name;
+  
   const handleBack = () => {
     if (navigation.canGoBack()) {
       navigation.navigate('Home');

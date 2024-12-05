@@ -36,6 +36,12 @@ const CardComponent = ({ route, navigation }) => {
     }
   }, [card]);
 
+  useEffect(() => {
+    if (card?.cardName) {
+      navigation.setParams({ screenName: card.cardName }); // Update params dynamically
+    }
+  }, [card, navigation]);
+
   const fetchCard = async () => {
     setLoading(true);
     try {

@@ -16,7 +16,7 @@ const difficultyOrder = {
   difficult: 2,
 };
 
-const CardDetailComponent = ({ route }) => {
+const CardDetailComponent = ({ route, navigation }) => {
   const { moveSetName, moves, cardName, image } = route.params;
   const [selectedItem, setSelectedItem] = useState(null);
   const [sortedMoves, setSortedMoves] = useState([]);
@@ -43,6 +43,12 @@ const CardDetailComponent = ({ route }) => {
       setSortedMoves(moves);
     }
   }, [moves, moveSetName]);
+
+  useEffect(() => {
+    if (cardName) {
+      navigation.setParams({ screenName: cardName }); // Update params dynamically
+    }
+  }, [cardName]);
 
   const openDrawer = (item) => {
     setSelectedItem(item);

@@ -197,13 +197,19 @@ const CreatorCardListComponent = ({ route, navigation }) => {
     fetchCards();
   }, [creatorId, sortOrder]);
 
+  useEffect(() => {
+    if (creator) {
+      navigation.setParams({ screenName: `${creator}'s Cards` }); // Update params dynamically
+    }
+  }, [creator]);
+
   return (
     <View style={styles.container}>
-      <View style={styles.heroContainer}>
+      {/* <View style={styles.heroContainer}>
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10 }}>
           {creator}'s Cards
         </Text>
-      </View>
+      </View> */}
       <View>
         <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
           <Text style={styles.sortButtonText}>Toggle Sort Order</Text>

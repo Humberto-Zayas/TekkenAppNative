@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Alert, View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
@@ -19,7 +19,14 @@ const MyCardListComponent = ({ navigation }) => {
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize, setPageSize] = useState(10); // Number of items per page
   const { user, token } = useAuth();
+  console.log(user)
   const userId = user?.userId;
+
+  useEffect(() => {
+    if (user?.username) {
+      navigation.setParams({ screenName: `${user.username}'s Cards` }); // Update params dynamically
+    }
+  }, []);
 
   const fetchCards = async () => {
     try {
@@ -191,11 +198,11 @@ const MyCardListComponent = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.heroContainer}>
+      {/* <View style={styles.heroContainer}>
         <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
           {user.username}'s Cards
         </Text>
-      </View>
+      </View> */}
 
       {showSavedList ? (
         <SavedListComponent navigation={navigation} />
