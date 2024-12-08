@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Animated } from 'react-native';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 
@@ -39,6 +40,32 @@ const ComboList = ({ comboData, onDelete, onEdit }) => {
   // Check if there are any combos
   const hasCombos = sortedComboData.length > 0;
 
+  const renderRightActions = (progress, dragX, index) => {
+    const actionWidth = 65;
+
+    const trans = dragX.interpolate({
+      inputRange: [-actionWidth * 2, 0],
+      outputRange: [0, actionWidth * 2],
+    });
+
+    return (
+      <Animated.View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          transform: [{ translateX: trans }],
+        }}
+      >
+        <TouchableOpacity style={{ padding: 20 }} onPress={() => onEdit(index)}>
+          <FontAwesome name="edit" size={28} color="blue" />
+        </TouchableOpacity>
+        <TouchableOpacity style={{ padding: 20 }} onPress={() => onDelete(index)}>
+          <FontAwesome name="trash" size={28} color="red" />
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  };
+
   return (
     <View>
       {/* Legend for difficulty */}
@@ -68,33 +95,34 @@ const ComboList = ({ comboData, onDelete, onEdit }) => {
 
             {/* Loop through each combo under this type */}
             {groupedCombos[type].map((item, index) => (
-              <View style={styles.tableRow} key={index}>
-                <View style={styles.comboStarterColumn}>
-                  {item.comboStarters.map((starter, idx) => (
-                    <Text style={{ fontSize: 18 }} key={idx}>{starter}</Text>
-                  ))}
-                </View>
-                <View style={styles.comboRouteColumn}>
-                  <Text style={styles.comboRouteText}>{item.comboRoute}</Text>
-                </View>
-                <View style={styles.notesColumn}>
-                  <View style={styles.buttonContainer}>
-                    <TouchableOpacity onPress={() => onEdit(index)} style={styles.editIcon}>
-                      <FontAwesome name="edit" size={24} color="blue" />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => onDelete(index)} style={styles.deleteIcon}>
-                      <FontAwesome name="trash" size={24} color="red" />
-                    </TouchableOpacity>
-                    
+              <Swipeable
+                key={index.toString()}
+                renderRightActions={(progress, dragX) =>
+                  renderRightActions(progress, dragX, index)
+                }
+                rightThreshold={40}
+              >
+                <View style={styles.tableRow}>
+                  <View style={styles.comboStarterColumn}>
+                    {item.comboStarters.map((starter, idx) => (
+                      <Text style={{ fontSize: 18 }} key={idx}>
+                        {starter}
+                      </Text>
+                    ))}
                   </View>
-                  <View
+                  <View style={styles.comboRouteColumn}>
+                    <Text style={styles.comboRouteText}>{item.comboRoute}</Text>
+                  </View>
+                  <View style={styles.notesColumn}>
+                    <View
                       style={[
                         styles.difficultyDot,
                         { backgroundColor: difficultyColors[item.difficulty.toLowerCase()] },
                       ]}
                     />
+                  </View>
                 </View>
-              </View>
+              </Swipeable>
             ))}
           </View>
         ))

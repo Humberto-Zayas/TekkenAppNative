@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import { characters } from '../../data/characters'; // Ensure you're importing the default export
 import { useAuth } from '../../utils/AuthContext';
@@ -6,14 +6,17 @@ import { useAuth } from '../../utils/AuthContext';
 const HomeScreen = ({ navigation }) => {
   const { user } = useAuth();
 
+  useEffect(() => {
+    if (user?.username) {
+      navigation.setParams({ screenName: `Hi, ${user.username}` }); // Update params dynamically
+    }
+  }, [user, navigation]);
+
   return (
     <View style={styles.screen}>
-      {/* Conditionally display user status */}
-      {/* {user && (
-        <Text style={styles.userStatus}>
-          Logged In as {user.username}
-        </Text>
-      )} */}
+      <Text style={styles.userStatus}>
+        Choose A Fighter
+      </Text>
       <ScrollView contentContainerStyle={styles.gridContainer}>
         {/* Convert characters object to an array and map over it */}
         {Object.values(characters).map((character) => (
@@ -42,9 +45,10 @@ const styles = StyleSheet.create({
     marginTop: 16,
     textAlign: 'center', // Align text to the center horizontally
     paddingBottom: 16,
+    color: '#222'
   },
   gridContainer: {
-    marginTop: 16,
+    marginTop: 0,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',

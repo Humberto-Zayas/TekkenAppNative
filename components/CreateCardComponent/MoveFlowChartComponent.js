@@ -116,12 +116,12 @@ const MoveFlowChartComponent = ({ onClose, setMoveFlowChartData, moveFlowChartDa
                 </View>
 
               ))}
-              <View style={{flexDirection: 'row', marginLeft: 16}}>
+              <View style={{flexDirection: 'row', marginLeft: 24}}>
                 <TouchableOpacity style={styles.editIcon} onPress={() => editFollowUp(moveIndex)}>
-                  <FontAwesome name="edit" size={20} color="blue" />
+                  <FontAwesome name="edit" size={24} color="blue" />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.deleteIcon} onPress={() => deleteFollowUp(moveIndex)}>
-                  <FontAwesome name="trash" size={20} color="red" />
+                <TouchableOpacity style={{...styles.deleteIcon, marginLeft: 8}} onPress={() => deleteFollowUp(moveIndex)}>
+                  <FontAwesome name="trash" size={24} color="red" />
                 </TouchableOpacity>
               </View>
             </ScrollView>

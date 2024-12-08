@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Pressable } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 
@@ -15,7 +15,7 @@ const MoveTableHeader = ({ firstHeader, secondHeader }) => (
 );
 
 const MoveTableRow = ({ item, index, onMovePress, onDelete }) => (
-  <TouchableOpacity onPress={() => onMovePress(item)}>
+  <Pressable onPress={() => onMovePress(item)}>
     <View style={styles.tableRow}>
       <View style={styles.columnLeft}>
         <Text style={{ fontSize: 18 }}>{item.move}</Text>
@@ -23,11 +23,8 @@ const MoveTableRow = ({ item, index, onMovePress, onDelete }) => (
       <View style={styles.column}>
         <Text style={{ fontSize: 18 }}>{item.startupFrame}</Text>
       </View>
-      <TouchableOpacity style={styles.deleteIcon} onPress={() => onDelete(index)}>
-        <FontAwesome name="trash" size={20} color="red" />
-      </TouchableOpacity>
     </View>
-  </TouchableOpacity>
+  </Pressable>
 );
 
 const FlowChartRow = ({ item, index, onDelete }) => (

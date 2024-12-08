@@ -92,8 +92,9 @@ export const styles = StyleSheet.create({
     backgroundColor: 'blue',
     padding: 8,
     borderRadius: 40,
+    marginTop: 16,
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 16,
     width: 40,
     height: 40,
     alignSelf: 'center',
@@ -338,6 +339,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   comboRouteText: {
+    paddingLeft: 16,
     fontSize: 18,
   },
   notesColumn: {
