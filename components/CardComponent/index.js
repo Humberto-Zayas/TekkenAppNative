@@ -113,7 +113,6 @@ const CardComponent = ({ route, navigation }) => {
   };
 
   const handleRatingChange = (newRating) => {
-    console.log('Selected Rating:', newRating);  // Debug log
     setUserRating(newRating);
     rateCard(newRating); // Immediately call rateCard when rating is changed
   };

@@ -19,7 +19,6 @@ const MyCardListComponent = ({ navigation }) => {
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize, setPageSize] = useState(10); // Number of items per page
   const { user, token } = useAuth();
-  console.log(user)
   const userId = user?.userId;
 
   useEffect(() => {
