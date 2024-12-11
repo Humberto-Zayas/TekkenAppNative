@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "scheme": "TekkenAppNative",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -26,12 +27,16 @@
       "package": "com.hzayas.TekkenAppNative"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
     },
     "extra": {
       "eas": {
         "projectId": "b2dd0ed4-e787-4f40-a4df-e78072b305fb"
       }
-    }
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }
