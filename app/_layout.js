@@ -1,7 +1,7 @@
 import { AuthProvider } from '../utils/AuthContext';
 import AppWrapper from '../components/AppWrapper';
 import CustomHeader from '../components/CustomHeader';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Slot } from 'expo-router';
 
 export default function HomeLayout() {

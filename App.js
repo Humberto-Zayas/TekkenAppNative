@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet } from 'react-native';
-
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AuthProvider } from './utils/AuthContext';
 import HomeScreen from './components/HomeScreen';
-import BoxComponent from './components/BoxComponent';
 import CardListComponent from './components/CardListComponent';
 import CardComponent from './components/CardComponent';
 import CardDetailComponent from './components/CardComponent/CardDetailComponent';
@@ -33,7 +31,6 @@ export default function App() {
             }}
           >
             <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="BoxComponent" component={BoxComponent} />
             <Stack.Screen name="CardList" component={CardListComponent} />
             <Stack.Screen name="CardComponent" component={CardComponent} />
             <Stack.Screen name="CardDetailComponent" component={CardDetailComponent} />

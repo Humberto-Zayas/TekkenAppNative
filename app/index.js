@@ -25,9 +25,9 @@ export default function Page() {
                 pathname: '/cardlist/[slug]',
                 params: { slug: slug }
               }}
-              // href={`/cardlist/${slug}`}
               style={styles.box}
             >
+              <View style={styles.boxContent}>
               <Image source={character.image} style={{ width: 72, height: 72, borderRadius: 8 }} />
               <Text
                 style={{
@@ -40,6 +40,7 @@ export default function Page() {
               >
                 {character.name.replace(/_/g, ' ')}
               </Text>
+              </View>
             </Link>
           );
         })}
@@ -71,8 +72,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     overflow: 'scroll'
   },
+  boxContent: {
+    alignItems: 'center', // Ensures vertical alignment of content
+  },
   box: {
-    display: 'block',
     alignItems: 'center',
     margin: 8,
   },
