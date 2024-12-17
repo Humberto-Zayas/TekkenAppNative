@@ -29,7 +29,7 @@ const Login = () => {
 
         if (token && refreshToken && username && userId) {
           login({ username, userId }, token, refreshToken);
-          router.push('/home'); // Redirect to the home page
+          router.push('/'); // Redirect to the home page
         } else {
           Alert.alert('Login Error', 'Token or refresh token missing in the response');
         }
@@ -68,12 +68,27 @@ const Login = () => {
       });
 
       if (response.ok) {
-        Alert.alert('Signup Successful', 'You can now log in with your credentials.', [
-          {
-            text: 'OK',
-            onPress: () => setSignUp(false),
-          },
-        ]);
+        // Parse the response data
+        const responseData = await response.json();
+        const { token, refreshToken, userId } = responseData;
+
+        if (token && refreshToken && userId) {
+          // Automatically log the user in
+          login({ username, userId }, token, refreshToken);
+          Alert.alert('Signup Successful', 'You are now logged in!', [
+            {
+              text: 'OK',
+              onPress: () => router.push('/'), // Redirect to home after successful login
+            },
+          ]);
+        } else {
+          Alert.alert('Signup Error', 'Failed to retrieve login details. Please log in manually.'[
+            {
+              text: 'OK',
+              onPress: () => setSignUp(false),
+            }
+          ]);
+        }
       } else if (response.status === 409) {
         const responseData = await response.json();
         Alert.alert('Signup Failed', responseData.error || 'An error occurred. Please try again.');
@@ -86,6 +101,7 @@ const Login = () => {
       console.error('Error during signup:', error);
     }
   };
+
 
   const handleToggle = () => {
     setSignUp(!signUp);
