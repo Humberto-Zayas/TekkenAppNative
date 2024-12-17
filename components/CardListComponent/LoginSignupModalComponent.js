@@ -1,8 +1,11 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Modal } from 'react-native';
+import { useRouter } from 'expo-router';
 import { styles } from './styles';
 
-const LoginSignupModalComponent = ({ showModal, closeModal, navigation }) => {
+const LoginSignupModalComponent = ({ showModal, closeModal }) => {
+  const router = useRouter();
+
   return (
     <Modal
       animationType="slide"
@@ -20,7 +23,7 @@ const LoginSignupModalComponent = ({ showModal, closeModal, navigation }) => {
             style={styles.modalButton}
             onPress={() => {
               closeModal();
-              navigation.navigate('Login', { isSignUp: false });
+              router.push({ pathname: '/login', params: { isSignUp: false } });
             }}
           >
             <Text style={styles.modalButtonText}>Login</Text>
@@ -29,7 +32,7 @@ const LoginSignupModalComponent = ({ showModal, closeModal, navigation }) => {
             style={styles.modalButton}
             onPress={() => {
               closeModal();
-              navigation.navigate('Login', { isSignUp: true });
+              router.push({ pathname: '/login', params: { isSignUp: true } });
             }}
           >
             <Text style={styles.modalButtonText}>Sign Up</Text>

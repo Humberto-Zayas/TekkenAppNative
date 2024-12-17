@@ -1,36 +1,40 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal, Image } from 'react-native';
 import { useAuth } from '../../utils/AuthContext';
-import { useRoute } from '@react-navigation/native';
+import { useSegments, useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import logo from '../../assets/favicon.png';
 
-const CustomHeader = ({ navigation }) => {
+const CustomHeader = () => {
   const [isMenuVisible, setMenuVisible] = useState(false);
   const { user, logout } = useAuth();
-  const route = useRoute();
-  const screenName = route.params?.character?.name || route.params?.screenName || route.name;
-  
+  const router = useRouter();
+  const segments = useSegments();
+
+  const screenName = segments[segments.length - 1] || 'Home';
+
   const handleBack = () => {
-    if (navigation.canGoBack()) {
-      navigation.navigate('Home');
+    if (segments.length > 1) {
+      router.back();
+    } else {
+      router.push('/');
     }
   };
 
   const handleLoginNavigation = (isSignUp) => {
     setMenuVisible(false);
-    navigation.navigate('Login', { isSignUp });
+    router.push(`/login?isSignUp=${isSignUp}`);
   };
 
   const handleCreatorPress = () => {
     setMenuVisible(false);
-    navigation.navigate('MyCardListComponent');
+    router.push(`/users/${user.username}/cards`);
   };
 
   const handleLogout = () => {
     setMenuVisible(false);
     logout();
-    navigation.navigate('Home');
+    router.push('/');
   };
 
   return (
@@ -50,18 +54,20 @@ const CustomHeader = ({ navigation }) => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            {/* Close Icon */}
             <TouchableOpacity
               style={styles.closeButton}
               onPress={() => setMenuVisible(false)}
             >
               <FontAwesome name="close" size={24} color="blue" />
             </TouchableOpacity>
-            {/* Menu Items */}
             {user ? (
               <>
                 <TouchableOpacity
-                  style={{...styles.menuItem, borderBottomWidth: 1, borderBottomColor: '#ddd' }}
+                  style={{
+                    ...styles.menuItem,
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#ddd',
+                  }}
                   onPress={handleCreatorPress}
                 >
                   <Text style={styles.menuText}>{user.username} Cards</Text>
@@ -76,7 +82,11 @@ const CustomHeader = ({ navigation }) => {
             ) : (
               <>
                 <TouchableOpacity
-                 style={{...styles.menuItem, borderBottomWidth: 1, borderBottomColor: '#ddd' }}
+                  style={{
+                    ...styles.menuItem,
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#ddd',
+                  }}
                   onPress={() => handleLoginNavigation(false)}
                 >
                   <Text style={styles.menuText}>Login</Text>

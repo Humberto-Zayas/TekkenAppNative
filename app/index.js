@@ -1,6 +1,12 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import { characters } from '../data/characters'; // Ensure you're importing the default export
+import { Link } from 'expo-router';
 // import { useAuth } from '../utils/AuthContext';
+
+// Helper function to create a slug from a name
+const slugify = (name) => {
+  return name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+};
 
 export default function Page() {
   return (
@@ -10,16 +16,33 @@ export default function Page() {
       </Text>
       <ScrollView contentContainerStyle={styles.gridContainer}>
         {/* Convert characters object to an array and map over it */}
-        {Object.values(characters).map((character) => (
-          <TouchableOpacity
-            key={character.id}
-            style={styles.box}
-            // onPress={() => navigation.navigate('CardList', { character })}
-          >
-            <Image source={character.image} style={{ width: 72, height: 72, borderRadius: 8 }} />
-            <Text style={{ marginTop: 8, fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', color: '#222' }}>{character.name.replace(/_/g, ' ')}</Text>
-          </TouchableOpacity>
-        ))}
+        {Object.values(characters).map((character) => {
+          const slug = slugify(character.name); // Create slug for the character
+          return (
+            <Link
+              key={character.id}
+              href={{
+                pathname: '/cardlist/[slug]',
+                params: { slug: slug }
+              }}
+              // href={`/cardlist/${slug}`}
+              style={styles.box}
+            >
+              <Image source={character.image} style={{ width: 72, height: 72, borderRadius: 8 }} />
+              <Text
+                style={{
+                  marginTop: 8,
+                  fontSize: 14,
+                  fontWeight: 'bold',
+                  textTransform: 'uppercase',
+                  color: '#222',
+                }}
+              >
+                {character.name.replace(/_/g, ' ')}
+              </Text>
+            </Link>
+          );
+        })}
       </ScrollView>
     </View>
   );
@@ -49,6 +72,7 @@ const styles = StyleSheet.create({
     overflow: 'scroll'
   },
   box: {
+    display: 'block',
     alignItems: 'center',
     margin: 8,
   },

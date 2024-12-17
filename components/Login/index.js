@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { Alert, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { REACT_APP_API_BASE_URL } from '@env';
 import { useAuth } from '../../utils/AuthContext';
 
-const Login = ({ route }) => {
-  const { isSignUp } = route.params || { isSignUp: false };
-  const [signUp, setSignUp] = useState(isSignUp);
+const Login = () => {
+  const { isSignUp } = useLocalSearchParams() || { isSignUp: false };
+  const [signUp, setSignUp] = useState(isSignUp === 'true');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-  const navigation = useNavigation();
+  const router = useRouter();
   const { login } = useAuth();
 
   const handleLogin = async () => {
@@ -29,7 +29,7 @@ const Login = ({ route }) => {
 
         if (token && refreshToken && username && userId) {
           login({ username, userId }, token, refreshToken);
-          navigation.navigate('Home');
+          router.push('/home'); // Redirect to the home page
         } else {
           Alert.alert('Login Error', 'Token or refresh token missing in the response');
         }
@@ -57,7 +57,7 @@ const Login = ({ route }) => {
 
   const handleSignup = async () => {
     if (!validateSignup()) return;
-  
+
     try {
       const response = await fetch(`${REACT_APP_API_BASE_URL}/users/signup`, {
         method: 'POST',
@@ -66,7 +66,7 @@ const Login = ({ route }) => {
         },
         body: JSON.stringify({ username, email, password }),
       });
-  
+
       if (response.ok) {
         Alert.alert('Signup Successful', 'You can now log in with your credentials.', [
           {
@@ -76,14 +76,7 @@ const Login = ({ route }) => {
         ]);
       } else if (response.status === 409) {
         const responseData = await response.json();
-        
-        if (responseData.error === "User with this email already exists") {
-          Alert.alert('Signup Failed', 'User with this email already exists.');
-        } else if (responseData.error === "Username is already taken") {
-          Alert.alert('Signup Failed', 'Username is already taken.');
-        } else {
-          Alert.alert('Signup Failed', 'An error occurred. Please try again.');
-        }
+        Alert.alert('Signup Failed', responseData.error || 'An error occurred. Please try again.');
       } else {
         const responseData = await response.json();
         Alert.alert('Signup Failed', responseData.error || 'An error occurred. Please try again.');
@@ -93,7 +86,7 @@ const Login = ({ route }) => {
       console.error('Error during signup:', error);
     }
   };
-  
+
   const handleToggle = () => {
     setSignUp(!signUp);
   };
