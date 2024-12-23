@@ -16,7 +16,7 @@ const difficultyOrder = {
   difficult: 2,
 };
 
-const CardDetailComponent = ({ route, navigation }) => {
+const CardDetailComponent = ({ route, navigation, closeModal }) => {
   const { moveSetName, moves, cardName, image } = route.params;
   const [selectedItem, setSelectedItem] = useState(null);
   const [sortedMoves, setSortedMoves] = useState([]);
@@ -125,6 +125,7 @@ const CardDetailComponent = ({ route, navigation }) => {
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={styles.flowChartContainer}
     >
+
       {followUpOrMoveFlow.moves.map((move, moveIndex) => (
         <View
           key={moveIndex}
@@ -178,6 +179,14 @@ const CardDetailComponent = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={{ position: 'absolute', top: 8, right: 16, zIndex: 9999 }}
+        onPress={() => {
+          closeModal();
+        }}
+      >
+        <FontAwesome name="chevron-down" size={24} color="black" />
+      </TouchableOpacity>
       <View style={styles.heroContainer}>
         <Image source={image} style={styles.heroImage} />
         <View style={styles.heroInfo}>
@@ -207,6 +216,7 @@ const CardDetailComponent = ({ route, navigation }) => {
       {moveSetName !== 'Combos' && renderHeader()}
 
       <ScrollView showsVerticalScrollIndicator={false}>
+
         {moveSetName === 'Combos' && Object.keys(groupedCombos).map((type) => (
           <View key={type}>
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginVertical: 8 }}>{type}</Text>

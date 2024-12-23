@@ -65,11 +65,9 @@ const CardListPage = () => {
     if (!user) {
       setShowModal(true);
     } else {
+      setShowModal(true);
       router.push({
-        pathname: '/create-card',
-        params: {
-          characterName: character.name,
-        },
+        pathname: `${character.name}/create`,
       });
     }
   };
@@ -85,6 +83,58 @@ const CardListPage = () => {
 
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
+  };
+
+  const handleBookmarkPress = async (item, isBookmarked) => {
+    try {
+      if (isBookmarked) {
+        // Call bookmark API if the card should now be bookmarked
+        await bookmarkCardById(user.userId, item._id, token);
+      } else {
+        // Call removeBookmark API if the card should be unbookmarked
+        await unbookmarkCardById(user.userId, item._id, token);
+      }
+
+      // Update the local state after successfully toggling the bookmark
+      setCards((prevCards) =>
+        prevCards.map((card) =>
+          card._id === item._id ? { ...card, isBookmarked } : card
+        )
+      );
+    } catch (error) {
+      console.error('Error toggling bookmark:', error);
+    }
+  };
+
+  const renderLoginSignupModal = () => {
+    return (
+      <LoginSignupModalComponent
+        showModal={showModal}
+        closeModal={closeModal}
+        navigation={navigation}
+      />
+    );
+  };
+
+  const handleDeletePress = (item) => {
+    Alert.alert(
+      "Delete Card",
+      "Are you sure you want to delete this card?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Delete", style: "destructive", onPress: () => handleDeleteConfirm(item) },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const handleDeleteConfirm = async (item) => {
+    try {
+      await deleteCard(item._id, user.userId, token);
+      setCards((prevCards) => prevCards.filter((card) => card._id !== item._id));
+    } catch (error) {
+      console.error("Error deleting card:", error);
+    }
   };
 
   useEffect(() => {
@@ -104,7 +154,13 @@ const CardListPage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.heroContainer}>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10 }}>{character.name}</Text>
+        {character.image && (
+          <Image
+            source={character.image}
+            style={styles.heroImage}
+          />
+        )}
+        <Text style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10 }}>{character.name}</Text>
       </View>
       {showSavedList ? (
         <SavedListComponent characterName={character.name} />
@@ -129,6 +185,24 @@ const CardListPage = () => {
           {cards.length === 0 && (
             <Text style={styles.noCardsText}>No cards found. Create one!</Text>
           )}
+          <TouchableOpacity style={{ marginBottom: 4 }} onPress={toggleSortOrder}>
+                <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
+              </TouchableOpacity>
+              {selectedTags.length > 0 && cards.length === 0 && (
+                <Text style={styles.noCardsText}>
+                  {`There are currently no cards for the following tag: ${selectedTags.map(tag => tag.name).join(', ')}`}
+                </Text>
+              )}
+              {youtubeQuery && cards.filter(card => card.youtubeLink).length === 0 && (
+                <Text style={styles.noCardsText}>
+                  There are currently no cards with a YouTube link.
+                </Text>
+              )}
+              {twitchQuery && cards.filter(card => card.twitchLink).length === 0 && (
+                <Text style={styles.noCardsText}>
+                  There are currently no cards with a Twitch link.
+                </Text>
+              )}
           <FlatList
             contentContainerStyle={styles.flatList}
             data={cards}
@@ -154,6 +228,20 @@ const CardListPage = () => {
           )}
         </>
       )}
+      <View style={styles.toggleButtonContainer}>
+        <TouchableOpacity
+          style={[styles.toggleButton, { marginRight: 10 }]}
+          onPress={() => setShowSavedList(false)}
+        >
+          <Text style={styles.toggleButtonText}>Show All Cards</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.toggleButton}
+          onPress={() => setShowSavedList(true)}
+        >
+          <Text style={styles.toggleButtonText}>Show Saved List</Text>
+        </TouchableOpacity>
+      </View>
       <TouchableOpacity style={styles.fab} onPress={handleCreateCard}>
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>

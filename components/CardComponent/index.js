@@ -200,7 +200,6 @@ const CardComponent = ({ route, navigation }) => {
                 <Text style={styles.counter}>{card?.comboData.length}</Text>
               </TouchableOpacity>
             )}
-
             {(card?.youtubeLink || card?.twitchLink) && (
               <Text style={{ ...styles.heroName, marginBottom: 8 }}>Guide and Stream Links</Text>
             )}

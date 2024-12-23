@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Alert, View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
 import { useFocusEffect } from '@react-navigation/native';
@@ -10,7 +11,7 @@ import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
 import { deleteCard, bookmarkCardById, unbookmarkCardById } from '../../utils/api';
 import { characters } from '../../data/characters';
 
-const MyCardListComponent = ({ navigation }) => {
+const MyCardListComponent = () => {
   const [cards, setCards] = useState([]);
   const [sortOrder, setSortOrder] = useState('ascending');
   const [showSavedList, setShowSavedList] = useState(false);
@@ -20,12 +21,13 @@ const MyCardListComponent = ({ navigation }) => {
   const [pageSize, setPageSize] = useState(10); // Number of items per page
   const { user, token } = useAuth();
   const userId = user?.userId;
+  const router = useRouter();
 
-  useEffect(() => {
-    if (user?.username) {
-      navigation.setParams({ screenName: `${user.username}'s Cards` }); // Update params dynamically
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (user?.username) {
+  //     navigation.setParams({ screenName: `${user.username}'s Cards` }); // Update params dynamically
+  //   }
+  // }, []);
 
   const fetchCards = async () => {
     try {
@@ -114,13 +116,21 @@ const MyCardListComponent = ({ navigation }) => {
     return frameDataFiles[sanitizedCharacterName] || null;
   };
 
+  // const handleCardPress = (id, characterName) => {
+  //   const frameData = loadFrameData(characterName);
+  //   navigation.navigate('CardComponent', {
+  //     id,
+  //     frameData
+  //   });
+  // };
+
   const handleCardPress = (id, characterName) => {
-    const frameData = loadFrameData(characterName);
-    navigation.navigate('CardComponent', {
-      id,
-      frameData
-    });
+    console.log(characterName)
+    const sanitizedCharacterName = characterName.toLowerCase().replace(/\s+|_/g, '');
+    // router.push(`/${sanitizedCharacterName}/${id}`);
+    router.push(`/card/${id}`);
   };
+  
 
   const handleDeletePress = (item) => {
     Alert.alert(
@@ -147,7 +157,7 @@ const MyCardListComponent = ({ navigation }) => {
   const handleEditPress = (item) => {
     const frameData = loadFrameData(item.characterName); // Get frame data for the specific character
     const characterImage = item.characterImage; // Get the image from the item
-    navigation.navigate('CreateCardComponent', { cardData: item, isEdit: true, characterImage, frameData });
+    // navigation.navigate('CreateCardComponent', { cardData: item, isEdit: true, characterImage, frameData });
   };
 
   const handleBookmarkPress = async (item, isBookmarked) => {
@@ -204,7 +214,7 @@ const MyCardListComponent = ({ navigation }) => {
       </View> */}
 
       {showSavedList ? (
-        <SavedListComponent navigation={navigation} />
+        <SavedListComponent />
       ) : (
         <>
           {cards.length === 0 ? (
@@ -212,7 +222,7 @@ const MyCardListComponent = ({ navigation }) => {
               <Text style={styles.noCardsText}>
                 {`You currently have no cards. Why don't you create one!`}
               </Text>
-              <TouchableOpacity style={styles.cab} onPress={() => { navigation.navigate('Home') }}>
+              <TouchableOpacity style={styles.cab}>
                 <Text style={styles.cabText}>+</Text>
               </TouchableOpacity>
             </>

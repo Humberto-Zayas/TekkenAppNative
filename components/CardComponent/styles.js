@@ -276,6 +276,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap', // Allow items to wrap to the next line
+    position: 'relative'
   },
   flowChartItemWrapper: {
     position: 'relative',
