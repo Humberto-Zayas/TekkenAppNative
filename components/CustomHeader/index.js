@@ -28,7 +28,7 @@ const CustomHeader = () => {
 
   const handleCreatorPress = () => {
     setMenuVisible(false);
-    router.push(`/users/${user.username}/cards`);
+    router.push(`/users/${user.username}/my-cards`);
   };
 
   const handleLogout = () => {

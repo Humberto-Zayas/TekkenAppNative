@@ -23,7 +23,6 @@ const CardComponent = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedCardDetails, setSelectedCardDetails] = useState(null);
 
-
   useEffect(() => {
     if (slug) {
       fetchCard();
@@ -127,8 +126,8 @@ const CardComponent = () => {
       <HeroComponent
         handleCreatorPress={() =>
           router.push({
-            pathname: '/creator-cards',
-            params: { creatorId: card?.userId, creator: card?.username },
+            pathname: `users/${card.username}/creator-cards`,
+            params: { creatorId: card?.userId, username: card?.username },
           })
         }
         rating={averageRating}
