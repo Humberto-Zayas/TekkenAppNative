@@ -10,7 +10,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
 const CardComponent = () => {
-  const { slug } = useLocalSearchParams(); // Get the slug from the URL
+  const { slug, frameData } = useLocalSearchParams(); // Retrieve slug and frameData
   const router = useRouter();
   const [card, setCard] = useState(null);
   const [character, setCharacter] = useState(null);
@@ -22,6 +22,8 @@ const CardComponent = () => {
   const [loading, setLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedCardDetails, setSelectedCardDetails] = useState(null);
+
+  // const stringFrameData = JSON.stringify(frameData)
 
   useEffect(() => {
     if (slug) {
@@ -62,9 +64,17 @@ const CardComponent = () => {
       moveSetName,
       moves,
       cardName: card.cardName,
-      image: character?.image,
+      image: card.image,
     });
     setIsModalVisible(true);
+  };
+
+  const handleEditPress = () => {
+    // setMenuVisible(false);
+    router.push({
+      pathname: `${card.cardName}/create`,
+      params: { cardData: JSON.stringify(card), isEdit: true, characterImage: character?.image, frameData: frameData  },
+    });
   };
 
   const toggleBookmark = async () => {
@@ -135,7 +145,8 @@ const CardComponent = () => {
         user={user}
         card={card}
         image={character?.image}
-        frameData={card.frameData}
+        frameData={frameData}
+        handleEditPress={handleEditPress}
         toggleBookmark={toggleBookmark}
         onRatingChange={setUserRating}
         onDelete={() => router.back()}

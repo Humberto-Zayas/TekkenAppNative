@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { View, ScrollView, Modal, TouchableOpacity, Text, Alert } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import HeroCreateComponent from '../../components/CreateCardComponent/HeroCreateComponent';
@@ -16,7 +16,10 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 const CreateCardPage = () => {
   const { user, token } = useAuth(); // Get user and token from useAuth
   const router = useRouter();
-  const { cardData: initialCardData, isEdit, characterName, characterImage, frameData } = useLocalSearchParams();
+  const { cardData: rawCardData, isEdit, characterName, characterImage, frameData } = useLocalSearchParams();
+  const initialCardData = useMemo(() => (rawCardData ? JSON.parse(rawCardData) : {}), [rawCardData]);
+
+  const parsedFrameData = JSON.parse(frameData); // Parse the stringified frame data
   
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showPunishers, setShowPunishers] = useState(false);
@@ -167,7 +170,7 @@ const CreateCardPage = () => {
             setHasUnsavedChanges(true); // Track unsaved changes
           }}
           punisherData={punisherData}
-          frameData={frameData}
+          frameData={parsedFrameData}
         />
       </Modal>
 
@@ -179,7 +182,7 @@ const CreateCardPage = () => {
             setHasUnsavedChanges(true)
           }}
           moveFlowChartData={moveFlowChartData}
-          frameData={frameData}
+          frameData={parsedFrameData}
         />
       </Modal>
 
@@ -191,7 +194,7 @@ const CreateCardPage = () => {
             setHasUnsavedChanges(true);
           }}
           followUpData={followUpData}
-          frameData={frameData}
+          frameData={parsedFrameData}
         />
       </Modal>
 
@@ -203,7 +206,7 @@ const CreateCardPage = () => {
             setHasUnsavedChanges(true);
           }}
           comboData={comboData}
-          frameData={frameData}
+          frameData={parsedFrameData}
         />
       </Modal>
 
@@ -215,7 +218,7 @@ const CreateCardPage = () => {
             setHasUnsavedChanges(true);
           }}
           importantMoveData={importantMoveData}
-          frameData={frameData}
+          frameData={parsedFrameData}
         />
       </Modal>
 

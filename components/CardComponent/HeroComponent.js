@@ -4,6 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 import { format } from 'date-fns';
 import { REACT_APP_API_BASE_URL } from '@env';
+import { useRouter } from 'expo-router'; // Expo Router hooks
 
 const RatingModal = ({ visible, onClose, onStarPress, selectedRating, card }) => {
 
@@ -75,11 +76,13 @@ const ConfirmationModal = ({ visible, onClose, onConfirm }) => {
   );
 };
 
-const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRatingChange, handleCreatorPress, onDelete, navigation, image, frameData }) => {
+const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRatingChange, handleCreatorPress, onDelete, image, handleEditPress }) => {
   const [selectedRating, setSelectedRating] = useState(null);
   const [isMenuVisible, setMenuVisible] = useState(false);
   const [isRatingModalVisible, setRatingModalVisible] = useState(false);
   const [isConfirmationModalVisible, setConfirmationModalVisible] = useState(false);
+
+  const router = useRouter(); // Use Expo Router's `useRouter`
 
   const handleStarPress = (starNumber) => {
     setSelectedRating(starNumber);
@@ -107,10 +110,7 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
     setRatingModalVisible(false);
   };
 
-  const handleEditPress = (card) => {
-    setMenuVisible(false);
-    navigation.navigate('CreateCardComponent', { cardData: card, isEdit: true, characterImage: image, characterName: `Edit ${card.cardName}`, frameData: frameData });
-  };
+
 
   const handleDeletePress = () => {
     setMenuVisible(false)
@@ -208,7 +208,7 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
                 {user?.userId === card?.userId && (
                   <>
                     <TouchableOpacity style={styles.menuItem}>
-                      <FontAwesome name="edit" size={24} color="blue" style={styles.menuItemIcon} onPress={() => handleEditPress(card)} />
+                      <FontAwesome name="edit" size={24} color="blue" style={styles.menuItemIcon} onPress={() => handleEditPress()} />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.menuItem} onPress={handleDeletePress}>
                       <FontAwesome name="trash" size={24} color="red" style={styles.menuItemIcon} />

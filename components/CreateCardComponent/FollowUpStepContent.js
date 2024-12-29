@@ -15,6 +15,7 @@ const FollowUpStepContent = ({
   addFollowUp,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const parsedFrameData = JSON.parse(frameData); // Parse the stringified frame data
 
   const handleMoveSelect = (move) => {
     setSelectedMoves((prevSelectedMoves) => {
@@ -29,7 +30,7 @@ const FollowUpStepContent = ({
   };
 
   // Filter the frameData based on the search query
-  const filteredFrameData = frameData.filter(item => {
+  const filteredFrameData = parsedFrameData.filter(item => {
     // Ensure item.move is a string before calling toLowerCase
     return typeof item.move === 'string' && item.move.toLowerCase().includes(searchQuery.toLowerCase());
   });

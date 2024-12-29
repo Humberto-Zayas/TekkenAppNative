@@ -38,28 +38,28 @@ const MyCardListComponent = () => {
       const totalCount = response.headers.get('X-Total-Count');
       const totalPages = Math.ceil(totalCount / pageSize); // Calculate total pages
       const data = await response.json();
-  
+
       const cardsWithData = data.map((card) => {
         // Sanitize the characterName
         const sanitizedCharacterName = card.characterName.toLowerCase().replace(/\s+|_/g, '');
-  
+
         const matchingCharacterKey = Object.keys(characters).find((char) => {
           const sanitizedCharKey = char.toLowerCase().replace(/\s+|_/g, '');
           return sanitizedCharKey === sanitizedCharacterName;
         });
-  
+
         const character = characters[matchingCharacterKey] || null; // Use null if not found
         const characterImage = character ? character.image : null;
-  
+
         return {
           ...card,
           averageRating: calculateAverageRating(card),
           characterImage,
         };
       });
-  
+
       const sortedCards = sortOrder === 'ascending' ? cardsWithData : cardsWithData.reverse();
-  
+
       setCards(sortedCards);
       setTotalCount(totalCount);
       setTotalPages(totalPages);
@@ -116,21 +116,30 @@ const MyCardListComponent = () => {
     return frameDataFiles[sanitizedCharacterName] || null;
   };
 
-  // const handleCardPress = (id, characterName) => {
-  //   const frameData = loadFrameData(characterName);
-  //   navigation.navigate('CardComponent', {
-  //     id,
-  //     frameData
-  //   });
-  // };
+    // Add the handleEditPress function
+    // const handleEditPress = (item) => {
+    //   const frameData = loadFrameData(item.characterName); 
+    //   const characterImage = item.characterImage; 
+    // };
+
+    const handleEditPress = (item) => {
+      const frameData = loadFrameData(item.characterName);
+      router.push({
+        pathname: `${item.characterName}/create`,
+        params: { cardData: JSON.stringify(item), isEdit: true, characterImage: item.characterImage, frameData: JSON.stringify(frameData),  },
+      });
+    };
 
   const handleCardPress = (id, characterName) => {
-    console.log(characterName)
-    const sanitizedCharacterName = characterName.toLowerCase().replace(/\s+|_/g, '');
-    // router.push(`/${sanitizedCharacterName}/${id}`);
-    router.push(`/card/${id}`);
+    const frameData = loadFrameData(characterName);
+
+    router.push({
+      pathname: `/card/${id}`,
+      params: {frameData: JSON.stringify(frameData)}
+    });
+    
   };
-  
+
 
   const handleDeletePress = (item) => {
     Alert.alert(
@@ -153,13 +162,6 @@ const MyCardListComponent = () => {
     }
   };
 
-  // Add the handleEditPress function
-  const handleEditPress = (item) => {
-    const frameData = loadFrameData(item.characterName); // Get frame data for the specific character
-    const characterImage = item.characterImage; // Get the image from the item
-    // navigation.navigate('CreateCardComponent', { cardData: item, isEdit: true, characterImage, frameData });
-  };
-
   const handleBookmarkPress = async (item, isBookmarked) => {
     try {
       if (isBookmarked) {
@@ -169,7 +171,7 @@ const MyCardListComponent = () => {
         // Call removeBookmark API if the card should be unbookmarked
         await unbookmarkCardById(user.userId, item._id, token);
       }
-  
+
       // Update the local state after successfully toggling the bookmark
       setCards((prevCards) =>
         prevCards.map((card) =>

@@ -8,6 +8,7 @@ const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData 
   const [context, setContext] = useState('');
   const [searchQuery, setSearchQuery] = useState(''); // State to keep track of the search query
 
+
   useEffect(() => {
     if (!modalVisible) {
       setSelectedMove(null);

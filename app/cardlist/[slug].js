@@ -22,6 +22,7 @@ const findCharacterBySlug = (slug) => {
 
 const CardListPage = () => {
   const { slug } = useLocalSearchParams(); // Use Expo Router's `useSearchParams`
+  // console.log(slug)
   const router = useRouter(); // Use Expo Router's `useRouter`
 
   const [showSavedList, setShowSavedList] = useState(false);
@@ -57,10 +58,16 @@ const CardListPage = () => {
   };
 
   const handleCardPress = (id) => {
-    router.push(`/card/${id}`); // Navigate to the specific card page dynamically
+    const frameData = loadFrameData(character.name);
+
+    router.push({
+      pathname: `/card/${id}`,
+      params: {frameData: JSON.stringify(frameData)}
+    });
   };
 
   const handleCreateCard = () => {
+    const frameData = loadFrameData(character.name);
     setCardMenuVisible(false);
     if (!user) {
       setShowModal(true);
@@ -68,6 +75,7 @@ const CardListPage = () => {
       setShowModal(true);
       router.push({
         pathname: `${character.name}/create`,
+        params: { characterImage: character.image, frameData: JSON.stringify(frameData) }
       });
     }
   };
@@ -83,6 +91,52 @@ const CardListPage = () => {
 
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
+  };
+
+  const frameDataFiles = {
+    Alisa: require('../../data/AlisaFrameData.js').default,
+    Asuka: require('../../data/AsukaFrameData.js').default,
+    Azucena: require('../../data/AzucenaFrameData.js').default,
+    Bryan: require('../../data/BryanFrameData.js').default,
+    Claudio: require('../../data/ClaudioFrameData.js').default,
+    Devil_Jin: require('../../data/Devil_JinFrameData.js').default,
+    Dragunov: require('../../data/DragunovFrameData.js').default,
+    Eddy: require('../../data/EddyFrameData.js').default,
+    Feng: require('../../data/FengFrameData.js').default,
+    Hwoarang: require('../../data/HwoarangFrameData.js').default,
+    Jin: require('../../data/JinFrameData.js').default,
+    Jun: require('../../data/JunFrameData.js').default,
+    Kazuya: require('../../data/KazuyaFrameData.js').default,
+    King: require('../../data/KingFrameData.js').default,
+    Kuma: require('../../data/KumaFrameData.js').default,
+    Lars: require('../../data/LarsFrameData.js').default,
+    Law: require('../../data/LawFrameData.js').default,
+    Lee: require('../../data/LeeFrameData.js').default,
+    Lili: require('../../data/LiliFrameData.js').default,
+    Nina: require('../../data/NinaFrameData.js').default,
+    Panda: require('../../data/PandaFrameData.js').default,
+    Paul: require('../../data/PaulFrameData.js').default,
+    Raven: require('../../data/RavenFrameData.js').default,
+    Reina: require('../../data/ReinaFrameData.js').default,
+    Shaheen: require('../../data/ShaheenFrameData.js').default,
+    Steve: require('../../data/SteveFrameData.js').default,
+    Victor: require('../../data/VictorFrameData.js').default,
+    Xiaoyu: require('../../data/XiaoyuFrameData.js').default,
+    Yoshimitsu: require('../../data/YoshimitsuFrameData.js').default,
+    Zafina: require('../../data/ZafinaFrameData.js').default,
+  };
+
+  const loadFrameData = (characterName) => {
+    const sanitizedCharacterName = characterName.replace(/\s+/g, '');
+    return frameDataFiles[sanitizedCharacterName] || null;
+  };
+
+  const handleEditPress = (item) => {
+    const frameData = loadFrameData(item.characterName);
+    router.push({
+      pathname: `${item.cardName}/create`,
+      params: { cardData: JSON.stringify(item), isEdit: true, characterImage: character.image, frameData: JSON.stringify(frameData),  },
+    });
   };
 
   const handleBookmarkPress = async (item, isBookmarked) => {
@@ -186,23 +240,23 @@ const CardListPage = () => {
             <Text style={styles.noCardsText}>No cards found. Create one!</Text>
           )}
           <TouchableOpacity style={{ marginBottom: 4 }} onPress={toggleSortOrder}>
-                <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
-              </TouchableOpacity>
-              {selectedTags.length > 0 && cards.length === 0 && (
-                <Text style={styles.noCardsText}>
-                  {`There are currently no cards for the following tag: ${selectedTags.map(tag => tag.name).join(', ')}`}
-                </Text>
-              )}
-              {youtubeQuery && cards.filter(card => card.youtubeLink).length === 0 && (
-                <Text style={styles.noCardsText}>
-                  There are currently no cards with a YouTube link.
-                </Text>
-              )}
-              {twitchQuery && cards.filter(card => card.twitchLink).length === 0 && (
-                <Text style={styles.noCardsText}>
-                  There are currently no cards with a Twitch link.
-                </Text>
-              )}
+            <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
+          </TouchableOpacity>
+          {selectedTags.length > 0 && cards.length === 0 && (
+            <Text style={styles.noCardsText}>
+              {`There are currently no cards for the following tag: ${selectedTags.map(tag => tag.name).join(', ')}`}
+            </Text>
+          )}
+          {youtubeQuery && cards.filter(card => card.youtubeLink).length === 0 && (
+            <Text style={styles.noCardsText}>
+              There are currently no cards with a YouTube link.
+            </Text>
+          )}
+          {twitchQuery && cards.filter(card => card.twitchLink).length === 0 && (
+            <Text style={styles.noCardsText}>
+              There are currently no cards with a Twitch link.
+            </Text>
+          )}
           <FlatList
             contentContainerStyle={styles.flatList}
             data={cards}
@@ -212,6 +266,9 @@ const CardListPage = () => {
                 item={item}
                 user={user}
                 handleCardPress={handleCardPress}
+                handleDeletePress={() => handleDeletePress(item)}
+                handleEditPress={handleEditPress}
+                handleBookmarkPress={handleBookmarkPress}
                 getBackgroundColor={getBackgroundColor}
               />
             )}

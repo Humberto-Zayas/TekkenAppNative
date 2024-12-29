@@ -22,6 +22,7 @@ const StepContent = ({
   editingIndex,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const parsedFrameData = JSON.parse(frameData); // Parse the stringified frame data
 
   const handleMoveSelect = (move) => {
     setSelectedComboStarters(selectedComboStarters.includes(move)
@@ -43,7 +44,7 @@ const StepContent = ({
   };
 
   // Filter the frameData based on the search query
-  const filteredFrameData = frameData.filter(item => {
+  const filteredFrameData = parsedFrameData.filter(item => {
     return typeof item.move === 'string' && item.move.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
