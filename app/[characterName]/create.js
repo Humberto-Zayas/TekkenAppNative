@@ -120,6 +120,16 @@ const CreateCardPage = () => {
     }
   };
 
+  const handleTagPress = (tag) => {
+    const tagIndex = selectedTags.findIndex(t => t.name === tag.name);
+    if (tagIndex !== -1) {
+      setSelectedTags(selectedTags.filter(t => t.name !== tag.name));
+    } else {
+      setSelectedTags([...selectedTags, { name: tag.name }]);
+    }
+    setHasUnsavedChanges(true);
+  };
+
   return (
     <ScrollView style={styles.container}>
       <HeroCreateComponent
