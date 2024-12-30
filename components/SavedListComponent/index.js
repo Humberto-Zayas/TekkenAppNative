@@ -1,6 +1,7 @@
 // SavedListComponent.js
 import React, { useEffect, useState } from 'react';
 import { Alert, View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
+import { useRouter } from 'expo-router'; // Expo Router hooks
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
 import Pagination from '../Pagination';
@@ -9,7 +10,7 @@ import { characters } from '../../data/characters.js';
 import { deleteCard, unbookmarkCardById } from '../../utils/api';
 import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
 
-const SavedListComponent = ({ navigation, characterName }) => {
+const SavedListComponent = ({ characterName }) => {
   const [bookmarkedCards, setBookmarkedCards] = useState([]);
   const [sortOrder, setSortOrder] = useState('ascending');
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,6 +19,7 @@ const SavedListComponent = ({ navigation, characterName }) => {
   const [pageSize, setPageSize] = useState(10); // Number of items per page
   const [cardToDelete, setCardToDelete] = useState(null);
   const { user, token } = useAuth();
+  const router = useRouter(); 
   const userId = user?.userId;
 
   useEffect(() => {
@@ -119,17 +121,25 @@ const SavedListComponent = ({ navigation, characterName }) => {
 
   const handleSavedCardPress = (id, characterName) => {
     const frameData = loadFrameData(characterName);
-    navigation.navigate('CardComponent', { id, frameData });
+    router.push({
+      pathname: `/card/${id}`,
+      params: {frameData: JSON.stringify(frameData)}
+    });
   };
 
   const handleEditPress = (item) => {
     const frameData = loadFrameData(item.characterName); // Load frame data for the specific character
     const characterImage = item.characterImage; // Get the character image from the item
-    navigation.navigate('CreateCardComponent', {
-      cardData: item,
-      isEdit: true,
-      characterImage,
-      frameData
+    // navigation.navigate('CreateCardComponent', {
+    //   cardData: item,
+    //   isEdit: true,
+    //   characterImage,
+    //   frameData
+    // });
+
+    router.push({
+      pathname: `${item.cardName}/create`,
+      params: { cardData: JSON.stringify(item), isEdit: true, characterImage: characterImage, frameData: JSON.stringify(frameData),  },
     });
   };
 

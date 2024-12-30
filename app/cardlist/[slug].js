@@ -135,7 +135,7 @@ const CardListPage = () => {
     const frameData = loadFrameData(item.characterName);
     router.push({
       pathname: `${item.cardName}/create`,
-      params: { cardData: JSON.stringify(item), isEdit: true, characterImage: character.image, frameData: JSON.stringify(frameData),  },
+      params: { cardData: JSON.stringify(item), isEdit: true, characterImage: character.image, frameData: JSON.stringify(frameData)},
     });
   };
 

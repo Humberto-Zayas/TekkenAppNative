@@ -137,9 +137,7 @@ const MyCardListComponent = () => {
       pathname: `/card/${id}`,
       params: {frameData: JSON.stringify(frameData)}
     });
-    
   };
-
 
   const handleDeletePress = (item) => {
     Alert.alert(
