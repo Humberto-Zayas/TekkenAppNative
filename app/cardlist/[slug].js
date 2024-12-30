@@ -12,19 +12,9 @@ import { styles } from '../../components/CardListComponent/styles';
 import tags from '../../data/tags';
 import { characters } from '../../data/characters'; // Import characters data
 
-// Helper function to find a character by slug
-const findCharacterBySlug = (slug) => {
-  return Object.values(characters).find(
-    (character) =>
-      character.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '') === slug
-  );
-};
-
 const CardListPage = () => {
   const { slug } = useLocalSearchParams(); // Use Expo Router's `useSearchParams`
-  // console.log(slug)
   const router = useRouter(); // Use Expo Router's `useRouter`
-
   const [showSavedList, setShowSavedList] = useState(false);
   const [isCardMenuVisible, setCardMenuVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -37,8 +27,15 @@ const CardListPage = () => {
   const [pageSize, setPageSize] = useState(10);
   const [youtubeQuery, setYouTubeQuery] = useState(false);
   const [twitchQuery, setTwitchQuery] = useState(false);
-
   const { user, token } = useAuth();
+
+  // Helper function to find a character by slug
+  const findCharacterBySlug = (slug) => {
+    return Object.values(characters).find(
+      (character) =>
+        character.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '') === slug
+    );
+  };
 
   const character = findCharacterBySlug(slug); // Find character by slug
 
@@ -62,7 +59,7 @@ const CardListPage = () => {
 
     router.push({
       pathname: `/card/${id}`,
-      params: {frameData: JSON.stringify(frameData)}
+      params: { frameData: JSON.stringify(frameData) }
     });
   };
 
@@ -89,8 +86,16 @@ const CardListPage = () => {
     }
   };
 
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
+  };
+
+  const toggleCardMenu = () => {
+    setCardMenuVisible(!isCardMenuVisible);
   };
 
   const frameDataFiles = {
@@ -135,7 +140,7 @@ const CardListPage = () => {
     const frameData = loadFrameData(item.characterName);
     router.push({
       pathname: `${item.cardName}/create`,
-      params: { cardData: JSON.stringify(item), isEdit: true, characterImage: character.image, frameData: JSON.stringify(frameData)},
+      params: { cardData: JSON.stringify(item), isEdit: true, characterImage: character.image, frameData: JSON.stringify(frameData) },
     });
   };
 
@@ -165,7 +170,6 @@ const CardListPage = () => {
       <LoginSignupModalComponent
         showModal={showModal}
         closeModal={closeModal}
-        navigation={navigation}
       />
     );
   };
@@ -299,9 +303,18 @@ const CardListPage = () => {
           <Text style={styles.toggleButtonText}>Show Saved List</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.fab} onPress={handleCreateCard}>
+      <TouchableOpacity style={styles.fab} onPress={toggleCardMenu}>
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>
+
+      {isCardMenuVisible && (
+        <View style={styles.fabMenu}>
+          <TouchableOpacity style={styles.menuItem} onPress={handleCreateCard}>
+          <Text style={{fontSize: 16}}>Create {slug.charAt(0).toUpperCase() + slug.slice(1)} Card</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      {showModal && renderLoginSignupModal()}
     </View>
   );
 };
