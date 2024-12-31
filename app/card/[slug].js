@@ -10,7 +10,8 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
 const CardComponent = () => {
-  const { slug, frameData } = useLocalSearchParams(); // Retrieve slug and frameData
+  const { slug, frameData, cardName } = useLocalSearchParams(); // Retrieve slug and frameData
+  console.log(cardName)
   const router = useRouter();
   const [card, setCard] = useState(null);
   const [character, setCharacter] = useState(null);

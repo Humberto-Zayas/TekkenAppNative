@@ -19,14 +19,8 @@ export default function Page() {
         {Object.values(characters).map((character) => {
           const slug = slugify(character.name); // Create slug for the character
           return (
-            <Link
-              key={character.id}
-              href={{
-                pathname: '/cardlist/[slug]',
-                params: { slug: slug }
-              }}
-              style={styles.box}
-            >
+            <Link key={character.id} href={`/cardlist/${slug}`} style={styles.box}>
+
               <View style={styles.boxContent}>
               <Image source={character.image} style={{ width: 72, height: 72, borderRadius: 8 }} />
               <Text

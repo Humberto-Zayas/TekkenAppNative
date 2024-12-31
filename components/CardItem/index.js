@@ -22,7 +22,7 @@ const CardItem = ({ item, user, handleCardPress, handleDeletePress, handleEditPr
     >
       <Pressable
         style={[styles.cardItem, { backgroundColor: getBackgroundColor(item.averageRating) }]}
-        onPress={() => handleCardPress(item._id)}
+        onPress={() => handleCardPress(item._id, item.cardName)}
       >
         <View>
           <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }} numberOfLines={1}>

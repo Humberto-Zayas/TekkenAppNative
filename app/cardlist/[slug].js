@@ -54,12 +54,12 @@ const CardListPage = () => {
     }
   };
 
-  const handleCardPress = (id) => {
+  const handleCardPress = (id, cardName) => {
     const frameData = loadFrameData(character.name);
 
     router.push({
       pathname: `/card/${id}`,
-      params: { frameData: JSON.stringify(frameData) }
+      params: { cardName, frameData: JSON.stringify(frameData) }
     });
   };
 
