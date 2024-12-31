@@ -130,12 +130,6 @@ const SavedListComponent = ({ characterName }) => {
   const handleEditPress = (item) => {
     const frameData = loadFrameData(item.characterName); // Load frame data for the specific character
     const characterImage = item.characterImage; // Get the character image from the item
-    // navigation.navigate('CreateCardComponent', {
-    //   cardData: item,
-    //   isEdit: true,
-    //   characterImage,
-    //   frameData
-    // });
 
     router.push({
       pathname: `${item.cardName}/create`,
@@ -166,10 +160,7 @@ const SavedListComponent = ({ characterName }) => {
 
   const handleBookmarkPress = async (item) => {
     try {
-      // Unbookmark the card
       await unbookmarkCardById(user.userId, item._id, token);
-
-      // Remove the unbookmarked card from the list
       setBookmarkedCards((prevCards) => prevCards.filter((card) => card._id !== item._id));
     } catch (error) {
       console.error("Error unbookmarking card:", error);

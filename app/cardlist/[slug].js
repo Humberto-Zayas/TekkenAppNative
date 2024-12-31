@@ -5,12 +5,14 @@ import SavedListComponent from '../../components/SavedListComponent';
 import LoginSignupModalComponent from '../../components/CardListComponent/LoginSignupModalComponent';
 import Pagination from '../../components/Pagination';
 import CardItem from '../../components/CardItem';
+import TagFilter from './tagFilter';
 import { useAuth } from '../../utils/AuthContext';
 import { getBackgroundColor } from '../../utils/utils';
 import { deleteCard, bookmarkCardById, unbookmarkCardById, fetchCardsByCharacter } from '../../utils/api';
 import { styles } from '../../components/CardListComponent/styles';
 import tags from '../../data/tags';
 import { characters } from '../../data/characters'; // Import characters data
+import useFrameDataStore from '../../store/frameDataStore';
 
 const CardListPage = () => {
   const { slug } = useLocalSearchParams(); // Use Expo Router's `useSearchParams`
@@ -27,6 +29,7 @@ const CardListPage = () => {
   const [pageSize, setPageSize] = useState(10);
   const [youtubeQuery, setYouTubeQuery] = useState(false);
   const [twitchQuery, setTwitchQuery] = useState(false);
+  const { setFrameData } = useFrameDataStore();
   const { user, token } = useAuth();
 
   // Helper function to find a character by slug
@@ -56,15 +59,21 @@ const CardListPage = () => {
 
   const handleCardPress = (id, cardName) => {
     const frameData = loadFrameData(character.name);
+    setFrameData(frameData); 
+    
+    console.log('Frame Data:', frameData); // Log the frame data to debug
+  console.log('Store Frame Data:', useFrameDataStore.getState().frameData);
 
-    router.push({
-      pathname: `/card/${id}`,
-      params: { cardName, frameData: JSON.stringify(frameData) }
-    });
+    // router.push({
+    //   pathname: `/card/${id}`,
+    //   params: { cardName }
+    // });
   };
 
   const handleCreateCard = () => {
     const frameData = loadFrameData(character.name);
+    setFrameData(frameData);
+
     setCardMenuVisible(false);
     if (!user) {
       setShowModal(true);
@@ -72,7 +81,7 @@ const CardListPage = () => {
       setShowModal(true);
       router.push({
         pathname: `${character.name}/create`,
-        params: { characterImage: character.image, frameData: JSON.stringify(frameData) }
+        params: { characterImage: character.image }
       });
     }
   };
@@ -138,23 +147,21 @@ const CardListPage = () => {
 
   const handleEditPress = (item) => {
     const frameData = loadFrameData(item.characterName);
+    setFrameData(frameData);
+
     router.push({
       pathname: `${item.cardName}/create`,
-      params: { cardData: JSON.stringify(item), isEdit: true, characterImage: character.image, frameData: JSON.stringify(frameData) },
+      params: { cardData: JSON.stringify(item), isEdit: true, characterImage: character.image },
     });
   };
 
   const handleBookmarkPress = async (item, isBookmarked) => {
     try {
       if (isBookmarked) {
-        // Call bookmark API if the card should now be bookmarked
         await bookmarkCardById(user.userId, item._id, token);
       } else {
-        // Call removeBookmark API if the card should be unbookmarked
         await unbookmarkCardById(user.userId, item._id, token);
       }
-
-      // Update the local state after successfully toggling the bookmark
       setCards((prevCards) =>
         prevCards.map((card) =>
           card._id === item._id ? { ...card, isBookmarked } : card
@@ -224,43 +231,15 @@ const CardListPage = () => {
         <SavedListComponent characterName={character.name} />
       ) : (
         <>
-          <View style={styles.tagsContainer}>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-              {tags.map((tag) => (
-                <TouchableOpacity
-                  onPress={() => handleTagClick(tag)}
-                  style={[
-                    styles.tag,
-                    selectedTags.some((t) => t.name === tag.name) && styles.selectedTag,
-                  ]}
-                  key={tag.name}
-                >
-                  <Text style={styles.tagText}>{tag.name}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-          {cards.length === 0 && (
-            <Text style={styles.noCardsText}>No cards found. Create one!</Text>
-          )}
-          <TouchableOpacity style={{ marginBottom: 4 }} onPress={toggleSortOrder}>
-            <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
-          </TouchableOpacity>
-          {selectedTags.length > 0 && cards.length === 0 && (
-            <Text style={styles.noCardsText}>
-              {`There are currently no cards for the following tag: ${selectedTags.map(tag => tag.name).join(', ')}`}
-            </Text>
-          )}
-          {youtubeQuery && cards.filter(card => card.youtubeLink).length === 0 && (
-            <Text style={styles.noCardsText}>
-              There are currently no cards with a YouTube link.
-            </Text>
-          )}
-          {twitchQuery && cards.filter(card => card.twitchLink).length === 0 && (
-            <Text style={styles.noCardsText}>
-              There are currently no cards with a Twitch link.
-            </Text>
-          )}
+          <TagFilter
+            tags={tags}
+            selectedTags={selectedTags}
+            handleTagClick={handleTagClick}
+            toggleSortOrder={toggleSortOrder}
+            cards={cards}
+            youtubeQuery={youtubeQuery}
+            twitchQuery={twitchQuery}
+          />
           <FlatList
             contentContainerStyle={styles.flatList}
             data={cards}
