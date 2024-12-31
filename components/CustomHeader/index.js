@@ -10,31 +10,47 @@ const CustomHeader = () => {
   const { user, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useLocalSearchParams(); // Use this to extract query parameters
+  const searchParams = useLocalSearchParams(); // Get query parameters like cardName
 
-  const [screenName, setScreenName] = useState(''); // Initialize state for screen name
+  const [screenName, setScreenName] = useState('');
 
   // Function to determine the current screen name dynamically
-  const updateScreenName = () => {
-    if (pathname.startsWith('/card/')) {
-      const cardName = searchParams.cardName; // Directly extract the `cardName` parameter
-      setScreenName(cardName ? decodeURIComponent(cardName) : 'Unknown Card');
-    } else if (pathname.startsWith('/cardlist/')) {
-      const slug = pathname.split('/').pop(); // Extract the last part of the path
-      setScreenName(slug
-        ? decodeURIComponent(slug.charAt(0).toUpperCase() + slug.slice(1))
-        : 'Characters');
-    } else if (pathname === '/cardlist') {
-      setScreenName('Characters');
-    } else {
-      setScreenName(pathname === '/' ? (user ? `Hi, ${user.username}` : 'Home') : 'Unknown');
+  const getScreenName = () => {
+    if (pathname === '/') {
+      // Home or Hi, {username} when logged in
+      return user ? `Hi, ${user.username}` : 'Home';
     }
+
+    if (pathname.startsWith('/cardlist/')) {
+      // Dynamic card list slug (e.g., /cardlist/alisa)
+      const slug = pathname.split('/').pop(); // Get the last part of the path (e.g., "alisa")
+      return slug ? decodeURIComponent(slug.charAt(0).toUpperCase() + slug.slice(1)) : 'Characters';
+    }
+
+    if (pathname.startsWith('/card/')) {
+      // Card route with a cardName query param (e.g., /card/6757dfe2cb813bcbb882bcc9?cardName=User+3’s+Easy+Alisa+Guide)
+      const cardName = searchParams.cardName;
+      return cardName ? decodeURIComponent(cardName) : 'Unknown Card';
+    }
+
+    if (pathname.startsWith('/users/')) {
+      // Users route (e.g., /users/Hzayas/my-cards)
+      const username = pathname.split('/')[2]; // Extract the username from /users/:username/my-cards
+      return `${username}'s Cards`;
+    }
+
+    if (pathname.startsWith('/login')) {
+      // Login page with isSignUp query param
+      return 'Login';
+    }
+
+    return 'Unknown'; // Default fallback screen name
   };
 
-  // Run updateScreenName whenever pathname or searchParams change
+  // Update screen name when pathname or searchParams change
   useEffect(() => {
-    updateScreenName();
-  }, [pathname, searchParams]); // Dependencies include pathname and searchParams
+    setScreenName(getScreenName());
+  }, [pathname, searchParams, user]);
 
   const handleBack = () => {
     if (pathname !== '/') {
