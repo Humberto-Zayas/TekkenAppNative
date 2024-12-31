@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, View, Text, FlatList, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { Alert, View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router'; // Expo Router hooks
 import SavedListComponent from '../../components/SavedListComponent';
 import LoginSignupModalComponent from '../../components/CardListComponent/LoginSignupModalComponent';
 import Pagination from '../../components/Pagination';
 import CardItem from '../../components/CardItem';
-import TagFilter from './tagFilter';
+import TagFilter from '../../components/TagFilter';
+import ToggleButtons from '../../components/ToggleButtons/index.js';
+import CardList from '../../components/CardList/index.js';
 import { useAuth } from '../../utils/AuthContext';
 import { getBackgroundColor } from '../../utils/utils';
 import { deleteCard, bookmarkCardById, unbookmarkCardById, fetchCardsByCharacter } from '../../utils/api';
@@ -240,22 +242,14 @@ const CardListPage = () => {
             youtubeQuery={youtubeQuery}
             twitchQuery={twitchQuery}
           />
-          <FlatList
-            contentContainerStyle={styles.flatList}
-            data={cards}
-            keyExtractor={(item) => item._id}
-            renderItem={({ item }) => (
-              <CardItem
-                item={item}
-                user={user}
-                handleCardPress={handleCardPress}
-                handleDeletePress={() => handleDeletePress(item)}
-                handleEditPress={handleEditPress}
-                handleBookmarkPress={handleBookmarkPress}
-                getBackgroundColor={getBackgroundColor}
-              />
-            )}
-            showsVerticalScrollIndicator={false}
+          <CardList
+            cards={cards}
+            user={user}
+            handleCardPress={handleCardPress}
+            handleDeletePress={handleDeletePress}
+            handleEditPress={handleEditPress}
+            handleBookmarkPress={handleBookmarkPress}
+            getBackgroundColor={getBackgroundColor}
           />
           {cards.length > pageSize && (
             <Pagination
@@ -268,20 +262,10 @@ const CardListPage = () => {
           )}
         </>
       )}
-      <View style={styles.toggleButtonContainer}>
-        <TouchableOpacity
-          style={[styles.toggleButton, { marginRight: 10 }]}
-          onPress={() => setShowSavedList(false)}
-        >
-          <Text style={styles.toggleButtonText}>Show All Cards</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.toggleButton}
-          onPress={() => setShowSavedList(true)}
-        >
-          <Text style={styles.toggleButtonText}>Show Saved List</Text>
-        </TouchableOpacity>
-      </View>
+       <ToggleButtons 
+        setShowSavedList={setShowSavedList} 
+        toggleCardMenu={toggleCardMenu} 
+      />
       <TouchableOpacity style={styles.fab} onPress={toggleCardMenu}>
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>
