@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
+import { Alert, View, Text, TouchableOpacity, Image } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router'; // Expo Router hooks
 import SavedListComponent from '../../components/SavedListComponent';
 import LoginSignupModalComponent from '../../components/CardListComponent/LoginSignupModalComponent';
 import Pagination from '../../components/Pagination';
-import CardItem from '../../components/CardItem';
 import TagFilter from '../../components/TagFilter';
 import ToggleButtons from '../../components/ToggleButtons/index.js';
 import CardList from '../../components/CardList/index.js';
 import { useAuth } from '../../utils/AuthContext';
 import { getBackgroundColor } from '../../utils/utils';
-import { deleteCard, bookmarkCardById, unbookmarkCardById, fetchCardsByCharacter } from '../../utils/api';
+import { deleteCard, bookmarkCardById, unbookmarkCardById, fetchCardsByCharacter, fetchBookmarksByCharacter } from '../../utils/api';
 import { styles } from '../../components/CardListComponent/styles';
 import tags from '../../data/tags';
 import { characters } from '../../data/characters'; // Import characters data
@@ -23,6 +22,7 @@ const CardListPage = () => {
   const [isCardMenuVisible, setCardMenuVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [cards, setCards] = useState([]);
+  const [bookmarkedCards, setBookmarkedCards] = useState([]);
   const [sortOrder, setSortOrder] = useState('ascending');
   const [selectedTags, setSelectedTags] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -59,12 +59,29 @@ const CardListPage = () => {
     }
   };
 
+  const loadBookmarks = async () => {
+    try {
+      const { sortedBookmarks, totalCount, totalPages } = await fetchBookmarksByCharacter(
+        user.userId,
+        character.name,
+        sortOrder,
+        pageSize
+      );
+
+      setBookmarkedCards(sortedBookmarks);
+      setTotalCount(totalCount);
+      setTotalPages(totalPages);
+    } catch (error) {
+      console.error('Error fetching bookmarks:', error);
+    }
+  };
+
   const handleCardPress = (id, cardName) => {
     const frameData = loadFrameData(character.name);
-    setFrameData(frameData); 
-    
+    setFrameData(frameData);
+
     console.log('Frame Data:', frameData); // Log the frame data to debug
-  console.log('Store Frame Data:', useFrameDataStore.getState().frameData);
+    console.log('Store Frame Data:', useFrameDataStore.getState().frameData);
 
     // router.push({
     //   pathname: `/card/${id}`,
@@ -95,6 +112,14 @@ const CardListPage = () => {
     } else {
       setSelectedTags(selectedTags.filter((t) => t.name !== tag.name));
     }
+  };
+
+  const handleYouTubeTagClick = () => {
+    setYouTubeQuery(!youtubeQuery);
+  };
+
+  const handleTwitchTagClick = () => {
+    setTwitchQuery(!twitchQuery);
   };
 
   const closeModal = () => {
@@ -208,7 +233,13 @@ const CardListPage = () => {
     if (character) {
       fetchCards(currentPage);
     }
-  }, [character, selectedTags, currentPage, youtubeQuery, twitchQuery]);
+
+    if (user) {
+      loadBookmarks();
+    }
+
+
+  }, [character, selectedTags, currentPage, youtubeQuery, twitchQuery, user, bookmarkedCards]);
 
   if (!character) {
     return (
@@ -229,19 +260,34 @@ const CardListPage = () => {
         )}
         <Text style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10 }}>{character.name}</Text>
       </View>
+      <>
+        <TagFilter
+          tags={tags}
+          selectedTags={selectedTags}
+          handleTagClick={handleTagClick}
+          toggleSortOrder={toggleSortOrder}
+          cards={cards}
+          handleYouTubeTagClick={handleYouTubeTagClick}
+          youtubeQuery={youtubeQuery}
+          handleTwitchTagClick={handleTwitchTagClick}
+          twitchQuery={twitchQuery}
+        />
+      </>
       {showSavedList ? (
-        <SavedListComponent characterName={character.name} />
+        <>
+          <SavedListComponent
+            characterName={character.name}
+            cards={bookmarkedCards}
+            user={user}
+            handleCardPress={handleCardPress}
+            handleDeletePress={handleDeletePress}
+            handleEditPress={handleEditPress}
+            handleBookmarkPress={handleBookmarkPress}
+            getBackgroundColor={getBackgroundColor}
+          />
+        </>
       ) : (
         <>
-          <TagFilter
-            tags={tags}
-            selectedTags={selectedTags}
-            handleTagClick={handleTagClick}
-            toggleSortOrder={toggleSortOrder}
-            cards={cards}
-            youtubeQuery={youtubeQuery}
-            twitchQuery={twitchQuery}
-          />
           <CardList
             cards={cards}
             user={user}
@@ -251,20 +297,20 @@ const CardListPage = () => {
             handleBookmarkPress={handleBookmarkPress}
             getBackgroundColor={getBackgroundColor}
           />
-          {cards.length > pageSize && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              handlePreviousPage={() => setCurrentPage(currentPage - 1)}
-              handleNextPage={() => setCurrentPage(currentPage + 1)}
-              setCurrentPage={setCurrentPage}
-            />
-          )}
         </>
       )}
-       <ToggleButtons 
-        setShowSavedList={setShowSavedList} 
-        toggleCardMenu={toggleCardMenu} 
+      {cards.length > pageSize && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          handlePreviousPage={() => setCurrentPage(currentPage - 1)}
+          handleNextPage={() => setCurrentPage(currentPage + 1)}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
+      <ToggleButtons
+        setShowSavedList={setShowSavedList}
+        toggleCardMenu={toggleCardMenu}
       />
       <TouchableOpacity style={styles.fab} onPress={toggleCardMenu}>
         <Text style={styles.fabText}>+</Text>
@@ -273,7 +319,7 @@ const CardListPage = () => {
       {isCardMenuVisible && (
         <View style={styles.fabMenu}>
           <TouchableOpacity style={styles.menuItem} onPress={handleCreateCard}>
-          <Text style={{fontSize: 16}}>Create {slug.charAt(0).toUpperCase() + slug.slice(1)} Card</Text>
+            <Text style={{ fontSize: 16 }}>Create {slug.charAt(0).toUpperCase() + slug.slice(1)} Card</Text>
           </TouchableOpacity>
         </View>
       )}

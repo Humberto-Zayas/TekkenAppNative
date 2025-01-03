@@ -9,7 +9,9 @@ const TagFilter = ({
   handleTagClick,
   toggleSortOrder,
   cards,
+  handleYouTubeTagClick,
   youtubeQuery,
+  handleTwitchTagClick,
   twitchQuery,
 }) => {
   return (
@@ -28,16 +30,30 @@ const TagFilter = ({
               <Text style={styles.tagText}>{tag.name}</Text>
             </TouchableOpacity>
           ))}
+          <TouchableOpacity
+            onPress={handleYouTubeTagClick}
+            style={[
+              styles.tag,
+              youtubeQuery && styles.selectedTag
+            ]}
+          >
+            <Text style={styles.tagText}>YouTube</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleTwitchTagClick}
+            style={[
+              styles.tag,
+              twitchQuery && styles.selectedTag
+            ]}
+          >
+            <Text style={styles.tagText}>Twitch</Text>
+          </TouchableOpacity>
         </ScrollView>
       </View>
 
       <TouchableOpacity style={{ marginBottom: 4 }} onPress={toggleSortOrder}>
         <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
       </TouchableOpacity>
-
-      {cards.length === 0 && (
-        <Text style={styles.noCardsText}>No cards found. Create one!</Text>
-      )}
 
       {selectedTags.length > 0 && cards.length === 0 && (
         <Text style={styles.noCardsText}>

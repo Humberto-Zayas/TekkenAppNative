@@ -1,6 +1,8 @@
 // utils/api.js
 import { REACT_APP_API_BASE_URL } from '@env'
 import { calculateAverageRating } from './utils';
+import { characters } from '../data/characters';
+
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -210,4 +212,55 @@ export const fetchUserBookmarks = async (userId, token) => {
   });
   const data = await response.json();
   return data.bookmarks;
+};
+
+export const fetchBookmarksByCharacter = async (userId, characterName, sortOrder, pageSize) => {
+  const url = new URL(`${process.env.REACT_APP_API_BASE_URL}/users/${userId}/bookmarks`);
+
+  // Add query parameters if characterName is provided
+  if (characterName) {
+    url.searchParams.append('characterName', encodeURIComponent(characterName));
+  }
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Failed to fetch bookmarks');
+    }
+
+    const totalCount = response.headers.get('X-Total-Count');
+    const totalPages = Math.ceil(totalCount / pageSize);
+
+    const data = await response.json();
+
+    // Map and process the fetched cards
+    const cardsWithData = data.bookmarks.map((card) => {
+      const sanitizedCharacterName = card.characterName.toLowerCase().replace(/\s+|_/g, '');
+
+      // Find the matching character
+      const matchingCharacterKey = Object.keys(characters).find((char) => {
+        const sanitizedCharKey = char.toLowerCase().replace(/\s+|_/g, '');
+        return sanitizedCharKey === sanitizedCharacterName;
+      });
+
+      const character = characters[matchingCharacterKey] || null;
+      const characterImage = character ? character.image : null;
+
+      return {
+        ...card,
+        averageRating: calculateAverageRating(card),
+        characterImage,
+      };
+    });
+
+    // Sort the cards
+    const sortedBookmarks = sortOrder === 'ascending'
+      ? cardsWithData.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+      : cardsWithData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    return { sortedBookmarks, totalCount, totalPages };
+  } catch (error) {
+    console.error('Error fetching bookmarks:', error);
+    throw error;
+  }
 };
