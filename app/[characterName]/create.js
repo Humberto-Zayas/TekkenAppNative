@@ -16,11 +16,9 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 const CreateCardPage = () => {
   const { user, token } = useAuth(); // Get user and token from useAuth
   const router = useRouter();
-  const { cardData: rawCardData, isEdit, characterName, characterImage, frameData } = useLocalSearchParams();
+  const { cardData: rawCardData, isEdit, characterName, characterImage } = useLocalSearchParams();
+  console.log(characterName)
   const initialCardData = useMemo(() => (rawCardData ? JSON.parse(rawCardData) : {}), [rawCardData]);
-
-  const parsedFrameData = JSON.parse(frameData); // Parse the stringified frame data
-  
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showPunishers, setShowPunishers] = useState(false);
   const [showMoveFlowChart, setShowMoveFlowChart] = useState(false);
@@ -37,6 +35,38 @@ const CreateCardPage = () => {
   const [followUpData, setFollowUpData] = useState([]);
   const [comboData, setComboData] = useState([]);
   const [importantMoveData, setImportantMoveData] = useState([]);
+  const frameDataFiles = {
+    Alisa: require('../../data/AlisaFrameData.js').default,
+    Asuka: require('../../data/AsukaFrameData.js').default,
+    Azucena: require('../../data/AzucenaFrameData.js').default,
+    Bryan: require('../../data/BryanFrameData.js').default,
+    Claudio: require('../../data/ClaudioFrameData.js').default,
+    Devil_Jin: require('../../data/Devil_JinFrameData.js').default,
+    Dragunov: require('../../data/DragunovFrameData.js').default,
+    Eddy: require('../../data/EddyFrameData.js').default,
+    Feng: require('../../data/FengFrameData.js').default,
+    Hwoarang: require('../../data/HwoarangFrameData.js').default,
+    Jin: require('../../data/JinFrameData.js').default,
+    Jun: require('../../data/JunFrameData.js').default,
+    Kazuya: require('../../data/KazuyaFrameData.js').default,
+    King: require('../../data/KingFrameData.js').default,
+    Kuma: require('../../data/KumaFrameData.js').default,
+    Lars: require('../../data/LarsFrameData.js').default,
+    Law: require('../../data/LawFrameData.js').default,
+    Lee: require('../../data/LeeFrameData.js').default,
+    Lili: require('../../data/LiliFrameData.js').default,
+    Nina: require('../../data/NinaFrameData.js').default,
+    Panda: require('../../data/PandaFrameData.js').default,
+    Paul: require('../../data/PaulFrameData.js').default,
+    Raven: require('../../data/RavenFrameData.js').default,
+    Reina: require('../../data/ReinaFrameData.js').default,
+    Shaheen: require('../../data/ShaheenFrameData.js').default,
+    Steve: require('../../data/SteveFrameData.js').default,
+    Victor: require('../../data/VictorFrameData.js').default,
+    Xiaoyu: require('../../data/XiaoyuFrameData.js').default,
+    Yoshimitsu: require('../../data/YoshimitsuFrameData.js').default,
+    Zafina: require('../../data/ZafinaFrameData.js').default,
+  };
 
   useEffect(() => {
     console.log('Unsaved Changes:', hasUnsavedChanges);
@@ -59,6 +89,20 @@ const CreateCardPage = () => {
       setHasUnsavedChanges(false);
     }
   }, [isEdit, initialCardData]);
+
+  // Correctly map the frameData to the characterName
+  const frameData = useMemo(() => {
+    if (!characterName) return null;
+
+    // Normalize characterName to match keys in frameDataFiles
+    const formattedCharacterName = characterName.replace(/ /g, '_'); // Replace spaces with underscores
+    return frameDataFiles[formattedCharacterName] || null; // Return frameData or null if not found
+  }, [characterName]);
+
+  // Debugging tip: Log to verify frameData is being fetched correctly
+  useEffect(() => {
+    console.log('Selected Frame Data:');
+  }, [frameData]);
 
   const handleSave = async () => {
     if (!cardName || !cardDescription) {
@@ -143,7 +187,7 @@ const CreateCardPage = () => {
         twitchLink={twitchLink}
         onTwitchLinkChange={(link) => { setTwitchLink(link); setHasUnsavedChanges(true); }}
       />
-     <View style={{ marginTop: 16 }}>
+      <View style={{ marginTop: 16 }}>
         <TouchableOpacity onPress={() => setShowPunishers(true)} style={styles.link}>
           <FontAwesome name="external-link" size={16} color="white" />
           <Text style={styles.linkText}>Punishers</Text>
@@ -180,7 +224,7 @@ const CreateCardPage = () => {
             setHasUnsavedChanges(true); // Track unsaved changes
           }}
           punisherData={punisherData}
-          frameData={parsedFrameData}
+          frameData={frameData}
         />
       </Modal>
 
@@ -192,7 +236,7 @@ const CreateCardPage = () => {
             setHasUnsavedChanges(true)
           }}
           moveFlowChartData={moveFlowChartData}
-          frameData={parsedFrameData}
+          frameData={frameData}
         />
       </Modal>
 
@@ -204,7 +248,7 @@ const CreateCardPage = () => {
             setHasUnsavedChanges(true);
           }}
           followUpData={followUpData}
-          frameData={parsedFrameData}
+          frameData={frameData}
         />
       </Modal>
 
@@ -216,7 +260,7 @@ const CreateCardPage = () => {
             setHasUnsavedChanges(true);
           }}
           comboData={comboData}
-          frameData={parsedFrameData}
+          frameData={frameData}
         />
       </Modal>
 
@@ -228,7 +272,7 @@ const CreateCardPage = () => {
             setHasUnsavedChanges(true);
           }}
           importantMoveData={importantMoveData}
-          frameData={parsedFrameData}
+          frameData={frameData}
         />
       </Modal>
 

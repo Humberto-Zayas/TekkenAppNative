@@ -13,7 +13,6 @@ import { deleteCard, bookmarkCardById, unbookmarkCardById, fetchCardsByCharacter
 import { styles } from '../../components/CardListComponent/styles';
 import tags from '../../data/tags';
 import { characters } from '../../data/characters'; // Import characters data
-import useFrameDataStore from '../../store/frameDataStore';
 
 const CardListPage = () => {
   const { slug } = useLocalSearchParams(); // Use Expo Router's `useSearchParams`
@@ -31,7 +30,6 @@ const CardListPage = () => {
   const [pageSize, setPageSize] = useState(10);
   const [youtubeQuery, setYouTubeQuery] = useState(false);
   const [twitchQuery, setTwitchQuery] = useState(false);
-  const { setFrameData } = useFrameDataStore();
   const { user, token } = useAuth();
 
   // Helper function to find a character by slug
@@ -77,12 +75,6 @@ const CardListPage = () => {
   };
 
   const handleCardPress = (id, cardName) => {
-    const frameData = loadFrameData(character.name);
-    setFrameData(frameData);
-
-    // console.log('Frame Data:', frameData); // Log the frame data to debug
-    // console.log('Store Frame Data:', useFrameDataStore.getState().frameData);
-
     router.push({
       pathname: `/card/${id}`,
       params: { cardName }
@@ -90,9 +82,6 @@ const CardListPage = () => {
   };
 
   const handleCreateCard = () => {
-    const frameData = loadFrameData(character.name);
-    setFrameData(frameData);
-
     setCardMenuVisible(false);
     if (!user) {
       setShowModal(true);
@@ -134,50 +123,10 @@ const CardListPage = () => {
     setCardMenuVisible(!isCardMenuVisible);
   };
 
-  const frameDataFiles = {
-    Alisa: require('../../data/AlisaFrameData.js').default,
-    Asuka: require('../../data/AsukaFrameData.js').default,
-    Azucena: require('../../data/AzucenaFrameData.js').default,
-    Bryan: require('../../data/BryanFrameData.js').default,
-    Claudio: require('../../data/ClaudioFrameData.js').default,
-    Devil_Jin: require('../../data/Devil_JinFrameData.js').default,
-    Dragunov: require('../../data/DragunovFrameData.js').default,
-    Eddy: require('../../data/EddyFrameData.js').default,
-    Feng: require('../../data/FengFrameData.js').default,
-    Hwoarang: require('../../data/HwoarangFrameData.js').default,
-    Jin: require('../../data/JinFrameData.js').default,
-    Jun: require('../../data/JunFrameData.js').default,
-    Kazuya: require('../../data/KazuyaFrameData.js').default,
-    King: require('../../data/KingFrameData.js').default,
-    Kuma: require('../../data/KumaFrameData.js').default,
-    Lars: require('../../data/LarsFrameData.js').default,
-    Law: require('../../data/LawFrameData.js').default,
-    Lee: require('../../data/LeeFrameData.js').default,
-    Lili: require('../../data/LiliFrameData.js').default,
-    Nina: require('../../data/NinaFrameData.js').default,
-    Panda: require('../../data/PandaFrameData.js').default,
-    Paul: require('../../data/PaulFrameData.js').default,
-    Raven: require('../../data/RavenFrameData.js').default,
-    Reina: require('../../data/ReinaFrameData.js').default,
-    Shaheen: require('../../data/ShaheenFrameData.js').default,
-    Steve: require('../../data/SteveFrameData.js').default,
-    Victor: require('../../data/VictorFrameData.js').default,
-    Xiaoyu: require('../../data/XiaoyuFrameData.js').default,
-    Yoshimitsu: require('../../data/YoshimitsuFrameData.js').default,
-    Zafina: require('../../data/ZafinaFrameData.js').default,
-  };
-
-  const loadFrameData = (characterName) => {
-    const sanitizedCharacterName = characterName.replace(/\s+/g, '');
-    return frameDataFiles[sanitizedCharacterName] || null;
-  };
-
   const handleEditPress = (item) => {
-    const frameData = loadFrameData(item.characterName);
-    setFrameData(frameData);
-
+    console.log(item.characterName)
     router.push({
-      pathname: `${item.cardName}/create`,
+      pathname: `${item.characterName}/create`,
       params: { cardData: JSON.stringify(item), isEdit: true, characterImage: character.image },
     });
   };
