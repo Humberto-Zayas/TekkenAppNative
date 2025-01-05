@@ -80,13 +80,13 @@ const CardListPage = () => {
     const frameData = loadFrameData(character.name);
     setFrameData(frameData);
 
-    console.log('Frame Data:', frameData); // Log the frame data to debug
-    console.log('Store Frame Data:', useFrameDataStore.getState().frameData);
+    // console.log('Frame Data:', frameData); // Log the frame data to debug
+    // console.log('Store Frame Data:', useFrameDataStore.getState().frameData);
 
-    // router.push({
-    //   pathname: `/card/${id}`,
-    //   params: { cardName }
-    // });
+    router.push({
+      pathname: `/card/${id}`,
+      params: { cardName }
+    });
   };
 
   const handleCreateCard = () => {

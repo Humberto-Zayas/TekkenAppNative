@@ -11,8 +11,7 @@ export const styles = StyleSheet.create({
     flexGrow: 1,
     flexDirection: 'column',
     alignItems: 'stretch',
-    justifyContent: 'center',
-    marginTop: 16
+    justifyContent: 'start',
   },
   cardItem: {
     flexDirection: 'row',
