@@ -20,9 +20,11 @@ const SavedListComponent = ({
     <>
       {user ? (
         cards?.length === 0 ? (
-          <Text style={styles.noCardsText}>
-            {`You currently have no bookmarked cards${characterName ? ` for ${characterName}` : ''}.`}
-          </Text>
+          // <Text style={styles.noCardsText}>
+          //   {`You currently have no bookmarked cards${characterName ? ` for ${characterName}` : ''}.`}
+          // </Text>
+          <>
+          </>
         ) : (
           <FlatList
             contentContainerStyle={styles.flatList}

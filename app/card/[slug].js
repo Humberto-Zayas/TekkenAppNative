@@ -14,7 +14,6 @@ const CardComponent = () => {
   const router = useRouter();
   const [card, setCard] = useState(null);
   const [character, setCharacter] = useState(null);
-  console.log('character: ', character?.name)
   const [isBookmarked, setIsBookmarked] = useState(null);
   const [userRating, setUserRating] = useState(null);
   const [averageRating, setAverageRating] = useState(null);

@@ -17,7 +17,6 @@ const CreateCardPage = () => {
   const { user, token } = useAuth(); // Get user and token from useAuth
   const router = useRouter();
   const { cardData: rawCardData, isEdit, characterName, characterImage } = useLocalSearchParams();
-  console.log(characterName)
   const initialCardData = useMemo(() => (rawCardData ? JSON.parse(rawCardData) : {}), [rawCardData]);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showPunishers, setShowPunishers] = useState(false);

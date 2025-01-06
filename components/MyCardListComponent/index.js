@@ -7,12 +7,14 @@ import { useFocusEffect } from '@react-navigation/native';
 import SavedListComponent from '../SavedListComponent';
 import Pagination from '../Pagination';
 import CardItem from '../CardItem/index.js';
+import CardList from '../../components/CardList/index.js';
 import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
-import { deleteCard, bookmarkCardById, unbookmarkCardById } from '../../utils/api';
+import { deleteCard, bookmarkCardById, unbookmarkCardById, fetchUserBookmarks } from '../../utils/api';
 import { characters } from '../../data/characters';
 
 const MyCardListComponent = () => {
   const [cards, setCards] = useState([]);
+  const [bookmarkedCards, setBookmarkedCards] = useState([]);
   const [sortOrder, setSortOrder] = useState('ascending');
   const [showSavedList, setShowSavedList] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,12 +24,6 @@ const MyCardListComponent = () => {
   const { user, token } = useAuth();
   const userId = user?.userId;
   const router = useRouter();
-
-  // useEffect(() => {
-  //   if (user?.username) {
-  //     navigation.setParams({ screenName: `${user.username}'s Cards` }); // Update params dynamically
-  //   }
-  // }, []);
 
   const fetchCards = async () => {
     try {
@@ -68,6 +64,50 @@ const MyCardListComponent = () => {
     }
   };
 
+  const loadBookmarks = async () => {
+    try {
+      // Fetch the bookmarks data from the API
+      const bookmarks = await fetchUserBookmarks(userId, token);
+  
+      // Process bookmarks to include additional data
+      const processedBookmarks = bookmarks.map((bookmark) => {
+        // Sanitize the characterName
+        const sanitizedCharacterName = bookmark.characterName.toLowerCase().replace(/\s+|_/g, '');
+  
+        // Match the character and get additional info
+        const matchingCharacterKey = Object.keys(characters).find((char) => {
+          const sanitizedCharKey = char.toLowerCase().replace(/\s+|_/g, '');
+          return sanitizedCharKey === sanitizedCharacterName;
+        });
+  
+        const character = characters[matchingCharacterKey] || null; // Use null if not found
+        const characterImage = character ? character.image : null;
+  
+        return {
+          ...bookmark,
+          averageRating: calculateAverageRating(bookmark),
+          characterImage,
+        };
+      });
+  
+      // Sort processed bookmarks if needed
+      const sortedBookmarks = sortOrder === 'ascending' ? processedBookmarks : processedBookmarks.reverse();
+  
+      // Set processed bookmarks to state
+      setBookmarkedCards(sortedBookmarks);
+  
+      // Calculate total count and pages
+      const totalCount = bookmarks.length;
+      const totalPages = Math.ceil(totalCount / pageSize); // Assuming `pageSize` is defined
+  
+      setTotalCount(totalCount);
+      setTotalPages(totalPages);
+    } catch (error) {
+      console.error('Error fetching bookmarks:', error);
+    }
+  };
+  
+
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -78,64 +118,17 @@ const MyCardListComponent = () => {
     setCurrentPage(currentPage + 1);
   };
 
-  const frameDataFiles = {
-    Alisa: require('../../data/AlisaFrameData.js').default,
-    Asuka: require('../../data/AsukaFrameData.js').default,
-    Azucena: require('../../data/AzucenaFrameData.js').default,
-    Bryan: require('../../data/BryanFrameData.js').default,
-    Claudio: require('../../data/ClaudioFrameData.js').default,
-    Devil_Jin: require('../../data/Devil_JinFrameData.js').default,
-    Dragunov: require('../../data/DragunovFrameData.js').default,
-    Eddy: require('../../data/EddyFrameData.js').default,
-    Feng: require('../../data/FengFrameData.js').default,
-    Hwoarang: require('../../data/HwoarangFrameData.js').default,
-    Jin: require('../../data/JinFrameData.js').default,
-    Jun: require('../../data/JunFrameData.js').default,
-    Kazuya: require('../../data/KazuyaFrameData.js').default,
-    King: require('../../data/KingFrameData.js').default,
-    Kuma: require('../../data/KumaFrameData.js').default,
-    Lars: require('../../data/LarsFrameData.js').default,
-    Law: require('../../data/LawFrameData.js').default,
-    Lee: require('../../data/LeeFrameData.js').default,
-    Lili: require('../../data/LiliFrameData.js').default,
-    Nina: require('../../data/NinaFrameData.js').default,
-    Panda: require('../../data/PandaFrameData.js').default,
-    Paul: require('../../data/PaulFrameData.js').default,
-    Raven: require('../../data/RavenFrameData.js').default,
-    Reina: require('../../data/ReinaFrameData.js').default,
-    Shaheen: require('../../data/ShaheenFrameData.js').default,
-    Steve: require('../../data/SteveFrameData.js').default,
-    Victor: require('../../data/VictorFrameData.js').default,
-    Xiaoyu: require('../../data/XiaoyuFrameData.js').default,
-    Yoshimitsu: require('../../data/YoshimitsuFrameData.js').default,
-    Zafina: require('../../data/ZafinaFrameData.js').default,
+  const handleEditPress = (item) => {
+    router.push({
+      pathname: `${item.characterName}/create`,
+      params: { cardData: JSON.stringify(item), isEdit: true, characterImage: item.characterImage, },
+    });
   };
 
-  const loadFrameData = (characterName) => {
-    const sanitizedCharacterName = characterName.replace(/\s+/g, '');
-    return frameDataFiles[sanitizedCharacterName] || null;
-  };
-
-    // Add the handleEditPress function
-    // const handleEditPress = (item) => {
-    //   const frameData = loadFrameData(item.characterName); 
-    //   const characterImage = item.characterImage; 
-    // };
-
-    const handleEditPress = (item) => {
-      const frameData = loadFrameData(item.characterName);
-      router.push({
-        pathname: `${item.characterName}/create`,
-        params: { cardData: JSON.stringify(item), isEdit: true, characterImage: item.characterImage, frameData: JSON.stringify(frameData),  },
-      });
-    };
-
-  const handleCardPress = (id, characterName) => {
-    const frameData = loadFrameData(characterName);
-
+  const handleCardPress = (id) => {
     router.push({
       pathname: `/card/${id}`,
-      params: {frameData: JSON.stringify(frameData)}
+      // params: { cardName }
     });
   };
 
@@ -199,22 +192,27 @@ const MyCardListComponent = () => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchCards();
-    }, [user])
-  );
+
+
+  useEffect(() => {
+    fetchCards();
+    loadBookmarks();
+  }, [user])
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.heroContainer}>
-        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
-          {user.username}'s Cards
-        </Text>
-      </View> */}
 
       {showSavedList ? (
-        <SavedListComponent />
+        <SavedListComponent
+          // characterName={character.name}
+          cards={bookmarkedCards}
+          user={user}
+          handleCardPress={handleCardPress}
+          handleDeletePress={handleDeletePress}
+          handleEditPress={handleEditPress}
+          handleBookmarkPress={handleBookmarkPress}
+          getBackgroundColor={getBackgroundColor}
+        />
       ) : (
         <>
           {cards.length === 0 ? (
@@ -231,13 +229,17 @@ const MyCardListComponent = () => {
               <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
                 <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
               </TouchableOpacity>
-              <FlatList
-                contentContainerStyle={styles.flatList}
-                data={cards}
-                keyExtractor={(item) => item._id}
-                renderItem={renderCardItem}
-                showsVerticalScrollIndicator={false}
+
+              <CardList
+                cards={cards}
+                user={user}
+                handleCardPress={handleCardPress}
+                handleDeletePress={handleDeletePress}
+                handleEditPress={handleEditPress}
+                handleBookmarkPress={handleBookmarkPress}
+                getBackgroundColor={getBackgroundColor}
               />
+
               {cards.length > 10 && (
                 <View style={styles.bottomContainer}>
                   <Pagination
