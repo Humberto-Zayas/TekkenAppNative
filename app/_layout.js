@@ -5,6 +5,7 @@ import AppWrapper from '../components/AppWrapper';
 import { Stack } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { themeStyles } from '../styles/styles';
 
 function HeaderLogo() {
   const router = useRouter();

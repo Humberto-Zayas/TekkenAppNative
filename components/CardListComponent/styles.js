@@ -39,6 +39,14 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 20,
   },
+  heroContainerDesktop: {
+    flexDirection: 'row', // Row for larger screens
+    justifyContent: 'space-between',
+  },
+  heroContainerMobile: {
+    flexDirection: 'column', // Stack vertically for smaller screens
+    alignItems: 'center',
+  },
   heroImage: {
     width: 120,
     height: 120,

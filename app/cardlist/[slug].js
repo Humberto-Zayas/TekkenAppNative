@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, View, Text, TouchableOpacity, Image } from 'react-native';
+import { Alert, View, Text, TouchableOpacity, Image, useWindowDimensions } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router'; // Expo Router hooks
 import SavedListComponent from '../../components/SavedListComponent';
 import LoginSignupModalComponent from '../../components/CardListComponent/LoginSignupModalComponent';
@@ -13,6 +13,7 @@ import { deleteCard, bookmarkCardById, unbookmarkCardById, fetchCardsByCharacter
 import { styles } from '../../components/CardListComponent/styles';
 import tags from '../../data/tags';
 import { characters } from '../../data/characters'; // Import characters data
+import { themeStyles } from '../../styles/styles';
 
 const CardListPage = () => {
   const { slug } = useLocalSearchParams(); // Use Expo Router's `useSearchParams`
@@ -31,6 +32,10 @@ const CardListPage = () => {
   const [youtubeQuery, setYouTubeQuery] = useState(false);
   const [twitchQuery, setTwitchQuery] = useState(false);
   const { user, token } = useAuth();
+
+  const { width } = useWindowDimensions();
+  const isMobile = width < 768; // Adjust breakpoint as needed
+
 
   // Helper function to find a character by slug
   const findCharacterBySlug = (slug) => {
@@ -86,7 +91,7 @@ const CardListPage = () => {
     if (!user) {
       setShowModal(true);
     } else {
-      setShowModal(true);
+      setShowModal(false);
       router.push({
         pathname: `${character.name}/create`,
         params: { characterImage: character.image }
@@ -187,7 +192,6 @@ const CardListPage = () => {
       loadBookmarks();
     }
 
-
   }, [character, selectedTags, currentPage, youtubeQuery, twitchQuery, user, bookmarkedCards]);
 
   if (!character) {
@@ -199,29 +203,23 @@ const CardListPage = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.heroContainer}>
-        {character.image && (
-          <Image
-            source={character.image}
-            style={styles.heroImage}
+    <View style={themeStyles.container}>
+      <View style={[styles.heroContainer, isMobile ? styles.heroContainerMobile : styles.heroContainerDesktop]}>
+        <Image source={character.image} style={styles.heroImage} />
+        <View style={styles.tagsContainer}>
+          <TagFilter
+            tags={tags}
+            selectedTags={selectedTags}
+            handleTagClick={handleTagClick}
+            toggleSortOrder={toggleSortOrder}
+            cards={cards}
+            handleYouTubeTagClick={handleYouTubeTagClick}
+            youtubeQuery={youtubeQuery}
+            handleTwitchTagClick={handleTwitchTagClick}
+            twitchQuery={twitchQuery}
           />
-        )}
-        <Text style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10 }}>{character.name}</Text>
+        </View>
       </View>
-      <>
-        <TagFilter
-          tags={tags}
-          selectedTags={selectedTags}
-          handleTagClick={handleTagClick}
-          toggleSortOrder={toggleSortOrder}
-          cards={cards}
-          handleYouTubeTagClick={handleYouTubeTagClick}
-          youtubeQuery={youtubeQuery}
-          handleTwitchTagClick={handleTwitchTagClick}
-          twitchQuery={twitchQuery}
-        />
-      </>
       {showSavedList ? (
         <>
           <SavedListComponent
