@@ -182,17 +182,18 @@ const CardListPage = () => {
       console.error("Error deleting card:", error);
     }
   };
-
   useEffect(() => {
     if (character) {
       fetchCards(currentPage);
     }
-
-    if (user) {
+  }, [character, currentPage, selectedTags, youtubeQuery, twitchQuery]);
+  
+  useEffect(() => {
+    if (user && character) {
       loadBookmarks();
     }
-
-  }, [character, selectedTags, currentPage, youtubeQuery, twitchQuery, user, bookmarkedCards]);
+  }, [user, character]);
+  
 
   if (!character) {
     return (
