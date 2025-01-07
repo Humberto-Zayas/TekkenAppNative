@@ -3,6 +3,7 @@ import { View, Text, Modal, TouchableOpacity, ScrollView, Image } from 'react-na
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 import ModalComponent from './ModalComponent';
+import { themeStyles } from '../../styles/styles';
 
 const difficultyColors = {
   easy: '#34db6e',
@@ -178,7 +179,7 @@ const CardDetailComponent = ({ route, navigation, closeModal }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={themeStyles.container}>
       <TouchableOpacity
         style={{ position: 'absolute', top: 8, right: 16, zIndex: 9999 }}
         onPress={() => {
@@ -188,7 +189,7 @@ const CardDetailComponent = ({ route, navigation, closeModal }) => {
         <FontAwesome name="chevron-down" size={24} color="black" />
       </TouchableOpacity>
       <View style={styles.heroContainer}>
-        <Image source={image} style={styles.heroImage} />
+        {/* <Image source={image} style={styles.heroImage} /> */}
         <View style={styles.heroInfo}>
           <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{cardName}</Text>
           <Text>{moveSetName}</Text>

@@ -11,9 +11,12 @@ function HeaderLogo() {
   const router = useRouter();
 
   const handlePress = () => {
-    router.back(); // Navigate to the previous screen
+    if (router.canGoBack()) {
+      router.back(); // Navigate to the previous screen
+    } else {
+      router.push('/'); // Navigate to the home page
+    }
   };
-
   return (
     <TouchableOpacity onPress={handlePress} style={styles.logoButton}>
       <Image

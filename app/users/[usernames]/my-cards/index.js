@@ -1,4 +1,5 @@
 import React from 'react';
+import { Text } from 'react-native'; // Import Text from react-native
 import MyCardListComponent from '../../../../components/MyCardListComponent';
 import { useAuth } from '../../../../utils/AuthContext';
 

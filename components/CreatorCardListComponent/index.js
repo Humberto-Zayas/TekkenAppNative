@@ -8,6 +8,7 @@ import { deleteCard, bookmarkCardById, unbookmarkCardById } from '../../utils/ap
 import { useAuth } from '../../utils/AuthContext';
 import { styles } from './styles';
 import { characters } from '../../data/characters';
+import { themeStyles } from '../../styles/styles.js';
 
 const CreatorCardListComponent = () => {
   const router = useRouter();
@@ -67,58 +68,19 @@ const CreatorCardListComponent = () => {
     }
   };
 
-  const frameDataFiles = {
-    Alisa: require('../../data/AlisaFrameData.js').default,
-    Asuka: require('../../data/AsukaFrameData.js').default,
-    Azucena: require('../../data/AzucenaFrameData.js').default,
-    Bryan: require('../../data/BryanFrameData.js').default,
-    Claudio: require('../../data/ClaudioFrameData.js').default,
-    Devil_Jin: require('../../data/Devil_JinFrameData.js').default,
-    Dragunov: require('../../data/DragunovFrameData.js').default,
-    Eddy: require('../../data/EddyFrameData.js').default,
-    Feng: require('../../data/FengFrameData.js').default,
-    Hwoarang: require('../../data/HwoarangFrameData.js').default,
-    Jin: require('../../data/JinFrameData.js').default,
-    Jun: require('../../data/JunFrameData.js').default,
-    Kazuya: require('../../data/KazuyaFrameData.js').default,
-    King: require('../../data/KingFrameData.js').default,
-    Kuma: require('../../data/KumaFrameData.js').default,
-    Lars: require('../../data/LarsFrameData.js').default,
-    Law: require('../../data/LawFrameData.js').default,
-    Lee: require('../../data/LeeFrameData.js').default,
-    Lili: require('../../data/LiliFrameData.js').default,
-    Nina: require('../../data/NinaFrameData.js').default,
-    Panda: require('../../data/PandaFrameData.js').default,
-    Paul: require('../../data/PaulFrameData.js').default,
-    Raven: require('../../data/RavenFrameData.js').default,
-    Reina: require('../../data/ReinaFrameData.js').default,
-    Shaheen: require('../../data/ShaheenFrameData.js').default,
-    Steve: require('../../data/SteveFrameData.js').default,
-    Victor: require('../../data/VictorFrameData.js').default,
-    Xiaoyu: require('../../data/XiaoyuFrameData.js').default,
-    Yoshimitsu: require('../../data/YoshimitsuFrameData.js').default,
-    Zafina: require('../../data/ZafinaFrameData.js').default,
-  };
-
-  const loadFrameData = (characterName) => {
-    const sanitizedCharacterName = characterName.replace(/\s+/g, '');
-    return frameDataFiles[sanitizedCharacterName] || null;
-  };
 
   const handleCardPress = (id, characterName, bookmarked) => {
-    const frameData = loadFrameData(characterName);
     router.push({
       pathname: `/card/${id}`,
-      params: { frameData: JSON.stringify(frameData) },
+      params: {  },
     });
   };
 
   const handleEditPress = (item) => {
-    const frameData = loadFrameData(item.characterName);
     const characterImage = item.characterImage;
     router.push({
       pathname: `${item.cardName}/create`,
-      params: { cardData: JSON.stringify(item), isEdit: true, characterImage: characterImage, frameData: JSON.stringify(frameData)},
+      params: { cardData: JSON.stringify(item), isEdit: true, characterImage: characterImage },
     });
   };
 
@@ -182,7 +144,7 @@ const CreatorCardListComponent = () => {
   }, [creatorId, sortOrder]);
 
   return (
-    <View style={styles.container}>
+    <View style={themeStyles.container}>
       <View>
         <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
           <Text style={styles.sortButtonText}>Toggle Sort Order</Text>

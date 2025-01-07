@@ -3,6 +3,7 @@ import { Alert, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'reac
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { REACT_APP_API_BASE_URL } from '@env';
 import { useAuth } from '../../utils/AuthContext';
+import { themeStyles } from '../../styles/styles';
 
 const Login = () => {
   const { isSignUp } = useLocalSearchParams() || { isSignUp: false };
@@ -102,7 +103,6 @@ const Login = () => {
     }
   };
 
-
   const handleToggle = () => {
     setSignUp(!signUp);
   };
@@ -116,49 +116,51 @@ const Login = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.formContainer}>
-        <Text style={styles.title}>{signUp ? 'Sign Up' : 'Login'}</Text>
-        {signUp && (
+    <View style={themeStyles.screen}>
+      <View style={[themeStyles.container, styles.container]}>
+        <View style={styles.formContainer}>
+          <Text style={styles.title}>{signUp ? 'Sign Up' : 'Login'}</Text>
+          {signUp && (
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+            />
+          )}
+          {signUp ? (
+            <TextInput
+              style={styles.input}
+              placeholder="Username"
+              value={username}
+              onChangeText={(text) => setUsername(text)}
+            />
+          ) : (
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              value={email}
+              onChangeText={(text) => setEmail(text.toLowerCase())}
+            />
+          )}
           <TextInput
             style={styles.input}
-            placeholder="Email"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
+            placeholder="Password"
+            secureTextEntry
+            value={password}
+            onChangeText={(text) => setPassword(text)}
           />
-        )}
-        {signUp ? (
-          <TextInput
-            style={styles.input}
-            placeholder="Username"
-            value={username}
-            onChangeText={(text) => setUsername(text)}
-          />
-        ) : (
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            value={email}
-            onChangeText={(text) => setEmail(text.toLowerCase())}
-          />
-        )}
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-        />
-        <TouchableOpacity style={styles.button} onPress={handleAction}>
-          <Text style={styles.buttonText}>{signUp ? 'Sign Up' : 'Login'}</Text>
+          <TouchableOpacity style={styles.button} onPress={handleAction}>
+            <Text style={styles.buttonText}>{signUp ? 'Sign Up' : 'Login'}</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity onPress={handleToggle}>
+          <Text style={styles.toggleText}>
+            {signUp ? 'Already have an account? Login' : "Don't have an account? Sign Up"}
+          </Text>
         </TouchableOpacity>
       </View>
-
-      <TouchableOpacity onPress={handleToggle}>
-        <Text style={styles.toggleText}>
-          {signUp ? 'Already have an account? Login' : "Don't have an account? Sign Up"}
-        </Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -166,11 +168,10 @@ const Login = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+
     justifyContent: 'center',
   },
   formContainer: {
-    width: '80%',
     marginBottom: 20,
   },
   title: {

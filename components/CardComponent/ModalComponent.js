@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { themeStyles } from '../../styles/styles';
 
 const ModalComponent = ({ selectedItem, closeDrawer }) => {
   const scrollViewRef = useRef(null);
@@ -27,7 +28,7 @@ const ModalComponent = ({ selectedItem, closeDrawer }) => {
       onScrollEndDrag={handleScrollEndDrag}
       scrollEventThrottle={100}
     >
-      <View ref={modalContainerRef} style={styles.modalContainer}>
+      <View ref={modalContainerRef} style={[themeStyles.container, styles.modalContainer]}>
         <View style={styles.modalContent}>
           
           {isCombo ? (

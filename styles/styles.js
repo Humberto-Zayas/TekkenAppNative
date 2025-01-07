@@ -4,7 +4,7 @@ import { StyleSheet, Platform } from 'react-native';
 
 const commonStyles = {
   container: {
-    padding: 20,
+    padding: 24,
     flex: 1,
   },
   text: {

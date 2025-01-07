@@ -8,6 +8,7 @@ import { styles } from '../../components/CardComponent/styles';
 import { useAuth } from '../../utils/AuthContext';
 import { fetchCardById, bookmarkCardById, unbookmarkCardById, rateCardById, fetchUserBookmarks } from '../../utils/api';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { themeStyles } from '../../styles/styles';
 
 const CardComponent = () => {
   const { slug } = useLocalSearchParams();
@@ -129,7 +130,7 @@ const CardComponent = () => {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={themeStyles.container}>
       <HeroComponent
         handleCreatorPress={() =>
           router.push({

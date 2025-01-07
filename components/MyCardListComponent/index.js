@@ -11,6 +11,7 @@ import CardList from '../../components/CardList/index.js';
 import { calculateAverageRating, getBackgroundColor } from '../../utils/utils';
 import { deleteCard, bookmarkCardById, unbookmarkCardById, fetchUserBookmarks } from '../../utils/api';
 import { characters } from '../../data/characters';
+import { themeStyles } from '../../styles/styles.js';
 
 const MyCardListComponent = () => {
   const [cards, setCards] = useState([]);
@@ -174,25 +175,9 @@ const MyCardListComponent = () => {
     }
   };
 
-  const renderCardItem = ({ item }) => {
-    return (
-      <CardItem
-        item={item}
-        user={user}
-        handleCardPress={(id) => handleCardPress(id, item.characterName, item.isBookmarked)}
-        handleDeletePress={() => handleDeletePress(item)}
-        handleEditPress={() => handleEditPress(item)}
-        handleBookmarkPress={handleBookmarkPress}
-        getBackgroundColor={getBackgroundColor}
-      />
-    );
-  };
-
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
   };
-
-
 
   useEffect(() => {
     fetchCards();
@@ -200,7 +185,7 @@ const MyCardListComponent = () => {
   }, [user])
 
   return (
-    <View style={styles.container}>
+    <View style={themeStyles.container}>
 
       {showSavedList ? (
         <SavedListComponent
