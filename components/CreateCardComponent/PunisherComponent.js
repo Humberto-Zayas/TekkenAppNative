@@ -3,6 +3,7 @@ import { View, ScrollView, Text, TouchableOpacity, Animated } from 'react-native
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
+import { themeStyles } from '../../styles/styles';
 import MoveDetailsModal from './MoveDetailsModal';
 import MoveListModal from './MoveListModal';
 import { MoveTableHeader, MoveTableRow } from './MoveTable';
@@ -52,7 +53,7 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
 
   return (
     <ScrollView
-      style={styles.scrollView}
+      style={themeStyles.container}
       contentContainerStyle={styles.scrollViewContent}
       showsVerticalScrollIndicator={false}
     >

@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Modal, ScrollView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
+import { themeStyles } from '../../styles/styles';
 import FollowUpStepContent from './FollowUpStepContent';
 
 const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData }) => {
@@ -73,7 +74,7 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
   };
 
   return (
-    <View style={styles.rowContainer}>
+    <View style={themeStyles.container}>
       {!isAddingFollowUp && (
         <>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
