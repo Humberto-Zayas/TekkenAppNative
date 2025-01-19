@@ -108,7 +108,6 @@ const MyCardListComponent = () => {
     }
   };
   
-
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -210,7 +209,7 @@ const MyCardListComponent = () => {
               </TouchableOpacity>
             </>
           ) : (
-            <View>
+            <>
               <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
                 <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
               </TouchableOpacity>
@@ -236,7 +235,7 @@ const MyCardListComponent = () => {
                   />
                 </View>
               )}
-            </View>
+            </>
           )}
         </>
       )}

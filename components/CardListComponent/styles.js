@@ -36,8 +36,10 @@ export const styles = StyleSheet.create({
   },
   heroContainer: {
     alignItems: 'center',
+    alignSelf: 'start',
     justifyContent: 'center',
-    marginBottom: 20,
+    marginBottom: 0,
+    gap: 16
   },
   heroContainerDesktop: {
     flexDirection: 'row', // Row for larger screens
@@ -61,7 +63,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 'auto',
-    padding: 10,
+    paddingTop: 16,
   },
   toggleButton: {
     backgroundColor: 'lightblue',
@@ -163,6 +165,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     // flexWrap: 'wrap',
     marginBottom: 16,
+    alignSelf: 'end'
   },
   tag: {
     backgroundColor: '#e0e0e0',

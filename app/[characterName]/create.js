@@ -8,6 +8,7 @@ import FollowUpsComponent from '../../components/CreateCardComponent/FollowUpsCo
 import ComboComponent from '../../components/CreateCardComponent/ComboComponent';
 import ImportantMovesComponent from '../../components/CreateCardComponent/ImportantMovesComponent';
 import { styles } from '../../components/CreateCardComponent/styles';
+import { themeStyles } from '../../styles/styles.js';
 import { useAuth } from '../../utils/AuthContext';
 import tags from '../../data/tags';
 import { createCard, updateCard } from '../../utils/api';
@@ -174,7 +175,7 @@ const CreateCardPage = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={themeStyles.container}>
       <HeroCreateComponent
         cardName={cardName}
         thumbnail={characterImage}

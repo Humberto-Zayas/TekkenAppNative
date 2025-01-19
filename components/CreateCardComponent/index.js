@@ -8,6 +8,7 @@ import FollowUpsComponent from './FollowUpsComponent';
 import ComboComponent from './ComboComponent';
 import ImportantMovesComponent from './ImportantMovesComponent';
 import { styles } from './styles';
+import { themeStyles } from '../../styles/styles';
 import { useAuth } from '../../utils/AuthContext';
 import tags from '../../data/tags';
 import { createCard, updateCard } from '../../utils/api';
@@ -208,7 +209,7 @@ const CreateCardComponent = ({ route, navigation }) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={themeStyles.container}>
       <HeroCreateComponent
         cardName={cardName}
         thumbnail={characterImage}

@@ -16,7 +16,6 @@ const themeStyles = StyleSheet.create({
   container: {
     ...commonStyles.container,
     width: '100%',
-    padding: 20,
     alignSelf: 'center',
     ...(Platform.OS === 'web' && {
       maxWidth: 767,

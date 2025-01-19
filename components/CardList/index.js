@@ -26,7 +26,7 @@ const CardList = ({
               item={item}
               user={user}
               handleCardPress={handleCardPress}
-              handleDeletePress={() => handleDeletePress(item)}
+              handleDeletePress={handleDeletePress}
               handleEditPress={handleEditPress}
               handleBookmarkPress={handleBookmarkPress}
               getBackgroundColor={getBackgroundColor}

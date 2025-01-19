@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, View, Text, TouchableOpacity, Image, useWindowDimensions } from 'react-native';
+import { Alert, View, Text, TouchableOpacity, Platform, Image, useWindowDimensions } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router'; // Expo Router hooks
 import SavedListComponent from '../../components/SavedListComponent';
 import LoginSignupModalComponent from '../../components/CardListComponent/LoginSignupModalComponent';
@@ -163,15 +163,25 @@ const CardListPage = () => {
   };
 
   const handleDeletePress = (item) => {
-    Alert.alert(
-      "Delete Card",
-      "Are you sure you want to delete this card?",
-      [
-        { text: "Cancel", style: "cancel" },
-        { text: "Delete", style: "destructive", onPress: () => handleDeleteConfirm(item) },
-      ],
-      { cancelable: true }
-    );
+  
+    if (Platform.OS === 'web') {
+      // Use the browser's alert for web
+      const confirmed = window.confirm(`Are you sure you want to delete this card: ${item.cardName}?`);
+      if (confirmed) {
+        handleDeleteConfirm(item);
+      }
+    } else {
+      // Use React Native's Alert for mobile
+      Alert.alert(
+        "Delete Card",
+        "Are you sure you want to delete this card?",
+        [
+          { text: "Cancel", style: "cancel" },
+          { text: "Delete", style: "destructive", onPress: () => handleDeleteConfirm(item) },
+        ],
+        { cancelable: true }
+      );
+    }
   };
 
   const handleDeleteConfirm = async (item) => {

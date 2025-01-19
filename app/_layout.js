@@ -65,30 +65,32 @@ function HeaderMenu() {
         onRequestClose={closeModal}
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Menu</Text>
-            <TouchableOpacity onPress={closeModal} style={styles.modalCloseButton}>
-              <FontAwesome name="close" size={24} color="blue" />
-            </TouchableOpacity>
-            {user ? (
-              <>
-                <TouchableOpacity onPress={handleCreatorPress} style={styles.menuItem}>
-                  <Text style={styles.menuText}>My Cards</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleLogout} style={styles.menuItem}>
-                  <Text style={styles.menuText}>Logout</Text>
-                </TouchableOpacity>
-              </>
-            ) : (
-              <>
-                <TouchableOpacity onPress={handleLoginNavigation} style={styles.menuItem}>
-                  <Text style={styles.menuText}>Login</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleLoginNavigation(true)} style={styles.menuItem}>
-                  <Text style={styles.menuText}>Register</Text>
-                </TouchableOpacity>
-              </>
-            )}
+          <View style={[themeStyles.container, { justifyContent: 'center', alignItems: 'center'}]}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Menu</Text>
+              <TouchableOpacity onPress={closeModal} style={styles.modalCloseButton}>
+                <FontAwesome name="close" size={24} color="blue" />
+              </TouchableOpacity>
+              {user ? (
+                <>
+                  <TouchableOpacity onPress={handleCreatorPress} style={styles.menuItem}>
+                    <Text style={styles.menuText}>My Cards</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleLogout} style={styles.menuItem}>
+                    <Text style={styles.menuText}>Logout</Text>
+                  </TouchableOpacity>
+                </>
+              ) : (
+                <>
+                  <TouchableOpacity onPress={handleLoginNavigation} style={styles.menuItem}>
+                    <Text style={styles.menuText}>Login</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleLoginNavigation(true)} style={styles.menuItem}>
+                    <Text style={styles.menuText}>Register</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </View>
           </View>
         </View>
       </Modal>
@@ -156,7 +158,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-    width: '80%',
+    width: '100%',
+    maxWidth: 479,
+    justifyContent: 'center',
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,

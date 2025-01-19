@@ -54,7 +54,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 'auto',
-    padding: 10,
+    paddingTop: 16,
   },
   toggleButton: {
     backgroundColor: 'lightblue',
