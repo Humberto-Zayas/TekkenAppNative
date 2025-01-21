@@ -2,11 +2,12 @@ import React from 'react';
 import { Modal, View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
+import { themeStyles } from '../../styles/styles';
 
 const MoveDetailsModal = ({ detailMove, setDetailMove }) => {
   const renderDetailRow = (label, value) => (
     <View style={styles.tableRow}>
-      <Text style={{ width: '30%', padding: 8, alignItems: 'start', justifyContent: 'center' }}>{label}</Text>
+      <Text style={{ width: '30%', padding: 8, fontSize: 18, alignItems: 'start', justifyContent: 'center' }}>{label}</Text>
       <Text style={styles.column}>{value}</Text>
     </View>
   );
@@ -17,8 +18,8 @@ const MoveDetailsModal = ({ detailMove, setDetailMove }) => {
       animationType="fade"
       onRequestClose={() => setDetailMove(null)}
     >
-      <View style={styles.modalContainer}>
-        <Text style={styles.header}>Move Details</Text>
+      <View style={[themeStyles.container, { marginTop: 48, position: 'relative' }]}>
+        <Text style={{ fontSize: 16, marginBottom: 17, marginTop: 17 }}>Move Details</Text>
         {detailMove && (
           <ScrollView style={styles.moveDetails}>
             {renderDetailRow('Move', detailMove.move)}

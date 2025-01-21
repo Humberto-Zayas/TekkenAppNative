@@ -37,7 +37,7 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
     });
 
     return (
-      <Animated.View 
+      <Animated.View
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -52,35 +52,40 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
   };
 
   return (
-    <ScrollView
-      style={themeStyles.container}
+    <View
+      style={[themeStyles.container, { marginTop: 48, position: 'relative' }]}
       contentContainerStyle={styles.scrollViewContent}
       showsVerticalScrollIndicator={false}
     >
       <TouchableOpacity onPress={onClose} style={styles.closeButton}>
         <FontAwesome name="times" size={20} color="black" />
       </TouchableOpacity>
-      <Text style={styles.header}>Punishers</Text>
+      <Text style={{ fontSize: 16, marginBottom: 17, marginTop: 17 }}>Punishers</Text>
       <MoveTableHeader firstHeader="Move" secondHeader="Start Up" />
-      {punisherData.length > 0 ? (
-        punisherData.map((item, index) => (
-          <Swipeable
-            key={index.toString()}
-            renderRightActions={(progress, dragX) =>
-              renderRightActions(progress, dragX, index)
-            }
-            rightThreshold={40} // Makes actions more responsive to swipe
-          >
-            <MoveTableRow
-              item={item}
-              index={index}
-              onMovePress={handleMovePress}
-            />
-          </Swipeable>
-        ))
-      ) : (
-        <Text style={styles.emptyText}>No punishers added yet</Text>
-      )}
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {punisherData.length > 0 ? (
+          punisherData.map((item, index) => (
+            <Swipeable
+              key={index.toString()}
+              renderRightActions={(progress, dragX) =>
+                renderRightActions(progress, dragX, index)
+              }
+              rightThreshold={40} // Makes actions more responsive to swipe
+            >
+              <MoveTableRow
+                item={item}
+                index={index}
+                onMovePress={handleMovePress}
+              />
+            </Swipeable>
+          ))
+        ) : (
+          <Text style={styles.emptyText}>No punishers added yet</Text>
+        )}
+      </ScrollView>
       <TouchableOpacity
         onPress={() => setModalVisible(true)}
         style={styles.plusButton}
@@ -94,7 +99,7 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
         frameData={frameData}
       />
       <MoveDetailsModal detailMove={detailMove} setDetailMove={setDetailMove} />
-    </ScrollView>
+    </View>
   );
 };
 

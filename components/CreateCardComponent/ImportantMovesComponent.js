@@ -51,35 +51,40 @@ const ImportantMovesComponent = ({ onClose, setImportantMoveData, importantMoveD
   };
 
   return (
-    <ScrollView
-      style={themeStyles.container}
+    <View
+      style={[themeStyles.container, { marginTop: 48, position: 'relative' }]}
       contentContainerStyle={styles.scrollViewContent}
       showsVerticalScrollIndicator={false}
     >
       <TouchableOpacity onPress={onClose} style={styles.closeButton}>
         <FontAwesome name="times" size={20} color="black" />
       </TouchableOpacity>
-      <Text style={styles.header}>Important Moves</Text>
+      <Text style={{ fontSize: 16, marginBottom: 17, marginTop: 17 }}>Important Moves</Text>
       <MoveTableHeader firstHeader="Move" secondHeader="Start Up" />
-      {importantMoveData.length > 0 ? (
-        importantMoveData.map((item, index) => (
-          <Swipeable
-            key={index.toString()}
-            renderRightActions={(progress, dragX) =>
-              renderRightActions(progress, dragX, index)
-            }
-            rightThreshold={40} // Makes actions more responsive to swipe
-          >
-            <MoveTableRow
-              item={item}
-              index={index}
-              onMovePress={handleMovePress}
-            />
-          </Swipeable>
-        ))
-      ) : (
-        <Text style={styles.emptyList}>No moves added yet</Text>
-      )}
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {importantMoveData.length > 0 ? (
+          importantMoveData.map((item, index) => (
+            <Swipeable
+              key={index.toString()}
+              renderRightActions={(progress, dragX) =>
+                renderRightActions(progress, dragX, index)
+              }
+              rightThreshold={40} // Makes actions more responsive to swipe
+            >
+              <MoveTableRow
+                item={item}
+                index={index}
+                onMovePress={handleMovePress}
+              />
+            </Swipeable>
+          ))
+        ) : (
+          <Text style={styles.emptyList}>No moves added yet</Text>
+        )}
+      </ScrollView>
       <TouchableOpacity
         onPress={() => setModalVisible(true)}
         style={styles.plusButton}
@@ -93,7 +98,7 @@ const ImportantMovesComponent = ({ onClose, setImportantMoveData, importantMoveD
         frameData={frameData}
       />
       <MoveDetailsModal detailMove={detailMove} setDetailMove={setDetailMove} />
-    </ScrollView>
+    </View>
   );
 };
 

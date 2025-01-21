@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
+import { themeStyles } from '../../styles/styles';
 
 const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData }) => {
   const [selectedMove, setSelectedMove] = useState(null);
@@ -70,10 +71,10 @@ const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData 
       animationType="slide"
       onRequestClose={() => setModalVisible(false)}
     >
-      <View style={styles.modalContainer}>
+      <View style={[themeStyles.container, { marginTop: 48, position: 'relative' }]}>
         {selectedMove ? (
           <>
-            <Text style={{ paddingVertical: 8 }}>Add Context for {selectedMove.move}</Text>
+            <Text style={{ fontSize: 16, marginBottom: 17, marginTop: 17 }}>Add Context for {selectedMove.move}</Text>
             {renderMoveListHeader()}
             <View style={styles.flatList}>
               <View style={styles.tableRow}>
@@ -88,12 +89,11 @@ const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData 
                 <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
                   <FontAwesome name="pencil" size={20} color="black" />
                   <TextInput
-                    style={styles.input}
+                    style={styles.searchInput}
                     placeholder={`Add Context for ${selectedMove.move}`}
                     value={context}
-                    numberOfLines={4}
                     onChangeText={(text) => setContext(text)}
-                    multiline
+                    
                   />
                 </View>
               </View>
@@ -109,7 +109,7 @@ const MoveListModal = ({ modalVisible, setModalVisible, onMoveSelect, frameData 
           </>
         ) : (
           <>
-            <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <FontAwesome name="search" size={20} color="black" />
               <TextInput
                 style={styles.searchInput} // Add some styling for this input

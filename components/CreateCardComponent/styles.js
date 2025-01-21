@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   scrollViewContent: {
-    padding: 16,
+    // padding: 16,
     paddingBottom: 40,
   },
   title: {
@@ -55,7 +55,8 @@ export const styles = StyleSheet.create({
   searchInput: {
     padding: 16,
     fontSize: 18,
-    width: '100%'
+    width: '100%',
+    outlineStyle: 'none'
   },
   inputArea: {
     padding: 16,
@@ -84,8 +85,11 @@ export const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    right: 8,
-    padding: 8,
+    top: 0,
+    right: 0,
+    paddingRight: 24,
+    paddingTop: 24,
+    // padding: 8,
     zIndex: 999
   },
   plusButton: {
