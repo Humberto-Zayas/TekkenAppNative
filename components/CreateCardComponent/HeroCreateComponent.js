@@ -1,48 +1,39 @@
 import React, { useState, useRef } from 'react';
-import { View, TextInput, Image, StyleSheet, Animated, TouchableWithoutFeedback, TouchableOpacity, Keyboard } from 'react-native';
+import {
+  View,
+  TextInput,
+  Image,
+  StyleSheet,
+  Animated,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+  Keyboard,
+} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import * as Clipboard from 'expo-clipboard';
 
-const HeroComponent = ({ cardName, thumbnail, onCardNameChange, cardDescription, onCardDescriptionChange, youtubeLink, onYouTubeLinkChange, twitchLink, onTwitchLinkChange }) => {
+const HeroComponent = ({
+  cardName,
+  thumbnail,
+  onCardNameChange,
+  cardDescription,
+  onCardDescriptionChange,
+  youtubeLink,
+  onYouTubeLinkChange,
+  twitchLink,
+  onTwitchLinkChange,
+
+}) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isFocused, setIsFocused] = useState(false); 
   const animation = useRef(new Animated.Value(0)).current;
-  const inputRefs = useRef([null, null, null, null]); 
 
   const toggleExpanded = () => {
-    setIsExpanded(prevState => !prevState);
-    setIsFocused(prevState => !prevState);
+    setIsExpanded((prevState) => !prevState);
     Animated.timing(animation, {
       toValue: isExpanded ? 0 : 1,
       duration: 300,
       useNativeDriver: false,
     }).start();
-  };
-
-  const handleFocus = () => {
-    setIsExpanded(true);
-    setIsFocused(true); 
-    Animated.timing(animation, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const handleBlur = () => {
-    setTimeout(() => {
-      if (inputRefs.current.every(ref => ref && !ref.isFocused())) { 
-        if (!cardName) {
-          setIsExpanded(false);
-          setIsFocused(false); 
-          Animated.timing(animation, {
-            toValue: 0,
-            duration: 300,
-            useNativeDriver: false,
-          }).start();
-        }
-      }
-    }, 100);
   };
 
   const handlePaste = async (setLink) => {
@@ -56,11 +47,18 @@ const HeroComponent = ({ cardName, thumbnail, onCardNameChange, cardDescription,
 
   const containerHeight = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [70, 280], 
+    outputRange: [70, 280],
   });
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback
+      onPress={(e) => {
+        const target = e.target;
+        if (target.tagName !== 'TEXTAREA' && target.tagName !== 'INPUT') {
+          Keyboard.dismiss();
+        }
+      }}
+    >
       <Animated.View style={[styles.container, { height: containerHeight }]}>
         <View style={styles.heroContainer}>
           <TouchableOpacity onPress={toggleExpanded} style={styles.thumbnailContainer}>
@@ -77,9 +75,6 @@ const HeroComponent = ({ cardName, thumbnail, onCardNameChange, cardDescription,
               placeholder="Card Name and Details"
               value={cardName}
               onChangeText={(text) => onCardNameChange(text)}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              ref={(ref) => inputRefs.current[0] = ref}
             />
           </View>
         </View>
@@ -88,15 +83,12 @@ const HeroComponent = ({ cardName, thumbnail, onCardNameChange, cardDescription,
             <View style={styles.inputContainer}>
               <FontAwesome name="pencil" size={20} color="#000" style={styles.icon} />
               <TextInput
-                style={[styles.descriptionInput, isFocused ? styles.descriptionInputFocused : null]} 
+                style={styles.descriptionInput}
                 placeholder="Enter Your Strategy"
                 value={cardDescription}
                 onChangeText={onCardDescriptionChange}
                 multiline={true}
                 numberOfLines={4}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-                ref={(ref) => inputRefs.current[1] = ref}
               />
             </View>
 
@@ -107,10 +99,6 @@ const HeroComponent = ({ cardName, thumbnail, onCardNameChange, cardDescription,
                 placeholder="YouTube Link"
                 value={youtubeLink}
                 onChangeText={onYouTubeLinkChange}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-                ref={(ref) => inputRefs.current[2] = ref}
-                numberOfLines={1}
               />
               <TouchableOpacity onPress={() => handlePaste(onYouTubeLinkChange)} style={styles.actionIcon}>
                 <FontAwesome name="clipboard" size={20} color="black" />
@@ -127,10 +115,6 @@ const HeroComponent = ({ cardName, thumbnail, onCardNameChange, cardDescription,
                 placeholder="Twitch Link"
                 value={twitchLink}
                 onChangeText={onTwitchLinkChange}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-                ref={(ref) => inputRefs.current[3] = ref}
-                numberOfLines={1}
               />
               <TouchableOpacity onPress={() => handlePaste(onTwitchLinkChange)} style={styles.actionIcon}>
                 <FontAwesome name="clipboard" size={20} color="black" />
@@ -185,7 +169,6 @@ const styles = StyleSheet.create({
     maxHeight: 96,
     flex: 1,
   },
-  descriptionInputFocused: { fontSize: 16 },
   cardLinkInput: {
     fontSize: 16,
     paddingVertical: 8,

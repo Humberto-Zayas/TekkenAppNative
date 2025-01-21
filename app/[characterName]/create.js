@@ -11,7 +11,7 @@ import { styles } from '../../components/CreateCardComponent/styles';
 import { themeStyles } from '../../styles/styles.js';
 import { useAuth } from '../../utils/AuthContext';
 import tags from '../../data/tags';
-import { createCard, updateCard } from '../../utils/api';
+import { handleSaveCard, handleYouTubeLinkChange, handleTwitchLinkChange } from '../../utils/cardHandlers';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 
 const CreateCardPage = () => {
@@ -104,12 +104,7 @@ const CreateCardPage = () => {
     console.log('Selected Frame Data:');
   }, [frameData]);
 
-  const handleSave = async () => {
-    if (!cardName || !cardDescription) {
-      alert('Please enter a Card Name and Card Description.');
-      return;
-    }
-
+  const handleSave = () => {
     const formData = {
       cardName,
       characterName,
@@ -125,43 +120,15 @@ const CreateCardPage = () => {
       username: user?.username,
       tags: selectedTags,
     };
-
-    try {
-      if (isEdit) {
-        await updateCard({ ...formData, _id: initialCardData._id }, token);
-        await new Promise((resolve) => {
-          Alert.alert('Success', 'Card updated successfully!', [
-            {
-              text: 'OK',
-              onPress: () => {
-                setHasUnsavedChanges(false); // Reset unsaved changes after update
-                resolve(); // Resolve the promise to indicate the alert was dismissed
-              },
-            },
-          ], { cancelable: false });
-        });
-      } else {
-        await createCard(formData, token);
-        await new Promise((resolve) => {
-          Alert.alert('Success', 'Card created successfully!', [
-            {
-              text: 'OK',
-              onPress: () => {
-                setHasUnsavedChanges(false); // Reset unsaved changes after creation
-                resolve(); // Resolve the promise to indicate the alert was dismissed
-              },
-            },
-          ], { cancelable: false });
-        });
-      }
-
-      // Navigate back after the alert is dismissed
-      router.back();
-
-    } catch (error) {
-      console.error('Error saving the card:', error);
-      alert('Failed to save the card. Please try again.');
-    }
+  
+    handleSaveCard({
+      isEdit,
+      formData,
+      token,
+      initialCardData,
+      setHasUnsavedChanges,
+      router,
+    });
   };
 
   const handleTagPress = (tag) => {
@@ -183,9 +150,9 @@ const CreateCardPage = () => {
         cardDescription={cardDescription}
         onCardDescriptionChange={(desc) => { setCardDescription(desc); setHasUnsavedChanges(true); }}
         youtubeLink={youtubeLink}
-        onYouTubeLinkChange={(link) => { setYoutubeLink(link); setHasUnsavedChanges(true); }}
+        onYouTubeLinkChange={(link) => handleYouTubeLinkChange(link, setYoutubeLink, setHasUnsavedChanges)}
         twitchLink={twitchLink}
-        onTwitchLinkChange={(link) => { setTwitchLink(link); setHasUnsavedChanges(true); }}
+        onTwitchLinkChange={(link) => handleTwitchLinkChange(link, setTwitchLink, setHasUnsavedChanges)}
       />
       <View style={{ marginTop: 16 }}>
         <TouchableOpacity onPress={() => setShowPunishers(true)} style={styles.link}>
