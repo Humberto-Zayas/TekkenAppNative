@@ -208,6 +208,7 @@ const CreateCardPage = () => {
       </Modal>
 
       <Modal visible={showFollowUps} animationType="slide" onRequestClose={() => setShowFollowUps(false)}>
+        <View style={{flex: 1}}>
         <FollowUpsComponent
           onClose={() => setShowFollowUps(false)}
           setFollowUpData={(data) => {
@@ -217,6 +218,7 @@ const CreateCardPage = () => {
           followUpData={followUpData}
           frameData={frameData}
         />
+        </View>
       </Modal>
 
       <Modal visible={showCombos} animationType="slide" onRequestClose={() => setShowCombos(false)}>

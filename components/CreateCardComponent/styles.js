@@ -69,11 +69,11 @@ export const styles = StyleSheet.create({
     padding: 10,
   },
   modalContainer: {
+    flex: 1,
     justifyContent: 'start',
     alignItems: 'center',
     marginTop: 64,
     padding: 16,
-    paddingBottom: 200
   },
   modalContent: {
     width: '80%',
@@ -134,6 +134,7 @@ export const styles = StyleSheet.create({
     borderBottomColor: '#ddd',
     paddingBottom: 8,
     paddingTop: 8,
+    width: '100%',
     backgroundColor: 'lightblue',
   },
   tableRow: {

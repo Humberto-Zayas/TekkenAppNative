@@ -62,10 +62,18 @@ const CardItem = ({ item, user, handleCardPress, handleDeletePress, handleEditPr
             <View style={styles.menuContainer}>
               {isCardOwner && (
                 <>
-                  <TouchableOpacity style={styles.menuItem} onPress={() => handleEditPress(item)}>
+                  <TouchableOpacity style={styles.menuItem} onPress={() => {
+                    handleEditPress(item);
+                    closeMenu();
+
+                  }}>
                     <FontAwesome name="edit" size={24} color="blue" style={styles.menuItemIcon} />
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.menuItem} onPress={() => handleDeletePress(item)}>
+                  <TouchableOpacity style={styles.menuItem} onPress={() => {
+                    handleDeletePress(item);
+                    closeMenu();
+
+                  }}>
                     <FontAwesome name="trash" size={24} color="red" style={styles.menuItemIcon} />
                   </TouchableOpacity>
                 </>
@@ -75,6 +83,7 @@ const CardItem = ({ item, user, handleCardPress, handleDeletePress, handleEditPr
                   const newBookmarkState = !isBookmarked;
                   setIsBookmarked(newBookmarkState); // Optimistic update
                   handleBookmarkPress(item, newBookmarkState); // Pass item and new state
+                  closeMenu();
                 }}
               >
                 <FontAwesome

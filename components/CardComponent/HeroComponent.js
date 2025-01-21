@@ -29,7 +29,7 @@ const RatingModal = ({ visible, onClose, onStarPress, selectedRating, card }) =>
                 </Pressable>
               ))}
             </View>
-            <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
               {[1, 2, 3, 4, 5].map((i) => (
                 <TouchableOpacity key={i} onPress={() => onStarPress(i)}>
                   <FontAwesome
@@ -208,9 +208,15 @@ const HeroComponent = ({ card, user, rating, isBookmarked, toggleBookmark, onRat
                 {user?.userId === card?.userId && (
                   <>
                     <TouchableOpacity style={styles.menuItem}>
-                      <FontAwesome name="edit" size={24} color="blue" style={styles.menuItemIcon} onPress={() => handleEditPress()} />
+                      <FontAwesome name="edit" size={24} color="blue" style={styles.menuItemIcon} onPress={() => {
+                        handleEditPress();
+                        closeMenu();
+                      }} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.menuItem} onPress={handleDeletePress}>
+                    <TouchableOpacity style={styles.menuItem} onPress={() => {
+                      handleDeletePress;
+                      closeMenu();
+                    }}>
                       <FontAwesome name="trash" size={24} color="red" style={styles.menuItemIcon} />
                     </TouchableOpacity>
                   </>

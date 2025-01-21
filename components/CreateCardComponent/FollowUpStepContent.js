@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, TextInput, ScrollView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
+import { themeStyles } from '../../styles/styles';
 
 const FollowUpStepContent = ({
   contentType,
@@ -66,20 +67,24 @@ const FollowUpStepContent = ({
     case 1:
       return (
         <>
-          <Text style={styles.header}>Select moves</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
-            <FontAwesome name="search" size={20} color="black" />
-            <TextInput
-              style={styles.searchInput} // Add some styling for this input
-              placeholder="Search moves..."
-              value={searchQuery}
-              onChangeText={(text) => setSearchQuery(text)}
-            />
+          <View style={{width: '100%'}}>
+            <Text style={{textAlign: 'center'}}>Select moves</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
+              <FontAwesome name="search" size={20} color="black" />
+              <TextInput
+                style={styles.searchInput} // Add some styling for this input
+                placeholder="Search moves..."
+                value={searchQuery}
+                onChangeText={(text) => setSearchQuery(text)}
+              />
+            </View>
           </View>
           {renderMoveListHeader}
           <FlatList
             data={filteredFrameData}
-            style={styles.flatList}
+            style={[styles.flatList, { flex: 1 }]} // Add flex: 1 if not already set
+            contentContainerStyle={{ flexGrow: 1 }}
+            scrollEnabled={true}
             renderItem={({ item }) => {
               const isSelected = selectedMoves.some(selected => selected.move === item.move);
               return (
@@ -123,7 +128,7 @@ const FollowUpStepContent = ({
       return (
         <>
           <Text style={styles.header}>
-            
+
             {contentType === 'followups' ? 'Add Notes About Follow Ups' : 'Add Notes About Flowchart'}
           </Text>
           <ScrollView
