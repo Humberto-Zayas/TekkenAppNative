@@ -74,59 +74,63 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
   };
 
   return (
-    <View style={themeStyles.container}>
+    <View style={[themeStyles.container, { marginTop: 48, position: 'relative', flex: 1 }]}>
       {!isAddingFollowUp && (
         <>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <FontAwesome name="times" size={20} color="black" />
           </TouchableOpacity>
-          <Text style={styles.header}>Follow Ups</Text>
-
-          {followUpData.map((followUp, moveIndex) => (
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.flowChartContainer}
-              key={moveIndex}
-            >
-              {followUp.moves.map((moveObj, moveObjIndex) => (
-                <View
-                  key={`move-${moveIndex}-${moveObjIndex}`}
-                  style={[
-                    styles.flowChartItemWrapper,
-                    { zIndex: selectedMoves.length - moveIndex },
-                  ]}
-                >
+          <Text style={{ fontSize: 16, marginBottom: 17, marginTop: 17 }}>Follow Ups</Text>
+          <ScrollView
+            contentContainerStyle={styles.scrollViewContent}
+            showsVerticalScrollIndicator={false}
+          >
+            {followUpData.map((followUp, moveIndex) => (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.flowChartContainer}
+                key={moveIndex}
+              >
+                {followUp.moves.map((moveObj, moveObjIndex) => (
                   <View
-
+                    key={`move-${moveIndex}-${moveObjIndex}`}
                     style={[
-                      styles.flowChartItem,
-                      { backgroundColor: getColorForIndex(moveObjIndex) },
+                      styles.flowChartItemWrapper,
+                      { zIndex: selectedMoves.length - moveIndex },
                     ]}
                   >
-                    <Text style={styles.flowChartItemText}>
-                      {moveObj.move} {/* Adjust this to match your move object structure */}
-                    </Text>
-                  </View>
-                  <View
-                    style={[
-                      styles.rotatedSquare,
-                      { backgroundColor: getColorForIndex(moveIndex) },
-                    ]}
-                  />
-                </View>
+                    <View
 
-              ))}
-              <View style={{ flexDirection: 'row', marginLeft: 24 }}>
-                <TouchableOpacity style={styles.editIcon} onPress={() => editFollowUp(moveIndex)}>
-                  <FontAwesome name="edit" size={24} color="blue" />
-                </TouchableOpacity>
-                <TouchableOpacity style={{...styles.deleteIcon, marginLeft: 8}} onPress={() => deleteFollowUp(moveIndex)}>
-                  <FontAwesome name="trash" size={24} color="red" />
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
-          ))}
+                      style={[
+                        styles.flowChartItem,
+                        { backgroundColor: getColorForIndex(moveObjIndex) },
+                      ]}
+                    >
+                      <Text style={styles.flowChartItemText}>
+                        {moveObj.move} {/* Adjust this to match your move object structure */}
+                      </Text>
+                    </View>
+                    <View
+                      style={[
+                        styles.rotatedSquare,
+                        { backgroundColor: getColorForIndex(moveIndex) },
+                      ]}
+                    />
+                  </View>
+
+                ))}
+                <View style={{ flexDirection: 'row', marginLeft: 24 }}>
+                  <TouchableOpacity style={styles.editIcon} onPress={() => editFollowUp(moveIndex)}>
+                    <FontAwesome name="edit" size={24} color="blue" />
+                  </TouchableOpacity>
+                  <TouchableOpacity style={{ ...styles.deleteIcon, marginLeft: 8 }} onPress={() => deleteFollowUp(moveIndex)}>
+                    <FontAwesome name="trash" size={24} color="red" />
+                  </TouchableOpacity>
+                </View>
+              </ScrollView>
+            ))}
+          </ScrollView>
 
           <TouchableOpacity onPress={handleAddFollowUpPress} style={styles.plusButton}>
             <FontAwesome name="plus" size={20} color="white" />
@@ -134,7 +138,7 @@ const FollowUpsComponent = ({ onClose, setFollowUpData, followUpData, frameData 
         </>
       )}
       <Modal visible={modalVisible} animationType="slide">
-        <View style={styles.modalContainer}>
+        <View style={[themeStyles.container, { marginTop: 48, position: 'relative' }]}>
           <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
             <FontAwesome name="times" size={20} color="black" />
           </TouchableOpacity>

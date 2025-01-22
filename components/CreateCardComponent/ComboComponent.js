@@ -5,6 +5,7 @@ import { styles } from './styles';
 import { themeStyles } from '../../styles/styles';
 import ComboList from './ComboList';
 import StepContent from './StepContent';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const ComboComponent = ({ onClose, comboData, setComboData, frameData }) => {
   const [selectedComboStarters, setSelectedComboStarters] = useState([]);
@@ -67,23 +68,26 @@ const ComboComponent = ({ onClose, comboData, setComboData, frameData }) => {
   };
 
   return (
-    <View style={themeStyles.container}>
+    <View style={[themeStyles.container, { marginTop: 48, position: 'relative', flex: 1 }]}>
       <TouchableOpacity onPress={onClose} style={styles.closeButton}>
         <FontAwesome name="times" size={20} color="black" />
       </TouchableOpacity>
-      <Text style={styles.header}>Combos</Text>
-      <ComboList
-        comboData={comboData}
-        onDelete={deleteCombo}
-        onEdit={(index) => { setEditingIndex(index); setModalVisible(true) }}
-      />
-      <View style={{ marginVertical: 8 }}></View>
-
+      <Text style={{ fontSize: 16, marginBottom: 17, marginTop: 17 }}>Combos</Text>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <ComboList
+          comboData={comboData}
+          onDelete={deleteCombo}
+          onEdit={(index) => { setEditingIndex(index); setModalVisible(true) }}
+        />
+      </ScrollView>
       <TouchableOpacity onPress={handleAddComboUpPress} style={styles.plusButton}>
         <FontAwesome name="plus" size={20} color="white" />
       </TouchableOpacity>
       <Modal visible={modalVisible} animationType="slide">
-        <View style={styles.modalContainer}>
+        <View style={[themeStyles.container, { marginTop: 48, position: 'relative' }]}>
           <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
             <FontAwesome name="times" size={20} color="black" />
           </TouchableOpacity>

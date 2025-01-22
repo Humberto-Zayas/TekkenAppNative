@@ -277,14 +277,16 @@ export const styles = StyleSheet.create({
     borderRadius: 20
   },
   flowChartContainer: {
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
     flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap', // Allow items to wrap to the next line
+    // flexWrap: 'wrap', // Allow items to wrap to the next line
   },
   flowChartItemWrapper: {
     position: 'relative',
+    marginBottom: 16
     // marginRight: 10, // Space between items
-    marginBottom: 20, // Space between rows
+    // marginBottom: 20, // Space between rows
   },
   flowChartItem: {
     // paddingVertical: 10,

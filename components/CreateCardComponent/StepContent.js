@@ -74,8 +74,8 @@ const StepContent = ({
     case 1:
       return (
         <View style={styles.flatList}>
-          <Text style={styles.header}>Select Combo Type</Text>
-          <Picker selectedValue={comboType} style={styles.picker} onValueChange={handleComboTypeChange}>
+          <Text style={{ fontSize: 16, marginBottom: 17, marginTop: 17 }}>Select Combo Type</Text>
+          <Picker selectedValue={comboType} onValueChange={handleComboTypeChange}>
             <Picker.Item label="Select Combo Type" value="" />
             <Picker.Item label="Normal" value="Normal" />
             <Picker.Item label="Counter Hit" value="Counter Hit" />
@@ -83,7 +83,7 @@ const StepContent = ({
             <Picker.Item label="Wall Ender" value="Wall Ender" />
             <Picker.Item label="Wall Tornado" value="Wall Tornado" />
           </Picker>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', paddingHorizontal: 16 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', paddingHorizontal: 16, marginTop: 16 }}>
             <TouchableOpacity
               onPress={() => (comboType === 'Wall Ender' || comboType === 'Wall Tornado' ? setStep(3) : setStep(2))}
               style={[styles.addButton, (!comboType) && styles.disabledButton]}
@@ -98,7 +98,7 @@ const StepContent = ({
       return (
         <>
 
-          <Text style={styles.header}>Choose The Combo Starters</Text>
+          <Text style={{ fontSize: 16, marginBottom: 17, marginTop: 17 }}>Choose The Combo Starters</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
             <FontAwesome name="search" size={20} color="black" />
             <TextInput
@@ -155,39 +155,44 @@ const StepContent = ({
     case 3:
       return (
         <View style={styles.flatList}>
-          <Text style={{ paddingHorizontal: 16 }}>Add The Combo String</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
-            <FontAwesome name="pencil" size={20} color="black" />
-            <TextInput
-              style={styles.input}
-              placeholder="Enter Combo String"
-              value={comboString}
-              onChangeText={setComboString}
-            />
+          <View>
+            <Text style={{ fontSize: 16, marginBottom: 17, marginTop: 17 }}>Add The Combo Difficulty</Text>
+            <Picker
+              selectedValue={difficulty}
+              style={styles.picker}
+              onValueChange={(itemValue) => setDifficulty(itemValue)}
+            >
+              <Picker.Item label="Easy" value="Easy" />
+              <Picker.Item label="Intermediate" value="Intermediate" />
+              <Picker.Item label="Difficult" value="Difficult" />
+            </Picker>
           </View>
-          <Text style={{ paddingHorizontal: 16 }}>Difficulty</Text>
-          <Picker
-            selectedValue={difficulty}
-            style={styles.picker}
-            onValueChange={(itemValue) => setDifficulty(itemValue)}
-          >
-            <Picker.Item label="Easy" value="Easy" />
-            <Picker.Item label="Intermediate" value="Intermediate" />
-            <Picker.Item label="Difficult" value="Difficult" />
-          </Picker>
-
-          <Text style={{ paddingHorizontal: 16 }}>Add Notes</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
-            <FontAwesome name="pencil" size={20} color="black" />
-            <TextInput
-              style={styles.input}
-              placeholder="Enter Notes"
-              value={notes}
-              onChangeText={setNotes}
-            />
+          <View>
+            <Text style={{ fontSize: 16, marginBottom: 17, marginTop: 17 }}>Add The Combo String</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
+              <FontAwesome name="pencil" size={20} color="black" />
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Enter Combo String"
+                value={comboString}
+                onChangeText={setComboString}
+              />
+            </View>
+          </View>
+          <View>
+            <Text style={{ fontSize: 16, marginBottom: 17, marginTop: 17 }}>Add Notes</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
+              <FontAwesome name="pencil" size={20} color="black" />
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Enter Notes"
+                value={notes}
+                onChangeText={setNotes}
+              />
+            </View>
           </View>
 
-          <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', paddingHorizontal: 16 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', marginTop: 16 }}>
             <TouchableOpacity onPress={() => setStep(2)} style={styles.backButton}>
               <Text style={{ color: 'white' }}>Back</Text>
             </TouchableOpacity>

@@ -67,8 +67,8 @@ const FollowUpStepContent = ({
     case 1:
       return (
         <>
-          <View style={{width: '100%'}}>
-            <Text style={{textAlign: 'center'}}>Select moves</Text>
+          <View style={{ width: '100%' }}>
+            <Text style={{ textAlign: 'center', fontSize: 16, marginBottom: 17, marginTop: 17 }}>Step 1: Select moves</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
               <FontAwesome name="search" size={20} color="black" />
               <TextInput
@@ -127,9 +127,8 @@ const FollowUpStepContent = ({
     case 2:
       return (
         <>
-          <Text style={styles.header}>
-
-            {contentType === 'followups' ? 'Add Notes About Follow Ups' : 'Add Notes About Flowchart'}
+          <Text style={{ textAlign: 'center', fontSize: 16, marginBottom: 17, marginTop: 17 }}>
+            {contentType === 'followups' ? 'Step 2: Add Notes About Follow Ups' : 'Step 2: Add Notes About Flowchart'}
           </Text>
           <ScrollView
             horizontal
@@ -167,7 +166,7 @@ const FollowUpStepContent = ({
             <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
               <FontAwesome name="pencil" size={20} color="black" />
               <TextInput
-                style={styles.input}
+                style={styles.searchInput}
                 placeholder="Enter notes"
                 value={notes}
                 onChangeText={setNotes}
