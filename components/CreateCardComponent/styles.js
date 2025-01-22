@@ -354,4 +354,18 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-end',
   },
+  pickerIOS: {
+    backgroundColor: 'white',
+  },
+  pickerAndroid: {
+    backgroundColor: 'white',
+  },
+  pickerWeb: {
+    height: 50,
+    backgroundColor: '#eef',
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#aaa',
+    outline: 'none', // For better focus styles on web
+  },
 });

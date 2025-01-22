@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, TextInput, Platform, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { styles } from './styles';
 import { FontAwesome } from '@expo/vector-icons';
@@ -22,6 +22,11 @@ const StepContent = ({
   editingIndex,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const pickerStyles = Platform.select({
+    ios: styles.pickerIOS, // Styles specific to iOS
+    android: styles.pickerAndroid, // Styles specific to Android
+    default: styles.pickerWeb, // Styles for web and other platforms
+  });
 
   const handleMoveSelect = (move) => {
     setSelectedComboStarters(selectedComboStarters.includes(move)
@@ -75,7 +80,7 @@ const StepContent = ({
       return (
         <View style={styles.flatList}>
           <Text style={{ fontSize: 16, marginBottom: 17, marginTop: 17 }}>Select Combo Type</Text>
-          <Picker selectedValue={comboType} onValueChange={handleComboTypeChange}>
+          <Picker style={pickerStyles} selectedValue={comboType} onValueChange={handleComboTypeChange}>
             <Picker.Item label="Select Combo Type" value="" />
             <Picker.Item label="Normal" value="Normal" />
             <Picker.Item label="Counter Hit" value="Counter Hit" />
@@ -159,7 +164,7 @@ const StepContent = ({
             <Text style={{ fontSize: 16, marginBottom: 17, marginTop: 17 }}>Add The Combo Difficulty</Text>
             <Picker
               selectedValue={difficulty}
-              style={styles.picker}
+              style={pickerStyles}
               onValueChange={(itemValue) => setDifficulty(itemValue)}
             >
               <Picker.Item label="Easy" value="Easy" />
