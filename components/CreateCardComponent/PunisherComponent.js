@@ -68,24 +68,19 @@ const PunisherComponent = ({ onClose, setPunisherData, punisherData, frameData }
       >
         {punisherData.length > 0 ? (
           punisherData.map((item, index) => (
-            <Swipeable
+            <MoveTableRow
               key={index.toString()}
-              renderRightActions={(progress, dragX) =>
-                renderRightActions(progress, dragX, index)
-              }
-              rightThreshold={40} // Makes actions more responsive to swipe
-            >
-              <MoveTableRow
-                item={item}
-                index={index}
-                onMovePress={handleMovePress}
-              />
-            </Swipeable>
+              item={item}
+              index={index}
+              onMovePress={handleMovePress}
+              onDelete={() => deletePunisher(index)} // Pass delete function
+            />
           ))
         ) : (
           <Text style={styles.emptyText}>No punishers added yet</Text>
         )}
       </ScrollView>
+
       <TouchableOpacity
         onPress={() => setModalVisible(true)}
         style={styles.plusButton}

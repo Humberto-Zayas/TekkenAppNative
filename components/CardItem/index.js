@@ -7,7 +7,6 @@ import RightActions from '../RightActions';
 import { styles } from './styles.js'; // Import your styles
 
 const CardItem = ({ item, user, handleCardPress, handleDeletePress, handleEditPress, handleBookmarkPress, getBackgroundColor }) => {
-  const [modalVisible, setModalVisible] = useState(false);
   const [isMenuVisible, setMenuVisible] = useState(false);
   const isCardOwner = user?.userId === item.userId;
   const [isBookmarked, setIsBookmarked] = useState(item.bookmarked);

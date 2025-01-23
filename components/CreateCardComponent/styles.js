@@ -175,7 +175,8 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   deleteIcon: {
-    alignSelf: 'center'
+    alignSelf: 'center',
+    marginRight: 16
   },
   editIcon: {
     marginRight: 8,
@@ -361,6 +362,7 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   pickerWeb: {
+    fontSize: 16,
     height: 50,
     backgroundColor: '#eef',
     borderRadius: 6,
