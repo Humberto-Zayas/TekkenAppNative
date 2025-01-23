@@ -144,7 +144,7 @@ export const styles = StyleSheet.create({
   tableRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 8,
+    paddingVertical: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
@@ -316,7 +316,7 @@ export const styles = StyleSheet.create({
     height: 16,
     borderRadius: 16,
     alignSelf: 'center',
-    marginTop: 8
+    paddingVertical: 8
   },
   legendContainer: {
     marginVertical: 8,
@@ -340,7 +340,7 @@ export const styles = StyleSheet.create({
   comboStarterColumn: {
     flex: 0.20, // 25% of the row width
     justifyContent: 'center',
-    paddingTop: 6
+    paddingVertical: 8
   },
   comboRouteColumn: {
     flex: 0.70,
@@ -369,5 +369,9 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#aaa',
     outline: 'none', // For better focus styles on web
+  },
+  actionButton: {
+    alignSelf: 'center',
+    padding: 8,
   },
 });

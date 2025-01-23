@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, Animated, Platform } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
@@ -93,16 +93,10 @@ const ComboList = ({ comboData, onDelete, onEdit }) => {
             {/* Combo type title */}
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 8 }}>{type}</Text>
 
-            {/* Loop through each combo under this type */}
             {groupedCombos[type].map((item, index) => (
-              <Swipeable
-                key={index.toString()}
-                renderRightActions={(progress, dragX) =>
-                  renderRightActions(progress, dragX, index)
-                }
-                rightThreshold={40}
-              >
-                <View style={styles.tableRow}>
+              Platform.OS === 'web' ? (
+                // Static layout for web
+                <View style={styles.tableRow} key={index.toString()}>
                   <View style={styles.comboStarterColumn}>
                     {item.comboStarters.map((starter, idx) => (
                       <Text style={{ fontSize: 18 }} key={idx}>
@@ -120,10 +114,47 @@ const ComboList = ({ comboData, onDelete, onEdit }) => {
                         { backgroundColor: difficultyColors[item.difficulty.toLowerCase()] },
                       ]}
                     />
+                    <TouchableOpacity onPress={() => onEdit(index)} style={styles.actionButton}>
+                      <FontAwesome name="edit" size={24} color="blue" />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => onDelete(index)} style={[styles.actionButton, { marginRight: 4 }]}>
+                      <FontAwesome name="trash" size={26} color="red" />
+                    </TouchableOpacity>
                   </View>
                 </View>
-              </Swipeable>
+              ) : (
+                // Swipeable layout for mobile
+                <Swipeable
+                  key={index.toString()}
+                  renderRightActions={(progress, dragX) =>
+                    renderRightActions(progress, dragX, index)
+                  }
+                  rightThreshold={40}
+                >
+                  <View style={styles.tableRow}>
+                    <View style={styles.comboStarterColumn}>
+                      {item.comboStarters.map((starter, idx) => (
+                        <Text style={{ fontSize: 18 }} key={idx}>
+                          {starter}
+                        </Text>
+                      ))}
+                    </View>
+                    <View style={styles.comboRouteColumn}>
+                      <Text style={styles.comboRouteText}>{item.comboRoute}</Text>
+                    </View>
+                    <View style={styles.notesColumn}>
+                      <View
+                        style={[
+                          styles.difficultyDot,
+                          { backgroundColor: difficultyColors[item.difficulty.toLowerCase()] },
+                        ]}
+                      />
+                    </View>
+                  </View>
+                </Swipeable>
+              )
             ))}
+
           </View>
         ))
       )}
