@@ -20,6 +20,7 @@ const CreateCardPage = () => {
   const { user, token } = useAuth(); // Get user and token from useAuth
   const router = useRouter();
   const { isEdit, slug, userId, characterName } = useLocalSearchParams();
+  // console.log(characterName)
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showPunishers, setShowPunishers] = useState(false);
   const [showMoveFlowChart, setShowMoveFlowChart] = useState(false);
@@ -124,6 +125,15 @@ const CreateCardPage = () => {
     const formattedCharacterName = characterName.replace(/ /g, '_'); // Replace spaces with underscores
     return frameDataFiles[formattedCharacterName] || null; // Return frameData or null if not found
   }, [characterName]);
+
+  useEffect(() => {
+    if (characterName) {
+      const matchedCharacter = Object.values(characters).find(c => c.name === characterName);
+      setCharacter(matchedCharacter || null); // Fallback to null if not found
+    }
+  }, [characterName]);
+
+  console.log(character?.image)
 
   // Debugging tip: Log to verify frameData is being fetched correctly
   useEffect(() => {

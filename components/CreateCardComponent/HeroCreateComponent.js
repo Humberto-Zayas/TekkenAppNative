@@ -24,8 +24,8 @@ const HeroComponent = ({
   onTwitchLinkChange,
 
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const animation = useRef(new Animated.Value(0)).current;
+  const [isExpanded, setIsExpanded] = useState(true);
+  const animation = useRef(new Animated.Value(1)).current;
 
   const toggleExpanded = () => {
     setIsExpanded((prevState) => !prevState);
@@ -35,6 +35,7 @@ const HeroComponent = ({
       useNativeDriver: false,
     }).start();
   };
+  
 
   const handlePaste = async (setLink) => {
     const clipboardText = await Clipboard.getStringAsync();
@@ -47,8 +48,8 @@ const HeroComponent = ({
 
   const containerHeight = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [70, 280],
-  });
+    outputRange: [70, 280], // Adjust these values as per your design
+  });  
 
   return (
     <TouchableWithoutFeedback
@@ -63,9 +64,13 @@ const HeroComponent = ({
         <View style={styles.heroContainer}>
           <TouchableOpacity onPress={toggleExpanded} style={styles.thumbnailContainer}>
             <Image source={thumbnail} style={styles.thumbnail} />
-            {isExpanded && (
+            {isExpanded ? (
               <TouchableOpacity onPress={toggleExpanded} style={styles.closeIcon}>
                 <FontAwesome name="times-circle" size={32} color="black" />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={toggleExpanded} style={styles.closeIcon}>
+                <FontAwesome name="edit" size={32} color="black" />
               </TouchableOpacity>
             )}
           </TouchableOpacity>
