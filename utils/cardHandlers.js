@@ -23,7 +23,7 @@ export const handleSaveCard = async ({
   isEdit,
   formData,
   token,
-  initialCardData,
+  card,
   setHasUnsavedChanges,
   router,
 }) => {
@@ -38,7 +38,7 @@ export const handleSaveCard = async ({
 
   try {
     if (isEdit) {
-      await updateCard({ ...formData, _id: initialCardData._id }, token);
+      await updateCard({ ...formData, _id: card._id }, token);
       await new Promise((resolve) => {
         if (Platform.OS === 'ios' || Platform.OS === 'android') {
           Alert.alert('Success', 'Card updated successfully!', [

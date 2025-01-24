@@ -19,8 +19,7 @@ import { fetchCardById } from '../../utils/api';
 const CreateCardPage = () => {
   const { user, token } = useAuth(); // Get user and token from useAuth
   const router = useRouter();
-  const { cardData: rawCardData, isEdit, slug, userId, characterName, characterImage } = useLocalSearchParams();
-  const initialCardData = useMemo(() => (rawCardData ? JSON.parse(rawCardData) : {}), [rawCardData]);
+  const { isEdit, slug, userId, characterName } = useLocalSearchParams();
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showPunishers, setShowPunishers] = useState(false);
   const [showMoveFlowChart, setShowMoveFlowChart] = useState(false);
@@ -30,7 +29,6 @@ const CreateCardPage = () => {
   const [cardName, setCardName] = useState('');
   const [cardDescription, setCardDescription] = useState('');
   const [card, setCard] = useState('');
-  console.log(card)
   const [character, setCharacter] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
   const [youtubeLink, setYoutubeLink] = useState('');
@@ -84,22 +82,22 @@ const CreateCardPage = () => {
   }, [hasUnsavedChanges]);
 
   useEffect(() => {
-    if (isEdit) {
-      setCardName(initialCardData.cardName);
-      setCardDescription(initialCardData.cardDescription);
-      setYoutubeLink(initialCardData.youtubeLink);
-      setTwitchLink(initialCardData.twitchLink);
-      setPunisherData(initialCardData.punisherData);
-      setMoveFlowChartData(initialCardData.moveFlowChartData);
-      setFollowUpData(initialCardData.followUpData);
-      setComboData(initialCardData.comboData);
-      setImportantMoveData(initialCardData.moveData);
-      setSelectedTags(initialCardData.tags || []);
+    if (isEdit && card) {
+      setCardName(card.cardName);
+      setCardDescription(card.cardDescription);
+      setYoutubeLink(card.youtubeLink);
+      setTwitchLink(card.twitchLink);
+      setPunisherData(card.punisherData);
+      setMoveFlowChartData(card.moveFlowChartData);
+      setFollowUpData(card.followUpData);
+      setComboData(card.comboData);
+      setImportantMoveData(card.moveData);
+      setSelectedTags(card.tags || []);
 
       // Reset unsaved changes because we are loading existing data
       setHasUnsavedChanges(false);
     }
-  }, [isEdit, initialCardData]);
+  }, [isEdit, card]);
 
   const fetchCard = async () => {
 
@@ -153,7 +151,7 @@ const CreateCardPage = () => {
       isEdit,
       formData,
       token,
-      initialCardData,
+      card,
       setHasUnsavedChanges,
       router,
     });

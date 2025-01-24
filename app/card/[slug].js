@@ -71,7 +71,7 @@ const CardComponent = () => {
     // setMenuVisible(false);
     router.push({
       pathname: `${card.cardName}/create`,
-      params: { cardData: JSON.stringify(card), slug: card._id, userId: user?.Id, isEdit: true, characterImage: character?.image },
+      params: { slug: card._id, userId: user?.Id, isEdit: true },
     });
   };
 

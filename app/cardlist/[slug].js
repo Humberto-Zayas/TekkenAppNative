@@ -133,7 +133,7 @@ const CardListPage = () => {
   const handleEditPress = (item) => {
     router.push({
       pathname: `${item.characterName}/create`,
-      params: { cardData: JSON.stringify(item), slug: item._id, userId: user?.Id, isEdit: true, characterImage: character.image },
+      params: { slug: item._id, userId: user?.Id, isEdit: true },
     });
   };
 
