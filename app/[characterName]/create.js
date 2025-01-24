@@ -13,11 +13,13 @@ import { useAuth } from '../../utils/AuthContext';
 import tags from '../../data/tags';
 import { handleSaveCard, handleYouTubeLinkChange, handleTwitchLinkChange } from '../../utils/cardHandlers';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { characters } from '../../data/characters';
+import { fetchCardById } from '../../utils/api';
 
 const CreateCardPage = () => {
   const { user, token } = useAuth(); // Get user and token from useAuth
   const router = useRouter();
-  const { cardData: rawCardData, isEdit, characterName, characterImage } = useLocalSearchParams();
+  const { cardData: rawCardData, isEdit, slug, userId, characterName, characterImage } = useLocalSearchParams();
   const initialCardData = useMemo(() => (rawCardData ? JSON.parse(rawCardData) : {}), [rawCardData]);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showPunishers, setShowPunishers] = useState(false);
@@ -27,6 +29,9 @@ const CreateCardPage = () => {
   const [showImportantMoves, setShowImportantMoves] = useState(false);
   const [cardName, setCardName] = useState('');
   const [cardDescription, setCardDescription] = useState('');
+  const [card, setCard] = useState('');
+  console.log(card)
+  const [character, setCharacter] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
   const [youtubeLink, setYoutubeLink] = useState('');
   const [twitchLink, setTwitchLink] = useState('');
@@ -69,6 +74,12 @@ const CreateCardPage = () => {
   };
 
   useEffect(() => {
+    if (slug && user) {
+      fetchCard();
+    }
+  }, [slug, user])
+
+  useEffect(() => {
     console.log('Unsaved Changes:', hasUnsavedChanges);
   }, [hasUnsavedChanges]);
 
@@ -89,6 +100,23 @@ const CreateCardPage = () => {
       setHasUnsavedChanges(false);
     }
   }, [isEdit, initialCardData]);
+
+  const fetchCard = async () => {
+
+      try {
+        const data = await fetchCardById(slug, user?.userId || '');
+        setCard(data);
+  
+        if (data.characterName) {
+          const foundCharacter = Object.values(characters).find(c => c.name === data.characterName);
+          setCharacter(foundCharacter);
+        }
+  
+      } catch (error) {
+        console.error('Error fetching card:', error);
+        Alert.alert('Error', 'Could not load the card. Please try again later.');
+      }
+    };
 
   // Correctly map the frameData to the characterName
   const frameData = useMemo(() => {
@@ -145,7 +173,7 @@ const CreateCardPage = () => {
     <ScrollView style={themeStyles.container}>
       <HeroCreateComponent
         cardName={cardName}
-        thumbnail={characterImage}
+        thumbnail={character?.image}
         onCardNameChange={(name) => { setCardName(name); setHasUnsavedChanges(true); }}
         cardDescription={cardDescription}
         onCardDescriptionChange={(desc) => { setCardDescription(desc); setHasUnsavedChanges(true); }}

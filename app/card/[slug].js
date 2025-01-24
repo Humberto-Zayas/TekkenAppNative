@@ -4,7 +4,6 @@ import HeroComponent from '../../components/CardComponent/HeroComponent';
 import CardDetailComponent from '../../components/CardComponent/CardDetailComponent';
 import CardLinks from '../../components/CardLinks';
 import { characters } from '../../data/characters';
-import { styles } from '../../components/CardComponent/styles';
 import { useAuth } from '../../utils/AuthContext';
 import { fetchCardById, bookmarkCardById, unbookmarkCardById, rateCardById, fetchUserBookmarks } from '../../utils/api';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -72,7 +71,7 @@ const CardComponent = () => {
     // setMenuVisible(false);
     router.push({
       pathname: `${card.cardName}/create`,
-      params: { cardData: JSON.stringify(card), isEdit: true, characterImage: character?.image },
+      params: { cardData: JSON.stringify(card), slug: card._id, userId: user?.Id, isEdit: true, characterImage: character?.image },
     });
   };
 
