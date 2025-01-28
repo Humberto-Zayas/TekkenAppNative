@@ -1,6 +1,10 @@
 {
   "name": "tekkenappnative",
   "version": "1.0.0",
+  "engines": {
+    "node": "16.14.0",
+    "npm": "8.3.1"
+  },
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start --dev-client",
