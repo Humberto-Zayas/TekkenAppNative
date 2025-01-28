@@ -19,18 +19,87 @@ const FollowUpStepContent = ({
 
   const handleMoveSelect = (move) => {
     setSelectedMoves((prevSelectedMoves) => {
-      const isSelected = prevSelectedMoves.some(selected => selected.move === move.move);
+      const isSelected = prevSelectedMoves.some(selected => selected.id === move.id);
       if (!isSelected) {
         return [...prevSelectedMoves, move];
       } else {
-        return prevSelectedMoves.filter(selected => selected.move !== move.move);
+        return prevSelectedMoves.filter(selected => selected.id !== move.id);
       }
     });
     setSearchQuery(''); // Reset search query when a move is selected
   };
 
+
+  const movementOptions = [
+    {
+      id: 'ss',
+      move: 'SS',
+      hitLevel: 'Side Step',
+      damage: [],
+      startupFrame: '',
+      blockFrame: '',
+      hitFrame: '',
+      counterHitFrame: '',
+      additionalNotes: '', // This will be added by the user
+    },
+    {
+      id: 'sw',
+      move: 'SW',
+      hitLevel: 'Side Walk',
+      damage: [],
+      startupFrame: '',
+      blockFrame: '',
+      hitFrame: '',
+      counterHitFrame: '',
+      additionalNotes: '', // This will be added by the user
+    },
+    {
+      id: 'bd',
+      move: 'BD',
+      hitLevel: 'Back Dash',
+      damage: [],
+      startupFrame: '',
+      blockFrame: '',
+      hitFrame: '',
+      counterHitFrame: '',
+      additionalNotes: '', // This will be added by the user
+    },
+    {
+      id: 'ff',
+      move: 'FF',
+      hitLevel: 'Forward Dash',
+      damage: [],
+      startupFrame: '',
+      blockFrame: '',
+      hitFrame: '',
+      counterHitFrame: '',
+      additionalNotes: '', // This will be added by the user
+    },
+    {
+      id: 'fc',
+      move: 'FC',
+      hitLevel: 'Full Crouch/Crouch',
+      damage: [],
+      startupFrame: '',
+      blockFrame: '',
+      hitFrame: '',
+      counterHitFrame: '',
+      additionalNotes: '', // This will be added by the user
+    },
+  ]
+
+  const enrichedFrameData = frameData.map((item, index) => ({
+    ...item,
+    id: item.id || `fd-${index}`, // Add unique id if not present
+  }));
+
+  const combinedData = [...movementOptions, ...enrichedFrameData];
+
+
+  // const combinedData = [...movementOptions, ...frameData];
+
   // Filter the frameData based on the search query
-  const filteredFrameData = frameData.filter(item => {
+  const filteredFrameData = combinedData.filter(item => {
     // Ensure item.move is a string before calling toLowerCase
     return typeof item.move === 'string' && item.move.toLowerCase().includes(searchQuery.toLowerCase());
   });
@@ -104,7 +173,9 @@ const FollowUpStepContent = ({
                       <Text style={styles.column}>{item.blockFrame}</Text>
                       <Text style={styles.column}>{item.hitFrame}</Text>
                       {isSelected && (
-                        <Text style={styles.flowCounter}>{selectedMoves.indexOf(item) + 1}</Text>
+                        <Text style={styles.flowCounter}>
+                          {selectedMoves.findIndex(selected => selected.id === item.id) + 1}
+                        </Text>
                       )}
                     </View>
 

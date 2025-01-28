@@ -178,7 +178,7 @@ const CreateCardPage = () => {
   };
 
   return (
-    <ScrollView style={themeStyles.container}>
+    <ScrollView  showsVerticalScrollIndicator={false} style={themeStyles.container}>
       <HeroCreateComponent
         cardName={cardName}
         thumbnail={character?.image}
