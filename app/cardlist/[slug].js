@@ -33,7 +33,6 @@ const CardListPage = () => {
   const [youtubeQuery, setYouTubeQuery] = useState(false);
   const [twitchQuery, setTwitchQuery] = useState(false);
   const { user, token } = useAuth();
-  console.log(user)
   const { width } = useWindowDimensions();
   const isMobile = width < 768; // Adjust breakpoint as needed
 
