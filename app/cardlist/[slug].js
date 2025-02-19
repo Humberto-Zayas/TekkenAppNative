@@ -147,6 +147,7 @@ const CardListPage = () => {
           card._id === item._id ? { ...card, isBookmarked } : card
         )
       );
+      loadBookmarks();
       
     } catch (error) {
       console.error('Error toggling bookmark:', error);
