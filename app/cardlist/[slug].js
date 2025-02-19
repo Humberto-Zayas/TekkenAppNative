@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, View, Text, TouchableOpacity, Platform, Image, useWindowDimensions } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-
 import { useRouter, useLocalSearchParams } from 'expo-router'; // Expo Router hooks
 import SavedListComponent from '../../components/SavedListComponent';
 import LoginSignupModalComponent from '../../components/CardListComponent/LoginSignupModalComponent';
