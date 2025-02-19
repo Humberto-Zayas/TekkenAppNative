@@ -33,6 +33,7 @@ const CardListPage = () => {
   const [youtubeQuery, setYouTubeQuery] = useState(false);
   const [twitchQuery, setTwitchQuery] = useState(false);
   const { user, token } = useAuth();
+  console.log(user)
   const { width } = useWindowDimensions();
   const isMobile = width < 768; // Adjust breakpoint as needed
 
@@ -146,6 +147,7 @@ const CardListPage = () => {
           card._id === item._id ? { ...card, isBookmarked } : card
         )
       );
+      
     } catch (error) {
       console.error('Error toggling bookmark:', error);
     }
@@ -195,7 +197,7 @@ const CardListPage = () => {
       if (character) {
         fetchCards(currentPage); // Fetch cards when returning to the page
       }
-    }, [character, currentPage, selectedTags, youtubeQuery, twitchQuery])
+    }, [character, currentPage, selectedTags, youtubeQuery, twitchQuery, user])
   );
   
   
