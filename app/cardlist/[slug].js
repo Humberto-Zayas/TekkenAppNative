@@ -27,7 +27,6 @@ const CardListPage = () => {
   const [sortOrder, setSortOrder] = useState('ascending');
   const [selectedTags, setSelectedTags] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [youtubeQuery, setYouTubeQuery] = useState(false);
@@ -48,13 +47,12 @@ const CardListPage = () => {
 
   const fetchCards = async (page = 1) => {
     try {
-      const { cards: fetchedCards, totalCount: fetchedTotalCount, totalPages: fetchedTotalPages } =
+      const { cards: fetchedCards, totalPages: fetchedTotalPages } =
         await fetchCardsByCharacter(character.name, page, selectedTags, youtubeQuery, twitchQuery, pageSize, user?.userId);
 
       const sortedCards = sortOrder === 'ascending' ? fetchedCards : fetchedCards.reverse();
 
       setCards(sortedCards);
-      setTotalCount(fetchedTotalCount);
       setTotalPages(fetchedTotalPages);
     } catch (error) {
       console.error('Error fetching cards:', error);
@@ -63,7 +61,7 @@ const CardListPage = () => {
 
   const loadBookmarks = async () => {
     try {
-      const { sortedBookmarks, totalCount, totalPages } = await fetchBookmarksByCharacter(
+      const { sortedBookmarks, totalPages } = await fetchBookmarksByCharacter(
         user.userId,
         character.name,
         sortOrder,
@@ -71,7 +69,6 @@ const CardListPage = () => {
       );
 
       setBookmarkedCards(sortedBookmarks);
-      setTotalCount(totalCount);
       setTotalPages(totalPages);
     } catch (error) {
       console.error('Error fetching bookmarks:', error);
