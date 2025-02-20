@@ -197,7 +197,7 @@ const CardListPage = () => {
       if (character) {
         fetchCards(currentPage); // Fetch cards when returning to the page
       }
-    }, [character, currentPage, selectedTags, youtubeQuery, twitchQuery, user])
+    }, [character, currentPage, selectedTags, youtubeQuery, twitchQuery, user, sortOrder])
   );
   
   
@@ -260,7 +260,7 @@ const CardListPage = () => {
           />
         </>
       )}
-      {cards.length > pageSize && (
+      {(cards.length == pageSize || currentPage !== 1) && (
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
