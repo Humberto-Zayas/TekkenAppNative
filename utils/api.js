@@ -6,9 +6,18 @@ import { characters } from '../data/characters';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-export const fetchCardsByCharacter = async (characterName, page = 1, selectedTags = [], youtubeQuery = false, twitchQuery = false, pageSize = 10, userId = null) => {
+export const fetchCardsByCharacter = async (
+  characterName,
+  page = 1,
+  selectedTags = [],
+  youtubeQuery = false,
+  twitchQuery = false,
+  pageSize = 10,
+  userId = null,
+  sortOrder = 'descending' // Default to 'descending' for newest first
+) => {
   try {
-    let queryParams = `${API_BASE_URL}/cards/character/${characterName}?page=${page}`;
+    let queryParams = `${API_BASE_URL}/cards/character/${characterName}?page=${page}&sortOrder=${sortOrder}`;
 
     // Append selected tags to query parameters
     if (selectedTags.length > 0) {

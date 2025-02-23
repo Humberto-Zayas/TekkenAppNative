@@ -48,16 +48,15 @@ const CardListPage = () => {
   const fetchCards = async (page = 1) => {
     try {
       const { cards: fetchedCards, totalPages: fetchedTotalPages } =
-        await fetchCardsByCharacter(character.name, page, selectedTags, youtubeQuery, twitchQuery, pageSize, user?.userId);
+        await fetchCardsByCharacter(character.name, page, selectedTags, youtubeQuery, twitchQuery, pageSize, user?.userId, sortOrder);
 
-      const sortedCards = sortOrder === 'ascending' ? fetchedCards : fetchedCards.reverse();
-
-      setCards(sortedCards);
+      setCards(fetchedCards);
       setTotalPages(fetchedTotalPages);
     } catch (error) {
       console.error('Error fetching cards:', error);
     }
   };
+
 
   const loadBookmarks = async () => {
     try {
@@ -144,7 +143,7 @@ const CardListPage = () => {
         )
       );
       loadBookmarks();
-      
+
     } catch (error) {
       console.error('Error toggling bookmark:', error);
     }
@@ -160,7 +159,7 @@ const CardListPage = () => {
   };
 
   const handleDeletePress = (item) => {
-  
+
     if (Platform.OS === 'web') {
       // Use the browser's alert for web
       const confirmed = window.confirm(`Are you sure you want to delete this card: ${item.cardName}?`);
@@ -192,18 +191,18 @@ const CardListPage = () => {
   useFocusEffect(
     React.useCallback(() => {
       if (character) {
-        fetchCards(currentPage); // Fetch cards when returning to the page
+        fetchCards(currentPage, sortOrder); // Fetch cards when returning to the page
       }
     }, [character, currentPage, selectedTags, youtubeQuery, twitchQuery, user, sortOrder])
   );
-  
-  
+
+
   useEffect(() => {
     if (user && character) {
       loadBookmarks();
     }
   }, [user, character]);
-  
+
 
   if (!character) {
     return (

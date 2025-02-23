@@ -1,7 +1,6 @@
 // styles.js
 import { StyleSheet, Platform } from 'react-native';
 
-
 const commonStyles = {
   container: {
     padding: 24,
