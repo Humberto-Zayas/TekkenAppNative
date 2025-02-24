@@ -24,7 +24,7 @@ const CardListPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [cards, setCards] = useState([]);
   const [bookmarkedCards, setBookmarkedCards] = useState([]);
-  const [sortOrder, setSortOrder] = useState('ascending');
+  const [sortOrder, setSortOrder] = useState('descending');
   const [selectedTags, setSelectedTags] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);

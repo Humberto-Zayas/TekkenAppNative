@@ -1,4 +1,3 @@
-// TagFilter.js
 import React from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { styles } from '../../components/CardListComponent/styles';
@@ -8,6 +7,7 @@ const TagFilter = ({
   selectedTags,
   handleTagClick,
   toggleSortOrder,
+  toggleRatingSort, // New prop for toggling rating sort
   cards,
   handleYouTubeTagClick,
   youtubeQuery,
@@ -51,9 +51,15 @@ const TagFilter = ({
         </ScrollView>
       </View>
 
-      <TouchableOpacity style={{ marginBottom: 4 }} onPress={toggleSortOrder}>
-        <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
-      </TouchableOpacity>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
+        <TouchableOpacity onPress={toggleSortOrder}>
+          <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={toggleRatingSort}>
+          <Text style={styles.sortButtonText}>Toggle Rating Sort</Text>
+        </TouchableOpacity>
+      </View>
 
       {selectedTags.length > 0 && cards.length === 0 && (
         <Text style={styles.noCardsText}>
