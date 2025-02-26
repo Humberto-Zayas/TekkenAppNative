@@ -96,6 +96,27 @@ const CardComponent = () => {
     }
   };
 
+  const rateCard = async (rating) => {
+    try {
+      if (!userId) {
+        Alert.alert('Please log in to rate this card');
+        return;
+      }
+      await rateCardById(slug, userId, rating, user?.username, token);
+      Alert.alert('Success', 'Rating submitted successfully!');
+      // Optionally fetch the new average rating from API or calculate based on submission
+      setAverageRating((prevAverage) => (prevAverage * card.numRatings + userRating) / (card.numRatings + 1));
+    } catch (error) {
+      console.error('Error submitting rating:', error);
+      Alert.alert('Error', 'Failed to submit your rating. Please try again.');
+    }
+  };
+
+  const handleRatingChange = (newRating) => {
+    setUserRating(newRating);
+    rateCard(newRating); // Immediately call rateCard when rating is changed
+  };
+
   const openLink = async (url) => {
     try {
       const supported = await Linking.canOpenURL(url);
@@ -144,7 +165,7 @@ const CardComponent = () => {
         image={character?.image}
         handleEditPress={handleEditPress}
         toggleBookmark={toggleBookmark}
-        onRatingChange={setUserRating}
+        onRatingChange={handleRatingChange}
         onDelete={() => router.back()}
       />
       <View style={{ paddingBottom: 64 }}>

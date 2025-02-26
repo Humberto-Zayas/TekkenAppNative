@@ -25,6 +25,7 @@ const CardListPage = () => {
   const [cards, setCards] = useState([]);
   const [bookmarkedCards, setBookmarkedCards] = useState([]);
   const [sortOrder, setSortOrder] = useState('descending');
+  const [ratingSortOrder, setRatingSortOrder] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -48,7 +49,7 @@ const CardListPage = () => {
   const fetchCards = async (page = 1) => {
     try {
       const { cards: fetchedCards, totalPages: fetchedTotalPages } =
-        await fetchCardsByCharacter(character.name, page, selectedTags, youtubeQuery, twitchQuery, pageSize, user?.userId, sortOrder);
+        await fetchCardsByCharacter(character.name, page, selectedTags, youtubeQuery, twitchQuery, pageSize, user?.userId, sortOrder, ratingSortOrder);
 
       setCards(fetchedCards);
       setTotalPages(fetchedTotalPages);
@@ -117,6 +118,10 @@ const CardListPage = () => {
 
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
+  };
+
+  const toggleRatingSort = () => {
+    setRatingSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
   };
 
   const toggleCardMenu = () => {
@@ -193,7 +198,7 @@ const CardListPage = () => {
       if (character) {
         fetchCards(currentPage, sortOrder); // Fetch cards when returning to the page
       }
-    }, [character, currentPage, selectedTags, youtubeQuery, twitchQuery, user, sortOrder])
+    }, [character, currentPage, selectedTags, youtubeQuery, twitchQuery, user, sortOrder, ratingSortOrder])
   );
 
 
@@ -222,6 +227,7 @@ const CardListPage = () => {
             selectedTags={selectedTags}
             handleTagClick={handleTagClick}
             toggleSortOrder={toggleSortOrder}
+            toggleRatingSort={toggleRatingSort}
             cards={cards}
             handleYouTubeTagClick={handleYouTubeTagClick}
             youtubeQuery={youtubeQuery}

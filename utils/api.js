@@ -14,7 +14,8 @@ export const fetchCardsByCharacter = async (
   twitchQuery = false,
   pageSize = 10,
   userId = null,
-  sortOrder = 'descending' // Default to 'descending' for newest first
+  sortOrder = 'descending',
+  ratingSortOrder = '' // Added ratingSortOrder
 ) => {
   try {
     let queryParams = `${API_BASE_URL}/cards/character/${characterName}?page=${page}&sortOrder=${sortOrder}`;
@@ -40,6 +41,11 @@ export const fetchCardsByCharacter = async (
       queryParams += `&userId=${userId}`;
     }
 
+    // Append ratingSortOrder if provided
+    if (ratingSortOrder) {
+      queryParams += `&ratingSortOrder=${ratingSortOrder}`;
+    }
+
     const response = await fetch(queryParams);
     if (!response.ok) {
       throw new Error('Failed to fetch cards');
@@ -49,9 +55,10 @@ export const fetchCardsByCharacter = async (
     const totalPages = Math.ceil(totalCount / pageSize);
     const data = await response.json();
 
+    // Ensure each card includes an average rating
     const cardsWithAverageRating = data.map((card) => ({
       ...card,
-      averageRating: calculateAverageRating(card),
+      averageRating: card.averageRating || 0, // Use backend-calculated average rating
     }));
 
     return { cards: cardsWithAverageRating, totalCount, totalPages };
@@ -124,7 +131,7 @@ export const unbookmarkCardById = async (userId, cardId, token) => {
 };
 
 export const rateCardById = async (cardId, userId, rating, username, token) => {
-  console.log('api.js rating: ', rating)
+  console.log('api.js cardId: ', cardId)
   try {
     const response = await fetch(`${REACT_APP_API_BASE_URL}/cards/rate/${cardId}`, {
       method: 'POST',
