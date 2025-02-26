@@ -117,6 +117,7 @@ const CardListPage = () => {
   };
 
   const toggleSortOrder = () => {
+    setRatingSortOrder('');
     setSortOrder((prevOrder) => (prevOrder === 'ascending' ? 'descending' : 'ascending'));
   };
 
