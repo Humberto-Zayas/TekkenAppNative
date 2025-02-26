@@ -7,12 +7,14 @@ const TagFilter = ({
   selectedTags,
   handleTagClick,
   toggleSortOrder,
-  toggleRatingSort, // New prop for toggling rating sort
+  toggleRatingSort,
   cards,
   handleYouTubeTagClick,
   youtubeQuery,
   handleTwitchTagClick,
   twitchQuery,
+  sortOrder, // State for normal sort order
+  ratingSortOrder, // State for rating sort order
 }) => {
   return (
     <View>
@@ -52,12 +54,18 @@ const TagFilter = ({
       </View>
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
-        <TouchableOpacity onPress={toggleSortOrder}>
-          <Text style={styles.sortButtonText}>Toggle Sort Order</Text>
+        {/* Sort Order Toggle Button with Indicator */}
+        <TouchableOpacity onPress={toggleSortOrder} style={styles.sortButton}>
+          <Text style={styles.sortButtonText}>
+            Sort: {sortOrder === 'ascending' ? '▲' : '▼'}
+          </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={toggleRatingSort}>
-          <Text style={styles.sortButtonText}>Toggle Rating Sort</Text>
+        {/* Rating Sort Toggle Button with Indicator */}
+        <TouchableOpacity onPress={toggleRatingSort} style={styles.sortButton}>
+          <Text style={styles.sortButtonText}>
+            Rating: {ratingSortOrder === 'ascending' ? '▲' : ratingSortOrder === 'descending' ? '▼' : '⏺'}
+          </Text>
         </TouchableOpacity>
       </View>
 

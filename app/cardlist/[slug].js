@@ -229,6 +229,8 @@ const CardListPage = () => {
             handleTagClick={handleTagClick}
             toggleSortOrder={toggleSortOrder}
             toggleRatingSort={toggleRatingSort}
+            sortOrder={sortOrder}
+            ratingSortOrder={ratingSortOrder}
             cards={cards}
             handleYouTubeTagClick={handleYouTubeTagClick}
             youtubeQuery={youtubeQuery}
