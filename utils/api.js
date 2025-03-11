@@ -15,7 +15,8 @@ export const fetchCardsByCharacter = async (
   pageSize = 10,
   userId = null,
   sortOrder = 'descending',
-  ratingSortOrder = '' // Added ratingSortOrder
+  ratingSortOrder = '', // Added ratingSortOrder
+  patchVersions = [] // New patchVersion support
 ) => {
   try {
     let queryParams = `${API_BASE_URL}/cards/character/${characterName}?page=${page}&sortOrder=${sortOrder}`;
@@ -44,6 +45,11 @@ export const fetchCardsByCharacter = async (
     // Append ratingSortOrder if provided
     if (ratingSortOrder) {
       queryParams += `&ratingSortOrder=${ratingSortOrder}`;
+    }
+
+    // Append patchVersion(s) if provided
+    if (patchVersions.length > 0) {
+      queryParams += `&patchVersion=${patchVersions.join(',')}`;
     }
 
     const response = await fetch(queryParams);

@@ -16,6 +16,9 @@ import tags from '../../data/tags';
 import { characters } from '../../data/characters'; // Import characters data
 import { themeStyles } from '../../styles/styles';
 
+const patchVersions = process.env.REACT_APP_PUBLIC_PATCH_VERSIONS ? process.env.REACT_APP_PUBLIC_PATCH_VERSIONS.split(',') : []; 
+
+
 const CardListPage = () => {
   const { slug } = useLocalSearchParams(); // Use Expo Router's `useSearchParams`
   const router = useRouter(); // Use Expo Router's `useRouter`
@@ -49,7 +52,7 @@ const CardListPage = () => {
   const fetchCards = async (page = 1) => {
     try {
       const { cards: fetchedCards, totalPages: fetchedTotalPages } =
-        await fetchCardsByCharacter(character.name, page, selectedTags, youtubeQuery, twitchQuery, pageSize, user?.userId, sortOrder, ratingSortOrder);
+        await fetchCardsByCharacter(character.name, page, selectedTags, youtubeQuery, twitchQuery, pageSize, user?.userId, sortOrder, ratingSortOrder, patchVersions);
 
       setCards(fetchedCards);
       setTotalPages(fetchedTotalPages);
@@ -57,7 +60,6 @@ const CardListPage = () => {
       console.error('Error fetching cards:', error);
     }
   };
-
 
   const loadBookmarks = async () => {
     try {

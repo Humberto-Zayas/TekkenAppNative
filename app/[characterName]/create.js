@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, ScrollView, Modal, TouchableOpacity, Text, Alert } from 'react-native';
+import { View, ScrollView, Modal, TouchableOpacity, Text, Alert, Platform } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import HeroCreateComponent from '../../components/CreateCardComponent/HeroCreateComponent';
 import PunisherComponent from '../../components/CreateCardComponent/PunisherComponent';
@@ -15,6 +15,11 @@ import { handleSaveCard, handleYouTubeLinkChange, handleTwitchLinkChange } from 
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { characters } from '../../data/characters';
 import { fetchCardById } from '../../utils/api';
+import { Picker } from '@react-native-picker/picker';
+
+const patchVersions = process.env.REACT_APP_PUBLIC_PATCH_VERSIONS ? process.env.REACT_APP_PUBLIC_PATCH_VERSIONS.split(',') : [];
+
+console.log(patchVersions)
 
 const CreateCardPage = () => {
   const { user, token } = useAuth(); // Get user and token from useAuth
@@ -39,6 +44,8 @@ const CreateCardPage = () => {
   const [followUpData, setFollowUpData] = useState([]);
   const [comboData, setComboData] = useState([]);
   const [importantMoveData, setImportantMoveData] = useState([]);
+  const [selectedPatchVersion, setSelectedPatchVersion] = useState(patchVersions);
+
   const frameDataFiles = {
     Alisa: require('../../data/AlisaFrameData.js').default,
     Asuka: require('../../data/AsukaFrameData.js').default,
@@ -72,6 +79,12 @@ const CreateCardPage = () => {
     Zafina: require('../../data/ZafinaFrameData.js').default,
   };
 
+  const pickerStyles = Platform.select({
+    ios: styles.pickerIOS, // Styles specific to iOS
+    android: styles.pickerAndroid, // Styles specific to Android
+    default: styles.pickerWeb, // Styles for web and other platforms
+  });
+
   useEffect(() => {
     if (slug && user) {
       fetchCard();
@@ -94,6 +107,7 @@ const CreateCardPage = () => {
       setComboData(card.comboData);
       setImportantMoveData(card.moveData);
       setSelectedTags(card.tags || []);
+      setSelectedPatchVersion(card.patchVersions || [])
 
       // Reset unsaved changes because we are loading existing data
       setHasUnsavedChanges(false);
@@ -102,20 +116,20 @@ const CreateCardPage = () => {
 
   const fetchCard = async () => {
 
-      try {
-        const data = await fetchCardById(slug, user?.userId || '');
-        setCard(data);
-  
-        if (data.characterName) {
-          const foundCharacter = Object.values(characters).find(c => c.name === data.characterName);
-          setCharacter(foundCharacter);
-        }
-  
-      } catch (error) {
-        console.error('Error fetching card:', error);
-        Alert.alert('Error', 'Could not load the card. Please try again later.');
+    try {
+      const data = await fetchCardById(slug, user?.userId || '');
+      setCard(data);
+
+      if (data.characterName) {
+        const foundCharacter = Object.values(characters).find(c => c.name === data.characterName);
+        setCharacter(foundCharacter);
       }
-    };
+
+    } catch (error) {
+      console.error('Error fetching card:', error);
+      Alert.alert('Error', 'Could not load the card. Please try again later.');
+    }
+  };
 
   // Correctly map the frameData to the characterName
   const frameData = useMemo(() => {
@@ -141,6 +155,7 @@ const CreateCardPage = () => {
   }, [frameData]);
 
   const handleSave = () => {
+    console.log('save patch: ', selectedPatchVersion)
     const formData = {
       cardName,
       characterName,
@@ -155,8 +170,9 @@ const CreateCardPage = () => {
       userId: user?.userId,
       username: user?.username,
       tags: selectedTags,
+      patchVersion: selectedPatchVersion
     };
-  
+
     handleSaveCard({
       isEdit,
       formData,
@@ -178,7 +194,7 @@ const CreateCardPage = () => {
   };
 
   return (
-    <ScrollView  showsVerticalScrollIndicator={false} style={themeStyles.container}>
+    <ScrollView showsVerticalScrollIndicator={false} style={themeStyles.container}>
       <HeroCreateComponent
         cardName={cardName}
         thumbnail={character?.image}
@@ -191,6 +207,19 @@ const CreateCardPage = () => {
         onTwitchLinkChange={(link) => handleTwitchLinkChange(link, setTwitchLink, setHasUnsavedChanges)}
       />
       <View style={{ marginTop: 16 }}>
+        {isEdit && (
+          <View style={{ marginVertical: 10 }}>
+            <Text style={styles.label}>Patch Version</Text>
+            <Picker
+              selectedValue={selectedPatchVersion}
+              onValueChange={(itemValue) => setSelectedPatchVersion(itemValue)}
+            >
+              {patchVersions.map((version) => (
+                <Picker.Item key={version} label={version} value={version} />
+              ))}
+            </Picker>
+          </View>
+        )}
         <TouchableOpacity onPress={() => setShowPunishers(true)} style={styles.link}>
           <FontAwesome name="external-link" size={16} color="white" />
           <Text style={styles.linkText}>Punishers</Text>
@@ -244,16 +273,16 @@ const CreateCardPage = () => {
       </Modal>
 
       <Modal visible={showFollowUps} animationType="slide" onRequestClose={() => setShowFollowUps(false)}>
-        <View style={{flex: 1}}>
-        <FollowUpsComponent
-          onClose={() => setShowFollowUps(false)}
-          setFollowUpData={(data) => {
-            setFollowUpData(data);
-            setHasUnsavedChanges(true);
-          }}
-          followUpData={followUpData}
-          frameData={frameData}
-        />
+        <View style={{ flex: 1 }}>
+          <FollowUpsComponent
+            onClose={() => setShowFollowUps(false)}
+            setFollowUpData={(data) => {
+              setFollowUpData(data);
+              setHasUnsavedChanges(true);
+            }}
+            followUpData={followUpData}
+            frameData={frameData}
+          />
         </View>
       </Modal>
 
